@@ -151,6 +151,9 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-youtube')
+    compile project(':react-native-vector-icons')
+    compile project(':react-native-linear-gradient')
     implementation project(':react-native-youtube')
     implementation project(':react-native-vector-icons')
     implementation fileTree(dir: "libs", include: ["*.jar"])

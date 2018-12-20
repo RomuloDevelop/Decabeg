@@ -1,22 +1,163 @@
 import React, {Component}  from 'react';
 import { 
     View, 
-    Text, 
-    TouchableHighlight,
+    ScrollView, 
+    TouchableOpacity,
     TextInput, StyleSheet, Image} from 'react-native';
+import {
+    Badge, Text, Icon
+} from 'native-base';
 
+
+class SingUp extends Component{
+    state = {
+        username: '',
+        email: '',
+        password: '',
+        repeatpassword: '',
+        validPassword: false,
+        showInvalidRepeatPassword: false,
+        showInvalidPassword: false,
+        iconName: 'eye',
+        security: true,
+        showValidRepeatPassword: false,
+    }
+
+    handleChangeUsername = (value) => {
+        this.setState({user:value});
+    }
+
+    handleChangeEmail = (value) => {
+        this.setState({email:value});
+    }
+
+    handleChangePassword = (value) => {
+        let {password, validPassword} = this.state
+        const testing = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/
+        validPassword = testing.test(password)
+        this.setState({password:value, validPassword});
+    }
+    
+    handleBlurPassword = () => {
+        const {validPassword} = this.state
+        this.setState({showInvalidPassword: !validPassword});
+    }
+
+    handleChangeRepeatpassword = (value) => {
+        let {password, validRepassword} = this.state
+        validRepassword = (password === value)
+        this.setState({repeatpassword: value, validRepassword});
+    }
+
+    handleBlurRepeatpassword = () => {
+        const {validRepassword} = this.state
+        this.setState({showInvalidRepeatPassword: !validRepassword});
+    }
+
+    handlePressSingUp = (value)=>{
+        this.props.navigation.goBack();
+      }
+    render(){
+        return (           
+        <ScrollView style ={{backgroundColor: 'rgba(52, 152, 219,1.0)'}}>
+            {/*<LinearGradient style ={styles.container} colors={['#0fbcf9','#0174DF']}>*/}
+            <View style ={styles.container}>
+                    <Text style={{fontSize:20, color:'#fff', textAlign:'center', margin:30}}>
+                        CREATE ACCOUNT
+                    </Text>
+                    <Text style={{fontSize:14, color:'rgba(255,255,255,0.5)', textAlign:'left', margin:10}}>
+                        * Password must have lenght 8, at least 1 digit, 1 special character
+                    </Text>
+                    <TextInput
+                        style = {styles.inputContainer}
+                        placeholder = "Username"
+                        placeholderTextColor = "rgba(255,255,255,0.7)"
+                        value = {this.state.username}
+                        onChangeText={this.handleChangeUsername}
+                    ></TextInput>
+                    <TextInput
+                        style = {styles.inputContainer}
+                        placeholder = "Email"
+                        placeholderTextColor = "rgba(255,255,255,0.7)"
+                        value = {this.state.email}
+                        onChangeText={this.handleChangeEmail}
+                    ></TextInput>
+                    <View style={[styles.inputIconContainer,styles.inputContainer]}>
+                        <TextInput
+                            style={styles.innerInput}
+                            placeholder="Password"
+                            placeholderTextColor = "rgba(255,255,255,0.7)"
+                            maxLength={8}
+                            secureTextEntry={this.state.security}
+                            onChangeText={this.handleChangePassword}
+                            onBlur={this.handleBlurPassword}
+                        />
+                        <Icon 
+                            style={styles.inputIcon} name={this.state.iconName} type='FontAwesome' 
+                            size={20}
+                            value = {this.state.password}
+                            onPress = {()=>{
+                                    if (this.state.iconName === 'eye')
+                                        this.setState({iconName:'eye-slash', security:false})
+                                    else 
+                                        this.setState({iconName:'eye', security:true})
+                                }}/>
+                            
+                    </View>
+                    {this.state.showInvalidPassword && (
+                        <Badge danger style={{marginBottom: 20}}>
+                            <View style={{flexDirection:'row', justifyContent:'center', alignItems: 'center'}}>
+                                <Icon name="times-circle" type='FontAwesome' style={styles.badgeIcon}/>
+                                <Text>Invalid Password</Text> 
+                            </View>
+                        </Badge>
+                    )
+                    }
+                    <TextInput
+                        style = {styles.inputContainer}
+                        placeholder = "Repeat Password"
+                        placeholderTextColor = "rgba(255,255,255,0.7)"
+                        secureTextEntry = {true}
+                        value = {this.state.repeatpassword}
+                        secureTextEntry={true}
+                        maxLength={8}
+                        onChangeText={this.handleChangeRepeatpassword}
+                        onBlur={this.handleBlurRepeatpassword}
+                    ></TextInput>
+                    {this.state.showInvalidRepeatPassword && (
+                        <Badge danger style={{marginBottom: 20}}>
+                            <View style={{flexDirection:'row', justifyContent:'center', alignItems: 'center'}}>
+                                <Icon name="times-circle" type='FontAwesome' style={styles.badgeIcon}/>
+                                <Text>Password its not the same</Text> 
+                            </View>
+                        </Badge>
+                    )
+                    }
+                    <TouchableOpacity 
+                        style = {[styles.buttonContainer ,{backgroundColor:"rgba(65, 197, 240,1.0)"}]}
+                        onPress={this.handlePressSingUp}>
+                        <Text style = {styles.textButton}>REGISTER</Text>
+                    </TouchableOpacity>
+            {/*<LinearGradient*/}
+            </View>
+        </ScrollView>
+        );
+    }
+}
+
+export default SingUp;
 
 const styles = StyleSheet.create({
-    textInputContainer: {
-        flex: 1,
+    container: {
+        padding: 30,
+        textAlign: 'center'
     },
-    textInput:{
-        flex: 2,
+    inputContainer: {
         height: 40,
-        paddingLeft: 5,
-        margin: 10,
-        backgroundColor: '#fff',
-        fontSize: 15,
+        paddingHorizontal: 10,
+        backgroundColor: 'rgba(255,255,255,0.2)',
+        marginBottom: 10,
+        color: '#FFF',
         borderRadius: 10,
         elevation: 1,
         shadowOpacity: 2,
@@ -24,106 +165,42 @@ const styles = StyleSheet.create({
         shadowColor: '#000'
     },
     buttonContainer: {
-        flex:1, 
-        marginTop: 10,
-        alignItems: 'center',
-        flexDirection:"row"
-    },
-    button:{
-        flex: 1,
-        height: 40,
-        margin: 5,
-        borderRadius: 20,
-        backgroundColor: '#58acfa',
-        justifyContent: 'center',
-        alignItems: 'center',
+        paddingVertical: 10,
+        marginBottom: 15,
+        backgroundColor: 'rgba(41, 128, 185,1.0)',
+        borderRadius: 10,
         elevation: 1,
         shadowOpacity: 2,
         shadowRadius: 2,
         shadowColor: '#000'
     },
-    buttonText:{
-        fontSize: 15,
-        color: '#fff',
-        fontWeight: '100'
+    textButton: {
+        color: '#FFF',
+        textAlign: 'center'
     },
-    image:{
-        width: 400,
-        height: 50
+    badgeIcon:{
+        fontSize: 15, 
+        color: "#fff", 
+        lineHeight: 20, 
+        marginRight: 5
+    },
+    inputIconContainer: {
+        flex: 1,
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        color: '#FFF'
+    },
+    inputIcon: {
+        padding: 10,
+        color: '#FFF'
+    },
+    innerInput: {
+        flex: 1,
+        paddingTop: 10,
+        paddingRight: 10,
+        paddingBottom: 10,
+        paddingLeft: 0,
+        color: '#FFF'
     },
 });
-
-class SingUp extends Component{
-    state = {
-        user: '',
-        password: '',
-        repassword: ''
-    }
-
-    handleChangeUser = (value) => {
-        this.setState({user:value});
-    }
-
-    handleChangePassword = (value) => {
-        this.setState({password:value});
-    }
-    
-    handleChangereRepassword = (value) => {
-        this.setState({repassword:value});
-    }
-    handlePress = (value)=>{
-        this.props.navigation.goBack();
-      }
-    render(){
-        return (
-            <View style={{flex:1}}>
-                <Image 
-                    style={[styles.image, {flex:1}]}
-                    source={require('../assets/reactIcon.png')}
-                />
-                <View style={{flex:2, backgroundColor: '#0080ff'}}>
-                    <View style={styles.textInputContainer}>
-                        <TextInput
-                            style = {styles.textInput}
-                            spellCheck = {false}
-                            onChangeText= {this.handleChangeUser}
-                            placeholder = "Tel./E-mail"
-                            value = {this.state.user}
-                        />
-                        <TextInput
-                            style = {styles.textInput}
-                            spellCheck = {false}
-                            onChangeText= {this.handleChangePassword}
-                            placeholder = "Password"
-                            value = {this.state.password}
-                        />
-                        <TextInput
-                            style = {styles.textInput}
-                            spellCheck = {false}
-                            onChangeText= {this.handleChangeRepassword}
-                            placeholder = "Repeat password"
-                            value = {this.state.repassword}
-                        />
-                    </View>
-                    <View style={styles.buttonContainer}>
-                        <TouchableHighlight
-                            //onPress = {this.handleAddPress}
-                            style = {styles.button}>
-                            <Text style = {styles.buttonText}>
-                                Sing up
-                            </Text>
-                        </TouchableHighlight>
-                        <TouchableHighlight
-                            onPress = {this.handlePress}
-                            style = {styles.button}>
-                            <Text style = {styles.buttonText}>
-                                Cancel
-                            </Text>
-                        </TouchableHighlight>
-                    </View>
-                </View>
-            </View>
-        );
-    }
-}
-export default SingUp;

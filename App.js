@@ -1,31 +1,26 @@
 import React from 'react';
 import { StyleSheet, Text, Button } from 'react-native';
- import {createStackNavigator} from 'react-navigation';
- import createBottomTabNavigator from 'react-navigation-tabs';
- import LogInSingUp from './InicioSesion/LogInSingUp';
+ import {createStackNavigator, createAppContainer} from 'react-navigation';
  import LogIn from './InicioSesion/LogIn';
  import SingUp from './InicioSesion/SingUp';
- import HomeTab from './Home/HomeTab';
- import AnunciosStack from './Anuncios/AnunciosStack'
  import PerfilAnuncioStack from './Home/PerfilAnuncioStack'
 
 export default createStackNavigator( {
-  loginsingup: {
-    screen: LogInSingUp,
-    navigationOptions: ()=> ({
-      title: ''
-    }),
-  },
   login: {
     screen: LogIn,
     navigationOptions: ()=> ({
-      title: 'Inicio de Sesion',
+      title: '',
+      header: null
     }),
   },
   singup: {
     screen: SingUp,
     navigationOptions: ()=> ({
-      title: 'sing up'
+      title: 'Sing Up',
+      headerStyle: {
+        backgroundColor: 'rgba(22, 122, 199,1.0)',
+      },
+      headerTintColor: '#fff'
     }),
   },
   home: {
@@ -36,5 +31,3 @@ export default createStackNavigator( {
     }),
   },
 });
-
-

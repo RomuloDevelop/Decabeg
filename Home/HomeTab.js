@@ -6,13 +6,6 @@ import Perfil from './Perfil/Perfil';
 import Monedero from './Monedero/Monedero';
 
 export default HomeTab = createBottomTabNavigator({
-    /*anuncios:{
-        screen: ListAnuncios,
-        navigationOptions: {
-          tabBarLabel: 'Anuncios', 
-          tabBarIcon:({tintColor})=> (<Icon name='ios-home' size={24}/>)
-        }
-    }*/
     perfil: {
         screen: Perfil,
         navigationOptions: {

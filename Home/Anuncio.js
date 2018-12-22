@@ -17,8 +17,8 @@ export default class Anuncio extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      videoIds: this.props.navigation.getParam('videos', ['ncw4ISEU5ik']),
-      indexVideo: this.props.navigation.getParam('index', 0),
+      videoIds: ['LTvK1REi8t4','w5LYm_zSeFU','ygGb3N_Nko4','UyTqgnKD3sw','h2aRP5LY78o'],
+      indexVideo: 0,
       isReady: false,
       status: null,
       quality: null,

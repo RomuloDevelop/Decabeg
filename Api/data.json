@@ -1,80 +1,34 @@
 {
     "videos":[
         {
-            "id":"ncw4ISEU5ik",
-            "descripcion": "politica",
-            "Question":"de que trata el video",
-            "Answers": [
-                {
-                    "answer":"potica",
-                    "correct": false
-                },
-                {
-                    "answer":"potica",
-                    "correct": true
-                }
-            ]
+            "name":"Tesla",
+            "img":"direccion",
+            "id":"LTvK1REi8t4",
+            "key":"LTvK1REi8t4"
         },
         {
+            "name":"UTBH",
+            "img":"direccion",
             "id":"w5LYm_zSeFU",
-            "descripcion": "politica",
-            "Question":"de que trata el video",
-            "Answers": [
-                {
-                    "answer":"potica",
-                    "correct": false
-                },
-                {
-                    "answer":"potica",
-                    "correct": true
-                }
-            ]
+            "key":"w5LYm_zSeFU"
         },
         {
+            "name":"PewDiePie",
+            "img":"direccion",
             "id":"ygGb3N_Nko4",
-            "descripcion": "politica",
-            "Question":"de que trata el video",
-            "Answers": [
-                {
-                    "answer":"potica",
-                    "correct": false
-                },
-                {
-                    "answer":"potica",
-                    "correct": true
-                }
-            ]
+            "key":"ygGb3N_Nko4"
         },
         {
+            "name":"SpaceTime",
+            "img":"direccion",
             "id":"UyTqgnKD3sw",
-            "descripcion": "politica",
-            "Question":"de que trata el video",
-            "Answers": [
-                {
-                    "answer":"potica",
-                    "correct": false
-                },
-                {
-                    "answer":"potica",
-                    "correct": true
-                }
-            ]
+            "key":"UyTqgnKD3sw"
         },
         {
+            "name":"Visual Politik",
+            "img":"direccion",
             "id":"h2aRP5LY78o",
-            "descripcion": "politica",
-            "Question":"de que trata el video",
-            "Answers": [
-                {
-                    "answer":"potica",
-                    "correct": false
-                },
-                {
-                    "answer":"potica",
-                    "correct": true
-                }
-            ]
-            
+            "key":"h2aRP5LY78o"
         }
     ],
     "money": 200

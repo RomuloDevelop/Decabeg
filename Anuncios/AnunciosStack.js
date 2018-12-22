@@ -16,7 +16,8 @@ export default AnunciosStack = createStackNavigator( {
     screen: Anuncio,
     navigationOptions: ()=> ({
       title: '',
-      header: null
+      header: null/*,
+      portraitOnlyMode: true*/
     }),
   }
 });

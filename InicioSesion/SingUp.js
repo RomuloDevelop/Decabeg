@@ -32,9 +32,10 @@ class SingUp extends Component{
     }
 
     handleChangePassword = (value) => {
-        let {password, validPassword} = this.state
-        const testing = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/
-        validPassword = testing.test(password)
+        let {validPassword} = this.state
+        const testing = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8}$/
+        validPassword = testing.test(value)
+        console.log(validPassword)
         this.setState({password:value, validPassword});
     }
     

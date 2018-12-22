@@ -57,7 +57,9 @@ class LogIn extends Component{
                             secureTextEntry = {true}
                             value = {this.state.password}
                         ></TextInput>
-                        <TouchableOpacity style = {styles.buttonContainer}>
+                        <TouchableOpacity 
+                            style = {styles.buttonContainer}
+                            onPress = {this.handleLoginPress}>
                             <Text style = {styles.textButton}>LOGIN</Text>
                         </TouchableOpacity>
                         <TouchableOpacity 

@@ -1,16 +1,49 @@
 import React, {Component} from 'react';
 import { 
     View,
-    TouchableHighlight, StyleSheet, Image } from 'react-native';
-    import { Container, Header, Content, Form, Item, Input, Label, Left, Button, Icon, Body, Right, Text } from 'native-base';
-    import { Col, Row, Grid } from 'react-native-easy-grid';
-
+    StyleSheet, Image, TouchableOpacity } from 'react-native';
+import { Container, Header, Content, Form, Item, Input, Label, Left, Button, Icon, Body, Right, Text } from 'native-base';
+import { Col, Row, Grid } from 'react-native-easy-grid';
+import ImagePicker from 'react-native-image-picker';
 
 class UpdatePerfil extends Component {
-
+    state ={
+      img: require('../../assets/reactIcon.png')
+    }
     handlePressGoBack = ()=>{
         this.props.navigation.goBack();
     }
+
+    handleImgPress = () => {
+      const options = {
+        title: 'Select Avatar',
+        customButtons: [{ name: 'fb', title: 'Choose Photo from Facebook' }],
+        storageOptions: {
+          skipBackup: true,
+          path: 'images',
+        },
+      }
+      ImagePicker.showImagePicker(null,(response) => {
+        console.log('Response = ', response);
+      
+        if (response.didCancel) {
+          console.log('User cancelled image picker');
+        } else if (response.error) {
+          console.log('ImagePicker Error: ', response.error);
+        } else if (response.customButton) {
+          console.log('User tapped custom button: ', response.customButton);
+        } else {
+          const source = { uri: response.uri };
+          console.log(source);
+          // You can also display the image using data:
+          // const source = { uri: 'data:image/jpeg;base64,' + response.data };
+      
+          this.setState({
+            img: source,
+          });
+        }
+      });
+      };
     render() {
         return (
             <Container>
@@ -31,9 +64,12 @@ class UpdatePerfil extends Component {
                 <Grid>
                   <Row style={{alignItems:'flex-start', justifyContent: 'center'}}>
                     <Col style={styles.formImage}>
-                          <Label>Choose Image</Label>
-                          <Image style={styles.image}
-                           source={require('../../assets/reactIcon.png')}/>
+                      <TouchableOpacity
+                       onPress={this.handleImgPress}>
+                        <Label>Choose Image</Label>
+                      </TouchableOpacity>
+                      <Image style={styles.image}
+                       source={this.state.img}/>
                     </Col>
                   </Row>
                   <Row>
@@ -43,7 +79,7 @@ class UpdatePerfil extends Component {
                           <Label>Username</Label>
                           <Input />
                         </Item>
-                        <Item floatingLabel last>
+                        <Item floatingLabel>
                           <Label>Number</Label>
                           <Input />
                         </Item>

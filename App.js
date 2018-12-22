@@ -3,9 +3,10 @@ import { StyleSheet, Text, Button } from 'react-native';
  import {createStackNavigator, createAppContainer} from 'react-navigation';
  import LogIn from './InicioSesion/LogIn';
  import SingUp from './InicioSesion/SingUp';
- import PerfilAnuncioStack from './Home/PerfilAnuncioStack'
+ import HomeStack from './Home/HomeStack'
 
-export default createStackNavigator( {
+
+const sessionStack = createStackNavigator({
   login: {
     screen: LogIn,
     navigationOptions: ()=> ({
@@ -22,9 +23,18 @@ export default createStackNavigator( {
       },
       headerTintColor: '#fff'
     }),
+  }
+})
+export default createStackNavigator( {
+  sesion: {
+    screen: sessionStack,
+    navigationOptions: ()=> ({
+      title: '',
+      header: null
+    }),
   },
   home: {
-    screen: PerfilAnuncioStack,
+    screen: HomeStack,
     navigationOptions: ()=> ({
       title: '',
       header: null

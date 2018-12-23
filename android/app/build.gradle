@@ -151,6 +151,7 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-orientation')
     compile project(':react-native-image-picker')
     compile project(':react-native-youtube')
     compile project(':react-native-vector-icons')

@@ -7,22 +7,14 @@ import { Col, Row, Grid } from 'react-native-easy-grid';
 class Perfil extends Component {
   
     handlePressUpdate = ()=>{
-      this.props.navigation.navigate('updateperfil');
     }
     render() {
 
         return (
           <Container>
-            {/* <Header>
-              <Right>
-                <Button transparent onPress={this.handlePressUpdate}>
-                  <IconNB  type="FontAwesome" name='pencil'/>
-                </Button>
-              </Right>
-            </Header> */}
             <Content>
                 <Grid>
-                  <Row size={5} style={{ backgroundColor: '#635DB7', alignItems: 'center', justifyContent: 'center'}}>
+                  <Row size={5} style={{ backgroundColor: 'rgba(41, 128, 185,1.0)', alignItems: 'center', justifyContent: 'center'}}>
                     <Image 
                         style={styles.image}
                         source={require('../../assets/reactIcon.png')}

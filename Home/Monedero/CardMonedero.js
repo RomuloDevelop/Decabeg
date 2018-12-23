@@ -1,8 +1,7 @@
 import React, {Component} from 'react';
 import { 
     View, 
-    Text, 
-    TouchableHighlight, StyleSheet, Image } from 'react-native';
+    Text, StyleSheet, Image } from 'react-native';
 
 class CardMonedero extends Component {
 
@@ -63,14 +62,15 @@ var styles = StyleSheet.create({
     cardHeader:{
         flex:1,
         textAlign: "left",
-        padding: 2,
+        padding: 5,
         paddingLeft: 10,    
         borderBottomColor: '#dddddd',
         borderBottomWidth: 2,
     },
     cardHeaderText:{
-        fontSize: 20,
-        fontWeight: "bold",
+        color:'#000', 
+        fontWeight:'300', 
+        fontSize: 18
     },
     cardBody: {
         flex: 3,

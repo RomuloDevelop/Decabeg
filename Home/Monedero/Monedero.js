@@ -2,8 +2,8 @@ import React, {Component} from 'react';
 import { 
     View, 
     Text, 
-    TouchableHighlight,  StyleSheet, ScrollView, TextInput} from 'react-native';
-    import { IconNB, Icon } from 'native-base';
+    TouchableOpacity,  StyleSheet, ScrollView, TextInput} from 'react-native';
+    import { Icon } from 'native-base';
 import CardMonedero from './CardMonedero';
 
 const tasaConvertion = 0.5
@@ -113,13 +113,13 @@ class Monedero extends Component {
                             value = {this.state.saldoInput}
                             editable= {false}/>
                     
-                    <TouchableHighlight
+                    <TouchableOpacity
                         onPress = {this.handlePressConvertion}
-                        style = {styles.button}>
-                        <Text style = {[styles.convertionText,{color: '#fff'}]}>
+                        style = {styles.buttonContainer}>
+                        <Text style = {styles.textButton}>
                             Convertir
                         </Text>
-                    </TouchableHighlight>
+                    </TouchableOpacity>
                 </View>
             </ScrollView>
         )
@@ -137,7 +137,6 @@ var styles = StyleSheet.create({
         backgroundColor: '#fff',
         fontSize: 18,
         fontWeight: "bold",
-        margin: 10,
         borderRadius: 10,
         elevation: 1,
         shadowOpacity: 2,
@@ -146,9 +145,10 @@ var styles = StyleSheet.create({
         textAlign: 'center'
     },
     convertionText: {
-        fontSize: 20,
+        fontSize: 18,
         fontWeight: "bold",
-        margin: 10
+        margin: 10,
+        color: '#000'
     },
     button:{
         margin: 20,
@@ -163,7 +163,20 @@ var styles = StyleSheet.create({
         shadowRadius: 2,
         shadowColor: '#000'
     },
-    convertionForm: {
-
+    buttonContainer: {
+      paddingVertical: 10,
+      marginVertical: 15,
+      marginHorizontal: 10,
+      backgroundColor: 'rgba(41, 128, 185,1.0)',
+      borderRadius: 10,
+      elevation: 1,
+      shadowOpacity: 2,
+      shadowRadius: 2,
+      shadowColor: '#000'
+    },
+    textButton: {
+        fontSize:15,
+        color: '#FFF',
+        textAlign: 'center'
     }
 });

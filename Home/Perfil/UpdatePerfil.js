@@ -15,14 +15,6 @@ class UpdatePerfil extends Component {
     }
 
     handleImgPress = () => {
-      const options = {
-        title: 'Select Avatar',
-        customButtons: [{ name: 'fb', title: 'Choose Photo from Facebook' }],
-        storageOptions: {
-          skipBackup: true,
-          path: 'images',
-        },
-      }
       ImagePicker.showImagePicker(null,(response) => {
         console.log('Response = ', response);
       
@@ -47,7 +39,7 @@ class UpdatePerfil extends Component {
     render() {
         return (
             <Container>
-              <Header>
+              {/* <Header>
                 <Left>
                   <Button
                   transparent
@@ -59,7 +51,7 @@ class UpdatePerfil extends Component {
                     <Text style={{color:'#FFFFFF'}}>Update Profile</Text>
                 </Body>
                 <Right/>
-              </Header>
+              </Header> */}
               <Content>
                 <Grid>
                   <Row style={{alignItems:'flex-start', justifyContent: 'center'}}>
@@ -74,7 +66,7 @@ class UpdatePerfil extends Component {
                   </Row>
                   <Row>
                   <Col>
-                    <Form>
+                    <Form style={{marginHorizontal:15}}>
                         <Item floatingLabel>
                           <Label>Username</Label>
                           <Input />
@@ -83,9 +75,11 @@ class UpdatePerfil extends Component {
                           <Label>Number</Label>
                           <Input />
                         </Item>
-                        <Button block block style={styles.formButton}>
-                            <Label style={{color:'#FFFFFF'}}>Update</Label>
-                        </Button>
+                        <TouchableOpacity 
+                            style = {styles.buttonContainer}
+                            onPress = {this.handleLoginPress}>
+                            <Text style = {styles.textButton}>Update</Text>
+                        </TouchableOpacity>
                     </Form>
                   </Col>
                   </Row>
@@ -99,17 +93,27 @@ class UpdatePerfil extends Component {
 export default UpdatePerfil;
 
  
-// Later on in your styles..
 var styles = StyleSheet.create({
   image: {
       width: 100,
       height: 100,
       borderRadius: 100
   },
-  formButton: {
-      margin: 13
-  },
   formImage: {
-      margin: 13
+      margin: 15
+  },
+  buttonContainer: {
+    paddingVertical: 10,
+    marginVertical: 15,
+    backgroundColor: 'rgba(41, 128, 185,1.0)',
+    borderRadius: 10,
+    elevation: 1,
+    shadowOpacity: 2,
+    shadowRadius: 2,
+    shadowColor: '#000'
+  },
+  textButton: {
+      color: '#FFF',
+      textAlign: 'center'
   }
 });

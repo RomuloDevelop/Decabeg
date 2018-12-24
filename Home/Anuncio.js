@@ -20,19 +20,21 @@ export default class Anuncio extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      videoIds: ['LTvK1REi8t4','w5LYm_zSeFU','ygGb3N_Nko4','UyTqgnKD3sw','h2aRP5LY78o'],
+      videoIds: ['pq-yP7mb8UE','w5LYm_zSeFU','ygGb3N_Nko4','UyTqgnKD3sw','h2aRP5LY78o'],
       actualIndexVideo: 0,
       isReady: false,
       status: null,
       quality: null,
       error: null,
       isPlaying: true,
-      isLooping: false,
+      isLooping: true,
       duration: 0,
       currentTime: 0,
       fullscreen: false,
       containerMounted: false,
       containerWidth: null,
+      showAlert: true,
+      disabledButton: false,
       showQuestion: false,
       question: "De que trata el video?",
       showResult: false,
@@ -60,7 +62,6 @@ export default class Anuncio extends Component {
   }
 
   componentDidMount(){
-
       Orientation.lockToPortrait();
       this.timerID = setInterval(() => {
         this.progressBarHandle()
@@ -71,29 +72,33 @@ export default class Anuncio extends Component {
     try {
       if(this.state.containerMounted && this.state.isReady) {
         if(this._youTubeRef) {
-          this._youTubeRef
-            .currentTime()
-            .then(currentTime => this.setState({currentTime}))
-            .catch(errorMessage => this.setState({ error: errorMessage }));
-          this._youTubeRef
-            .duration()
-            .then(duration => this.setState({ duration }))
-            .catch(errorMessage => this.setState({ error: errorMessage }));
-          if(this.state.duration !== 0) {
-            const duration = this.state.duration;
-            const currentTime = this.state.currentTime;
+          const currentTime = await this._youTubeRef.currentTime()
+          //   .then(currentTime => this.setState({currentTime}))
+          //   .catch(errorMessage => this.setState({ error: errorMessage }));
+          const duration = await this._youTubeRef.duration()
+            // .then(duration => this.setState({ duration }))
+            // .catch(errorMessage => this.setState({ error: errorMessage }));
+          if(duration !== 0) {
+            // const duration = this.state.duration;
+            // const currentTime = this.state.currentTime;
             const progressValue= currentTime/duration
             const actualIndexVideo = await this._youTubeRef.videosIndex();
+            //console.log()
             if (actualIndexVideo > this.state.actualIndexVideo){
               this.setState({
                 actualIndexVideo,
                 progressValue,
+                currentTime,
+                duration,
                 isPlaying: false,
-                showQuestion: true
+                showQuestion: true,
+                disabledButton: true
               });
             } else {
               this.setState({
-                progressValue
+                progressValue,
+                currentTime,
+                duration
               });
             }
           }
@@ -105,37 +110,108 @@ export default class Anuncio extends Component {
   }
 
   nextButtonHandle = () => {
+    clearInterval(this.timerID);
     this.setState({
-      isPlaying: false
+      isPlaying: false,
+      disabledButton: true
     })
-    Alert.alert(
-      'Next Video',
-      'If you jump to the next video you will not recieve points',
-      [
-        {text: 'Cancel', onPress: () => {
-          this.setState({
-            isPlaying: true
-          })
-        }, style: 'cancel'},
-        {text: 'OK', onPress: () => {
-          if(this._youTubeRef){
-            const actualIndexVideo = this.state.actualIndexVideo + 1;
-            this.setState(() => {
-              return {
-              isPlaying: true,
-              actualIndexVideo}
-            }, ()=>this._youTubeRef.nextVideo())
-          } else {
+    if(this.state.showAlert){
+      Alert.alert(
+        'Next Video',
+        'If you jump to the next video you will not recieve points',
+        [
+          {text: 'Cancel', onPress: () => {
             this.setState({
-              isPlaying: true
+              isPlaying: true,
+              disabledButton: false
             })
-          }
-
-        }},
-      ],
-      { cancelable: false }
-    )
+          }, style: 'cancel'},
+          {text: 'OK', onPress: () => {
+            this.executeNextButton()
+          }},
+        ],
+        { cancelable: false }
+      )
+    
+    } else {
+      this.executeNextButton()
+    }
   }
+
+  executeNextButton(){
+    if(this._youTubeRef){
+      
+      let actualIndexVideo = 0
+      if(this.state.actualIndexVideo !== this.state.videoIds.length - 1){
+        actualIndexVideo = this.state.actualIndexVideo + 1;
+      this.setState(() => {
+        return {
+          isPlaying: true,
+          disabledButton: false,
+          showAlert: false,
+          actualIndexVideo
+        }
+      }, ()=>{
+        //this._youTubeRef.playVideoAt(actualIndexVideo) 
+        this._youTubeRef.nextVideo()
+      })
+    } else {
+      this.setState({
+        isPlaying: true,
+        disabledButton: false,
+        showAlert: false
+      })
+    }
+    } else {
+      this.setState({
+        isPlaying: true,
+        disabledButton: false
+      })
+    }
+    this.timerID = setInterval(() => {
+      this.progressBarHandle()
+    }, 1000);
+  }
+
+ executeBackButton =  async ()=>{
+    clearInterval(this.timerID);
+    this.setState({
+      isPlaying: false,
+      disabledButton: true
+    })
+    if(this._youTubeRef){
+      let actualIndexVideo = await this._youTubeRef.videosIndex();
+      alert(JSON.stringify(actualIndexVideo))
+      if(actualIndexVideo != 0){
+        actualIndexVideo -= 1;
+        this.setState(() => {
+          return {
+            isPlaying: true,
+            disabledButton: false,
+            showAlert: false,
+            actualIndexVideo
+          }
+        }, ()=>{
+          this._youTubeRef.previousVideo()
+        })
+      } else {
+        this.setState({
+          isPlaying: true,
+          disabledButton: false,
+          showAlert: false
+        })
+      }
+    } else {
+      this.setState({
+        isPlaying: true,
+        disabledButton: false
+      })
+    }
+    this.timerID = setInterval(() => {
+      this.progressBarHandle()
+    }, 1000);
+  }
+
   radioHandle = (itemID)=>{
     const answers = this.state.answers.map((item)=>{
       if( item.key === itemID ){
@@ -149,6 +225,7 @@ export default class Anuncio extends Component {
   }
 
   showMessage(ex){
+    this.setState({ error: errorMessage })
     Toast.show({
       text: ex.message,
       buttonText: "Okay",
@@ -214,14 +291,15 @@ export default class Anuncio extends Component {
 
         <View style={styles.buttonGroup}>
          <Button iconLeft rounded info
+            disabled = {this.state.disabledButton}
             style={styles.buttonVideo}
-            onPress={() => {
-              return this._youTubeRef && this._youTubeRef.previousVideo()
-            }}>
+            onPress={this.executeBackButton}
+         >
             <Icon name='arrow-back' />
             <Text>Back</Text>
          </Button>
           <Button iconRight rounded info
+            disabled = {this.state.disabledButton}
             style={styles.buttonVideo}
             onPress={this.nextButtonHandle}
             >
@@ -251,6 +329,7 @@ export default class Anuncio extends Component {
                     this.setState(()=>{return{
                       isPlaying: true,
                       showQuestion: false,
+                      disabledButton: false,
                       showResult: true,
                       result
                     }}, () => this.resutViewHandle = setTimeout(()=>this.setState({showResult:false}),3000))

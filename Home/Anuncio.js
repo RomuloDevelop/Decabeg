@@ -11,7 +11,7 @@ import {
   ProgressBarAndroid,
   Alert
 } from 'react-native';
-import {Button, Text, Icon, ListItem, Radio, Right, Left, Badge } from 'native-base'
+import {Button, Text, Icon, ListItem, Radio, Right, Left, Badge, Toast } from 'native-base'
 import YouTube from 'react-native-youtube';
 import Orientation from 'react-native-orientation';
 import FadeIn from './Animations/FadeIn'
@@ -73,17 +73,10 @@ export default class Anuncio extends Component {
       if(this.state.containerMounted && this.state.isReady) {
         if(this._youTubeRef) {
           const currentTime = await this._youTubeRef.currentTime()
-          //   .then(currentTime => this.setState({currentTime}))
-          //   .catch(errorMessage => this.setState({ error: errorMessage }));
           const duration = await this._youTubeRef.duration()
-            // .then(duration => this.setState({ duration }))
-            // .catch(errorMessage => this.setState({ error: errorMessage }));
           if(duration !== 0) {
-            // const duration = this.state.duration;
-            // const currentTime = this.state.currentTime;
             const progressValue= currentTime/duration
             const actualIndexVideo = await this._youTubeRef.videosIndex();
-            //console.log()
             if (actualIndexVideo > this.state.actualIndexVideo){
               this.setState({
                 actualIndexVideo,

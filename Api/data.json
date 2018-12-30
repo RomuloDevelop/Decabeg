@@ -28,7 +28,21 @@
             "name":"Visual Politik",
             "img":"direccion",
             "id":"h2aRP5LY78o",
-            "key":"h2aRP5LY78o"
+            "key":"h2aRP5LY78o",
+            "answers": [
+              {
+                "key": 0,
+                "correct": false,
+                "answer": "De Nada",
+                "selected": true
+              },
+              {
+                "key": 1,
+                "correct": true,
+                "answer": "De Anuncios",
+                "selected": false
+              }
+            ]
         }
     ],
     "money": 200

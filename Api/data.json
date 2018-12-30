@@ -4,25 +4,81 @@
             "name":"Tesla",
             "img":"direccion",
             "id":"LTvK1REi8t4",
-            "key":"LTvK1REi8t4"
+            "key":"LTvK1REi8t4",
+            "answers": [
+              {
+                "key": 0,
+                "correct": false,
+                "answer": "De Nada",
+                "selected": true
+              },
+              {
+                "key": 1,
+                "correct": true,
+                "answer": "De Anuncios",
+                "selected": false
+              }
+            ]
         },
         {
             "name":"UTBH",
             "img":"direccion",
             "id":"w5LYm_zSeFU",
-            "key":"w5LYm_zSeFU"
+            "key":"w5LYm_zSeFU",
+            "answers": [
+              {
+                "key": 0,
+                "correct": false,
+                "answer": "De Nada",
+                "selected": true
+              },
+              {
+                "key": 1,
+                "correct": true,
+                "answer": "De Anuncios",
+                "selected": false
+              }
+            ]
         },
         {
             "name":"PewDiePie",
             "img":"direccion",
             "id":"ygGb3N_Nko4",
-            "key":"ygGb3N_Nko4"
+            "key":"ygGb3N_Nko4",
+            "answers": [
+              {
+                "key": 0,
+                "correct": false,
+                "answer": "De Nada",
+                "selected": true
+              },
+              {
+                "key": 1,
+                "correct": true,
+                "answer": "De Anuncios",
+                "selected": false
+              }
+            ]
         },
         {
             "name":"SpaceTime",
             "img":"direccion",
             "id":"UyTqgnKD3sw",
-            "key":"UyTqgnKD3sw"
+            "key":"UyTqgnKD3sw",
+            "answers": [
+              {
+                "key": 0,
+                "correct": false,
+                "answer": "De Nada",
+                "selected": true
+              },
+              {
+                "key": 1,
+                "correct": true,
+                "answer": "De Anuncios",
+                "selected": false
+              }
+            ]
         },
         {
             "name":"Visual Politik",

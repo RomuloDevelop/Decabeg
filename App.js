@@ -1,33 +1,20 @@
 import React from 'react';
 import { StyleSheet, Text, Button } from 'react-native';
- import {createStackNavigator, createAppContainer} from 'react-navigation';
- import LogIn from './InicioSesion/LogIn';
- import SingUp from './InicioSesion/SingUp';
- import HomeStack from './Home/HomeStack'
+ import { createSwitchNavigator} from 'react-navigation';
+ import HomeStack from './screens/Home/HomeStack';
+ import SessionStack from './screens/InicioSesion/SessionStack';
+ import LoadingSession from './screens/InicioSesion/LoadingSession';
 
-
-const sessionStack = createStackNavigator({
-  login: {
-    screen: LogIn,
+const appStack = createSwitchNavigator({
+  loading: {
+    screen: LoadingSession,
     navigationOptions: ()=> ({
       title: '',
       header: null
     }),
   },
-  singup: {
-    screen: SingUp,
-    navigationOptions: ()=> ({
-      title: 'Sing Up',
-      headerStyle: {
-        backgroundColor: 'rgba(22, 122, 199,1.0)',
-      },
-      headerTintColor: '#fff'
-    }),
-  }
-})
-export default createStackNavigator( {
   sesion: {
-    screen: sessionStack,
+    screen: SessionStack,
     navigationOptions: ()=> ({
       title: '',
       header: null
@@ -41,3 +28,5 @@ export default createStackNavigator( {
     }),
   },
 });
+
+export default appStack;

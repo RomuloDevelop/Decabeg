@@ -5,11 +5,27 @@ import {
 import { Container, Header, Content, Form, Item, Input, Label, Left, Button, Icon, Body, Right, Text } from 'native-base';
 import { Col, Row, Grid } from 'react-native-easy-grid';
 import ImagePicker from 'react-native-image-picker';
+import { getUserData } from '../../../dataStore/sessionData';
+import { sendUpdateUserData } from '../../../Api/api';
 
 class UpdatePerfil extends Component {
     state ={
-      img: require('../../../assets/reactIcon.png')
+      username: '',
+      phone: '',
+      image: require('../../../assets/reactIcon.png')
     }
+
+    componentWillMount(){
+      getUserData().then((data)=>{
+        console.log(data)
+        this.setState({
+          username: data.username,
+          phone: data.phone,
+          image: data.image? data.image:require('../../../assets/reactIcon.png')
+        });
+      }).catch((ex)=>console.log(ex));
+    }
+
     handlePressGoBack = ()=>{
         this.props.navigation.goBack();
     }
@@ -31,27 +47,30 @@ class UpdatePerfil extends Component {
           // const source = { uri: 'data:image/jpeg;base64,' + response.data };
       
           this.setState({
-            img: source,
+            image: source,
           });
         }
       });
-      };
+      }
+    
+
+    handleUsername = (value) => {
+      this.setState({username:value});
+    }
+
+    handlePhone = (value) => {
+      this.setState({phone:value});
+      
+    }
+    
+    handleLoginPress = () => {
+      sendUpdateUserData(this.state).then(()=>this.props.navigation.goBack())
+      .catch((ex)=>{console.log(`error enviando data:${JSON.stringify(ex)}`)});
+    }
+
     render() {
         return (
             <Container>
-              {/* <Header>
-                <Left>
-                  <Button
-                  transparent
-                  onPress={this.handlePressGoBack}>
-                    <Icon name='arrow-back'/>
-                  </Button>
-                </Left>
-                <Body>
-                    <Text style={{color:'#FFFFFF'}}>Update Profile</Text>
-                </Body>
-                <Right/>
-              </Header> */}
               <Content>
                 <Grid>
                   <Row style={{alignItems:'flex-start', justifyContent: 'center'}}>
@@ -61,7 +80,7 @@ class UpdatePerfil extends Component {
                         <Label>Choose Image</Label>
                       </TouchableOpacity>
                       <Image style={styles.image}
-                       source={this.state.img}/>
+                       source={this.state.image}/>
                     </Col>
                   </Row>
                   <Row>
@@ -69,19 +88,23 @@ class UpdatePerfil extends Component {
                     <Form style={{marginHorizontal:15}}>
                         <Item floatingLabel>
                           <Label>Username</Label>
-                          <Input />
+                          <Input onChangeText={this.handleUsername} value={this.state.username}/>
                         </Item>
                         <Item floatingLabel>
                           <Label>Number</Label>
-                          <Input />
+                          <Input onChangeText={this.handlePhone} value={this.state.phone}/>
                         </Item>
-                        <TouchableOpacity 
-                            style = {styles.buttonContainer}
-                            onPress = {this.handleLoginPress}>
-                            <Text style = {styles.textButton}>Update</Text>
-                        </TouchableOpacity>
                     </Form>
                   </Col>
+                  </Row>
+                  <Row>
+                    <Col>
+                      <TouchableOpacity 
+                            style = {[styles.buttonContainer,{marginHorizontal:15}]}
+                            onPress = {this.handleLoginPress}>
+                            <Text style = {styles.textButton}>Update</Text>
+                      </TouchableOpacity>
+                    </Col>
                   </Row>
                 </Grid>
               </Content>

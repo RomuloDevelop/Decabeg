@@ -8,7 +8,7 @@
     <application
       android:name=".MainApplication"
       android:label="@string/app_name"
-      android:icon="@mipmap/ic_launcher"
+      android:icon="@mipmap/dicabeg_launcher"
       android:allowBackup="false"
       android:theme="@style/AppTheme">
       <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebook_app_id"/>
@@ -20,6 +20,25 @@
         <intent-filter>
             <action android:name="android.intent.action.MAIN" />
             <category android:name="android.intent.category.LAUNCHER" />
+        </intent-filter>
+        <!-- Linking browser -->
+        <intent-filter>
+            <action android:name="android.intent.action.VIEW" />
+            <category android:name="android.intent.category.DEFAULT" />
+            <category android:name="android.intent.category.BROWSABLE" />
+            <!-- http://www.dicabeg.com/singup will match-->
+            <data android:scheme="http"
+              android:host="dicabeg"
+              android:pathPrefix="/signup" />
+        </intent-filter>
+        <!-- Linking -->
+        <intent-filter>
+            <action android:name="android.intent.action.VIEW" />
+            <category android:name="android.intent.category.DEFAULT" />
+            <category android:name="android.intent.category.BROWSABLE" />
+            <!-- dicabeg://singup will match-->
+            <data android:scheme="dicabeg"
+              android:host="signup"/>
         </intent-filter>
       </activity>
       <activity android:name="com.facebook.react.devsupport.DevSettingsActivity" />

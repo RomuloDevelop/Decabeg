@@ -15,28 +15,39 @@ class SingUp extends Component{
         username: '',
         email: '',
         password: '',
+        invite_code:'',
         repeatpassword: '',
         validPassword: false,
+        validEmail: false,
         showInvalidRepeatPassword: false,
         showInvalidPassword: false,
         iconName: 'eye',
         security: true,
         showValidRepeatPassword: false,
+        showCode:false,
+    }
+
+    componentDidMount(){
+        const {navigation} = this.props;
+        const showCode = navigation.getParam('showCode', false);
+        const invite_code = navigation.getParam('code','');
+        this.setState({invite_code, showCode});
     }
 
     handleChangeUsername = (value) => {
-        this.setState({user:value});
+        this.setState({username:value});
     }
 
     handleChangeEmail = (value) => {
-        this.setState({email:value});
+        const testing = /\S+@\S+\.\S+/;
+        const validEmail = testing.test(value);
+        this.setState({email:value, validEmail});
     }
 
     handleChangePassword = (value) => {
         let {validPassword} = this.state
-        const testing = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8}$/
-        validPassword = testing.test(value)
-        console.log(validPassword)
+        const testing = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&_\-])[A-Za-z\d@$!%*#?&_\-]{8,}$/
+        validPassword = testing.test(value);
         this.setState({password:value, validPassword});
     }
     
@@ -58,15 +69,19 @@ class SingUp extends Component{
 
     handlePressSingUp = async ()=>{
         try {
-            await sendUserSignUp(
-                {
+            if(this.state.validEmail && this.state.validPassword){
+                const userAccount = {
                     username:this.state.username,
                     email:this.state.email,
-                    password:this.state.password,
-                });
-            this.props.navigation.goBack();
+                    password:this.state.password
+                };
+                if(this.state.showCode) userAccount.invite_code = this.state.invite_code;
+                await sendUserSignUp(userAccount);
+                this.props.navigation.goBack();
+            }
         } catch(ex){
-            alert(ex);
+            console.log(ex);
+            alert(JSON.stringify(ex));
         }
       }
     render(){
@@ -78,7 +93,7 @@ class SingUp extends Component{
                         CREATE ACCOUNT
                     </Text>
                     <Text style={{fontSize:14, color:'rgba(255,255,255,0.5)', textAlign:'left', margin:10}}>
-                        * Password must have lenght 8, at least 1 digit, 1 special character
+                        * Password must have lenght 8, at least 1 digit, 1 special character (@$!%*#?&_-)
                     </Text>
                     <TextInput
                         style = {styles.inputContainer}
@@ -87,13 +102,21 @@ class SingUp extends Component{
                         value = {this.state.username}
                         onChangeText={this.handleChangeUsername}
                     ></TextInput>
-                    <TextInput
-                        style = {styles.inputContainer}
-                        placeholder = "Email"
-                        placeholderTextColor = "rgba(255,255,255,0.7)"
-                        value = {this.state.email}
-                        onChangeText={this.handleChangeEmail}
-                    ></TextInput>
+                    <View style={[styles.inputIconContainer,styles.inputContainer,
+                        {borderColor:this.state.validEmail?'green':'red', 
+                        borderWidth:1}]}>
+                        <TextInput
+                            style = {styles.innerInput}
+                            placeholder = "Email"
+                            placeholderTextColor = "rgba(255,255,255,0.7)"
+                            value = {this.state.email}
+                            onChangeText={this.handleChangeEmail}
+                        ></TextInput>
+                        <Icon 
+                            style={[styles.inputIcon, {color:this.state.validEmail?'green':'red'}]}
+                            name={this.state.validEmail?'checkmark-circle':'close-circle'}
+                            size={20} />
+                    </View>
                     <View style={[styles.inputIconContainer,styles.inputContainer]}>
                         <TextInput
                             style={styles.innerInput}
@@ -145,6 +168,15 @@ class SingUp extends Component{
                         </Badge>
                     )
                     }
+                    {this.state.showCode&&(
+                    <TextInput
+                        style = {styles.inputContainer}
+                        placeholder = "Code"
+                        placeholderTextColor = "rgba(255,255,255,0.7)"
+                        value = {this.state.invite_code}
+                        editable = {false}
+                    ></TextInput>
+                    )}
                     <TouchableOpacity 
                         style = {[styles.buttonContainer ,{backgroundColor:"rgba(65, 197, 240,1.0)"}]}
                         onPress={this.handlePressSingUp}>

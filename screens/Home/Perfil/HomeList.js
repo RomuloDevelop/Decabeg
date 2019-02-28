@@ -1,65 +1,179 @@
 import React , {Component} from 'react';
-import {Container, Content, Icon,IconNB, List, ListItem, Text, Left, Right} from 'native-base';
-import {View,Image} from 'react-native';
-export default class HomeList extends Component {
-    render(){
-        return(
-            <Container>
+import {Container, Content, Icon,IconNB, List, ListItem, Text, Left, Right, Button} from 'native-base';
+import BackgroundTimer from 'react-native-background-timer'
+import {View,Image,TouchableOpacity, Alert, NativeEventEmitter } from 'react-native';
+import { getUserData, clearData } from '../../../dataStore/sessionData';
+import { signOut as googleSingOut } from '../../../Api/SessionManager/googleApi'
+import { signOut as facebookSingOut } from '../../../Api/SessionManager/facebookApi'
+import {sendUserLogOut} from '../../../Api/api';
+
+import globalStyles, {buttonForm} from '../../../styles';
+
+export default class HomeList extends Component {    
+  constructor(props){
+    super(props);
+    this.state = {
+      userData:{}
+    }
+
+    //this.eventEmitter = new NativeEventEmitter();
+    //this.listener = new NativeEventEmitter();
+  }
+
+  componentWillMount(){
+    const {navigation} = this.props;
+    navigation.addListener('didFocus',()=>{
+      getUserData().then((userData)=>{
+        this.setState({userData});
+      }).catch((ex)=>console.log(ex));
+    });
+  }
+  // showMessageToContinueLogin(unixtime) {
+  //   BackgroundTimer.runBackgroundTimer(() => { 
+  //     try{
+  //       const remainigTime = calcRemainingTime(1550768905);
+  //       console.log('van:' + JSON.stringify(remainigTime));
+  //       if(remainigTime.minutes < 2 || remainigTime.hours < 0){ 
+  //         this.eventEmitter.emit('termino', { type: 'custom' });
+  //           //after this call all code on background stop run.
+  //          appAlert('Sesion','Desea mantener la sesion activa?',()=>{
+  //          //Enviar token antiguo
+  //          });
+  //         }
+  //     } catch(ex){
+  //       console.log(ex)
+  //     }
+  //   },60000);
+  //     //rest of code will be performing for iOS on background too
+  // }
+
+  signOutConfirmation=()=>{
+    Alert.alert(
+      'Sign Out',
+      'Are you sure to sign out?',
+      [
+        {
+          text: 'Cancel',
+          onPress: () => console.log('Cancel Pressed'),
+          style: 'cancel',
+        },
+        {
+          text: 'OK', onPress: this.signOut
+        },
+      ],
+      {cancelable: false},
+    );
+  }
+
+  signOut = async () => {
+    try {
+      await googleSingOut();
+      await facebookSingOut();
+      const data = await sendUserLogOut();
+      if(data){
+        await clearData();
+        this.props.navigation.navigate('login');
+      }
+    } catch (error) {
+      console.log(JSON.stringify(error));
+    }
+  };
+
+  render(){
+    return(
+      <Container>
         <Content>
             <View style={{
               borderRadius:27,
               flexDirection:'row', 
               alignItems:'stretch', 
-              margin:13,
-              backgroundColor:'rgb(180,180,180)'}}>
+              margin:13, //'rgb(180,180,180)'
+              backgroundColor:globalStyles.mediumBlue}}>
                 <Image
                     style={{
                         width: 100,
                         height: 100,
                         borderRadius: 100}}
-                    source={require('../../../assets/user.png')} />
+                    source={this.state.userData.image?
+                            this.state.userData.image:
+                            require('../../../assets/user.png')} />
                 <View style={{justifyContent:'center'}}>
-                    <Text style={{fontSize:20, textAlign:'center'}}>Caroline Aron</Text>
-                    <Text style={{fontSize:20, textAlign:'center'}}>0424-589-6547</Text>
+                    <Text style={{fontSize:20, textAlign:'center', color:'white'}}>
+                      {(this.state.userData.username)?
+                      `${this.state.userData.username}`:
+                      (this.state.userData.lastnames?`
+                      ${this.state.userData.names} ${this.state.userData.lastnames}`:
+                      `${this.state.userData.names}`)}
+                    </Text>
+                    <Text style={{fontSize:20, textAlign:'center', color:'white'}}>{this.state.userData.phone}</Text>
                 </View>
             </View>
           <List>
             <ListItem noIndent
                 onPress={() => this.props.navigation.navigate('updateperfil')}>
               <Left>
-                <IconNB  type="FontAwesome" name='pencil'
-                 style = {{color: 'rgba(41, 128, 185,1.0)', marginRight:10, fontSize:24}}/>
-                <Text>Editar</Text>
+                <Button transparent>
+                  <IconNB  type="FontAwesome" name='pencil'
+                  style = {{color: 'rgba(41, 128, 185,1.0)', marginRight:10, fontSize:24}}/>
+                </Button>
+                <Text style={{fontSize:18}}>Editar</Text>
               </Left>
               <Right>
                 <Icon name="arrow-forward" />
               </Right>
             </ListItem>
-            <ListItem
+            <ListItem noIndent
                 onPress={() => this.props.navigation.navigate('history')}>
               <Left>
-                <Icon name='history' type="FontAwesome"
-                style={{color: 'rgba(41, 128, 185,1.0)', marginRight:10}}/>
-                <Text>History</Text>
+                <Button transparent>
+                  <Icon name='history' type="FontAwesome"
+                  style={{color: 'rgba(41, 128, 185,1.0)', marginRight:10}}/>
+                </Button>
+                <Text style={{fontSize:18}}>History</Text>
               </Left>
               <Right>
                 <Icon name="arrow-forward" />
               </Right>
             </ListItem>
-            <ListItem
+            <ListItem noIndent
                 onPress={() => this.props.navigation.navigate('contacts')}>
               <Left>
-                <Icon name='address-book' type="FontAwesome"
-                style={{color: 'rgba(41, 128, 185,1.0)', marginRight:10}}/>
-                <Text>Contacts</Text>
+                <Button transparent>
+                  <Icon name='address-book' type="FontAwesome"
+                  style={{color: 'rgba(41, 128, 185,1.0)', marginRight:10}}/>
+                </Button>
+                <Text style={{fontSize:18}}>Referrals</Text>
+              </Left>
+              <Right>
+                <Icon name="arrow-forward" />
+              </Right>
+            </ListItem>
+            <ListItem noIndent
+                onPress={() => this.props.navigation.navigate('code')}>
+              <Left>
+                <Button transparent>
+                  <Icon name='connectdevelop' type="FontAwesome"
+                  style={{color: 'rgba(41, 128, 185,1.0)', marginRight:10}}/>
+                </Button>
+                <Text style={{fontSize:18}}>Generate Code</Text>
               </Left>
               <Right>
                 <Icon name="arrow-forward" />
               </Right>
             </ListItem>
           </List>
+            <TouchableOpacity 
+                  style = {buttonForm.buttonContainer}
+                  onPress = {this.signOutConfirmation}>
+                  <Text style = {buttonForm.textButton}>SING OUT</Text>
+            </TouchableOpacity>
+            <TouchableOpacity 
+                  style = {buttonForm.buttonContainer}
+                  onPress = {async ()=>await clearData()}>
+                  <Text style = {buttonForm.textButton}>CLEAR DATA</Text>
+            </TouchableOpacity>
         </Content>
       </Container>
-        );
-    }
+    );
+  }
 }

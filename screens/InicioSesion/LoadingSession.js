@@ -1,35 +1,40 @@
 import React, {Component} from 'react';
-import {View, Platform, ProgressBarAndroid} from 'react-native';
-import {facebookSilently} from '../../Api/SessionManager/facebookApi';
-import googleSilently from '../../Api/SessionManager/googleApi';
-import { sendUserLogin, sendUserSignUp } from '../../Api/api';
+import {View, Platform, ProgressBarAndroid, Linking} from 'react-native';
+import { GoogleSignin } from 'react-native-google-signin';
+import { getAppToken, getUserData, clearData } from '../../dataStore/sessionData';
+import { facebookSilently } from '../../Api/SessionManager/facebookApi';
+import { googleSilently } from '../../Api/SessionManager/googleApi';
+import { sendUserLogin } from '../../Api/api';
 
 import globalStyles from '../../styles';
 
 export default class LoadingSession extends Component {
     constructor(props){
+        GoogleSignin.configure();
         super(props);
         this.googleFails = false;
     }
-    async signInAppOAuth(userData){
-        try {
-            let invalid = await this.signInApp(userData);
-            if(invalid){
-                this.props.navigation.navigate('sesion');
-                console.log('An error ocurred while login/registration, please try again');
-            }
+
+    async getActualData(){
+        try{
+            const account = await getAppToken();
+            if(account){
+                const userData = await getUserData();
+                console.log(`Account: ${JSON.stringify(account)} Data: ${JSON.stringify(userData)}`);
+            } 
+            console.log(account)
+            return account;
         } catch(ex){
-            console.log(ex);
-            this.props.navigation.navigate('sesion');
+            throw ex
         }
     }
 
-    async loginSilently(){
+    async loginSilently(actualData){
         try {
             let result = '';
             console.log('silentlyProgress');
             if(!this.googleFails){
-                await goolgleSilently(this.signInAppOAuth);
+                result = await googleSilently();
             } else {
                 result = await facebookSilently();
             }
@@ -51,14 +56,27 @@ export default class LoadingSession extends Component {
         }
     }
 
-    async signInApp(userData){
+    async signInAppOAuth(user){
+        try {
+            console.log(user);
+            let invalid = await this.signInApp(user.userAccount);
+            if(invalid){
+                this.props.navigation.navigate('sesion');
+                console.log('An error ocurred while login/registration, please try again');
+            }
+        } catch(ex){
+            console.log(ex);
+            this.props.navigation.navigate('sesion');
+        }
+    }
+
+    async signInApp(user){
         try {
             let response;
-            response = await sendUserLogin(userData);
-            if(response.ok){
+            response = await sendUserLogin(user);
+            if(response){
                this.props.navigation.navigate('home', {
-                   user:userData,
-                   onGoBack: () => {this.fromGoBack=true;}
+                   user
                 });
                return false;
             }
@@ -69,8 +87,58 @@ export default class LoadingSession extends Component {
     }
 
     componentDidMount(){
-        this.loginSilently();
+        this.getActualData()
+        .then(async (data)=>{
+            try{
+                if(data) {
+                    const tokenDate = new Date(data.expiration*1000);
+                    const actualDate = new Date();
+                    console.log(`${JSON.stringify(tokenDate)} - ${JSON.stringify(actualDate)}`);
+                    if(actualDate <= tokenDate)
+                        this.props.navigation.navigate('home', {expiration:data.expiration});
+                    else {
+                        this.props.navigation.navigate('sesion', {expiration:data.expiration});
+                        await clearData();
+                    }
+                } 
+            } catch(ex){
+                console.log(ex);
+            }
+        })
+        .catch((ex)=>{
+            if(ex === 'No data was found'){
+                console.log('confirm url');
+                Linking.getInitialURL().then(url => {
+                    if(url)this.navigate(url);
+                    else this.props.navigation.navigate('sesion');        
+                }).catch((ex)=>console.error('An error ocurred', ex));
+            } else {
+                this.props.navigation.navigate('sesion');
+                console.log(ex);
+            }
+        });
+        
+        //this.loginSilently();
+        //this.props.navigation.navigate('home');
     }
+
+    handleOpenURL = (event) => {
+        this.navigate(event.url);
+    }
+
+    navigate = (url) => { // E
+        const route = url.replace(/.*?:\/\//g, '');
+        //const id = route.match(/\/([^\/]+)\/?$/)[1];
+        const params = route.split('/');
+        console.log(params);
+        if (params[0] === 'signup')
+            this.props.navigation.navigate('singup', { showCode: true, code:params[1] })
+        else if(params[1] === 'signup')
+            this.props.navigation.navigate('singup', { showCode: true, code:params[2] })
+        else this.props.navigation.navigate('home');
+
+    }
+
     render(){
         return(
             <View style={{

@@ -20,8 +20,9 @@ class ForgotPassword extends Component{
         super(props);
         this.userInfo = {};
         this.state = {
-            user: '',
-            password: ''
+            email: '',
+            password: '',
+            repeatpassword: ''
         }
     }
 
@@ -34,6 +35,11 @@ class ForgotPassword extends Component{
         }
     }
 
+    handleChangeEmail = (value)=>{}
+    
+    handleChangePassword = ()=>{}
+
+    handleChangePassword = ()=>{}
 
     render(){
         return (
@@ -49,8 +55,22 @@ class ForgotPassword extends Component{
                             style = {styles.inputContainer}
                             placeholder = "Email"
                             placeholderTextColor = "rgba(255,255,255,0.7)"
-                            onChangeText={this.handleChangeUser}
-                            value = {this.state.user}>
+                            onChangeText={this.handleChangeEmail}
+                            value = {this.state.email}>
+                        </TextInput>
+                        <TextInput
+                            style = {styles.inputContainer}
+                            placeholder = "Password"
+                            placeholderTextColor = "rgba(255,255,255,0.7)"
+                            onChangeText={this.handleChangePassword}
+                            value = {this.state.password}>
+                        </TextInput>
+                        <TextInput
+                            style = {styles.inputContainer}
+                            placeholder = "Repeat Password"
+                            placeholderTextColor = "rgba(255,255,255,0.7)"
+                            onChangeText={this.handleChangeRepeatPassword}
+                            value = {this.state.repeatpassword}>
                         </TextInput>
                         <TouchableOpacity 
                             style = {styles.buttonContainer}

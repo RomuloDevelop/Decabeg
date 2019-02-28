@@ -3,6 +3,8 @@ import {
     View, 
     Text, StyleSheet, Image } from 'react-native';
 
+import globalStyles from '../../../styles';
+
 class CardMonedero extends Component {
 
     render() {

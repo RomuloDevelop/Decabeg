@@ -5,12 +5,18 @@ import {View, StyleSheet, TouchableOpacity,
     ProgressBarAndroid,ScrollView} from 'react-native';
 import {Button, Text, Icon, ListItem, Radio, Right, Left, Badge, Toast } from 'native-base';
 import FadeIn from '../../../Animations/FadeIn';
+
+import { sendGetVideos } from '../../../Api/api';
+import { sendPostHistory } from '../../../Api/historyApi';
+import { updateUserMoneyLocalAndSend } from '../../../Api/helpers';
+
 // Within your render function, assuming you have a file called
 // "background.mp4" in your project. You can include multiple videos
 // on a single screen if you like.
 export default class Anuncios extends Component {
     constructor(props){
-        super(props)
+        super(props);
+        this.result = false;
         this.state = {
             rate: 1,
             volume: 1,
@@ -20,32 +26,39 @@ export default class Anuncios extends Component {
             currentTime: 0.0,
             paused: true,
             progressValue:0,
-            uriArray:[
-                'http://clips.vorwaerts-gmbh.de/VfE_html5.mp4',
-                'https://udemy-assets-on-demand.udemy.com/2018-03-09_13-55-44-e005d8ebb14aa521d2fc9c17b47ebba0/WebHD_720p.mp4?nva=20190116173920&token=0802db52f068e0d961eb0',
-                'http://clips.vorwaerts-gmbh.de/VfE_html5.mp4'],
+            videos:[],
             index:0,
-            start:true,
+            start:false,
             showQuestion:false,
             showResult:false,
             disabledButton:false,
-            question: "De que trata el video?",
-            answers: [
-                {
-                  key: 0,
-                  correct: false,
-                  answer: 'De Nada',
-                  selected: true
-                },
-                {
-                  key: 1,
-                  correct: true,
-                  answer: 'De Anuncios',
-                  selected: false
-                }
-              ]
+            question: "De que trata el video?"
           };
     }
+
+    componentWillMount(){
+      sendGetVideos().then((data)=>{
+        try{
+          if(data){
+            const videos = data.map((video)=>{
+              const response = video.responses.map((response, index)=>{
+                let selected = false
+                if(index===0) selected=true;
+                return {key:index, response, selected};
+              });
+              video.responses = response;
+              return video;
+            });
+            this.setState({videos, start:true});
+          } else 
+            console.log('Not videos found');
+        }catch(ex){
+            console.log('exception willunmount');
+            console.log(ex);
+        }
+      }).catch((ex)=>console.log('in catch willunmount' + JSON.stringify(ex)));
+    }
+
     realoadVideo(index){
         this.setState({index, start:false});
         setTimeout(()=>{
@@ -63,7 +76,7 @@ export default class Anuncios extends Component {
     }
     onSkip = ()=>{
         const actualIndex = this.state.index;
-        if(actualIndex === this.state.uriArray.length -1){
+        if(actualIndex === this.state.videos.length -1){
             alert('Last video is playing');
             return;
         }
@@ -90,47 +103,89 @@ export default class Anuncios extends Component {
     }
 
     videoError = (error)=>{
-        alert(JSON.stringify(error))
+        console.log(error);
     }
 
+    onPressAnswer = async ()=>{
+      /*Si es correcto envia saldo a la api */
+      const responses =  this.state.videos[this.state.index].responses
+      for (let index = 0; index < responses.length; index ++){
+          const item = responses[index];
+          if(item.selected){
+              const {correct} = this.state.videos[this.state.index];
+              this.result = correct === index;
+              break;
+          }
+      }
+      console.log(`Result: ${this.result}`);
+      console.log(this.state.videos[this.state.index].video_id);
+      //Videos
+      if(this.result) await updateUserMoneyLocalAndSend("points", 5);
+      await sendPostHistory(this.state.videos[this.state.index].video_id);
+      this.setState(()=>({
+                  pause: false,
+                  showQuestion: false,
+                  disabledButton: false,
+                  showResult: true
+              }), () => this.resutViewHandle = setTimeout(()=>this.setState({showResult:false}),3000)
+      );
+  }
+
     radioHandle = (itemID)=>{
-        const answers = this.state.answers.map((item)=>{
+      try {
+        const videos = this.state.videos;
+        const responses = videos[this.state.index].responses
+        .map((item)=>{
           if( item.key === itemID ){
             item.selected = true;
           } else {
             item.selected = false;
           }
-          return item
-        })
-        this.setState({answers})
+          return item;
+        });
+        videos.responses = responses;
+        this.setState({videos});
+      }catch(ex){
+        console.log('In radio Handle');
+        console.log(ex);
+      }
     }
-    
+    radioListView = ()=>{
+      try{
+      const videos = this.state.videos;
+      console.log('Video List');
+      console.log(videos)
+      return videos[this.state.index].responses.map(
+      (item)=>{
+        return(
+          <ListItem
+            key={item.key}>
+            <Left>
+              <Text>{item.response}</Text>
+            </Left>
+            <Right>
+              <Radio 
+                selected = {item.selected}
+                onPress = {()=>{
+                  this.radioHandle(item.key)
+                }}/>
+            </Right>
+          </ListItem>
+        )
+    })
+  } catch(ex){
+    console.log(ex);
+  }
+  }
     render(){    
-        const radioListView = this.state.answers.map(
-        (item)=>{
-          return(
-            <ListItem
-              key={item.key}>
-              <Left>
-                <Text>{item.answer}</Text>
-              </Left>
-              <Right>
-                <Radio 
-                  selected = {item.selected}
-                  onPress = {()=>{
-                    this.radioHandle(item.key)
-                  }}/>
-              </Right>
-            </ListItem>
-          )
-      })
+
         return(
             <ScrollView style={styles.container}>
                 <TouchableOpacity
                     style={styles.videoButton}
                     onPress={() => this.setState({ paused: !this.state.paused })}>
                     {this.state.start && (
-                        <Video source={{uri: this.state.uriArray[this.state.index]}}   // Can be a URL or a local file.
+                        <Video source={{uri: this.state.videos[this.state.index].link}}   // Can be a URL or a local file.
                             ref={(ref) => {
                                 this.video = ref;
                             }}                                      // Store reference
@@ -141,7 +196,8 @@ export default class Anuncios extends Component {
                             onEnd={this.onEnd}
                             onProgress={this.onProgress}
                             paused={this.state.paused}
-                            style={styles.video} />
+                            style={styles.video} 
+                            rate={3}/>
                     )}
                 </TouchableOpacity>
                 <View style={styles.videoControl}>
@@ -171,26 +227,8 @@ export default class Anuncios extends Component {
                     {this.state.showQuestion && (
                     <FadeIn style={{marginHorizontal:15, marginBottom: 10}}>
                         <Text style={{fontSize:20, fontWeight:'bold', textAlign:'center'}}>{this.state.question}</Text>
-                        {radioListView}
-                        <TouchableOpacity style={styles.buttonContainer} onPress = {()=>{
-                            /*Si es correcto envia saldo a la api */
-                            const answers =  this.state.answers
-                            for (let index = 0; index < answers.length; index ++){
-                                const item = answers[index];
-                                if(item.selected){
-                                    console.log(item)
-                                    this.result = item.correct;
-                                    break;
-                                }
-                            }                   
-                            this.setState(()=>({
-                                        pause: false,
-                                        showQuestion: false,
-                                        disabledButton: false,
-                                        showResult: true
-                                    }), () => this.resutViewHandle = setTimeout(()=>this.setState({showResult:false}),3000)
-                            );
-                        }}>
+                        {this.radioListView()}
+                        <TouchableOpacity style={styles.buttonContainer} onPress = {this.onPressAnswer}>
                             <Text style={styles.textButton}>Send</Text>
                         </TouchableOpacity>
                     </FadeIn>)}

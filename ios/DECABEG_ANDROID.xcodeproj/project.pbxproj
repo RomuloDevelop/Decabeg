@@ -64,6 +64,7 @@
 		0F4FA98979C745A0838B5B9E /* libRNGoogleSignin.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 79ECA937BDF94E0691FF77CF /* libRNGoogleSignin.a */; };
 		E143E133B50E4CADB30C4707 /* libRCTFBSDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = CCF1A76350C94A2FA1B5B1B4 /* libRCTFBSDK.a */; };
 		5D233815D45B4105BDA9DDDA /* libRCTVideo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6D085ACFCE0F483C9BAD9E7D /* libRCTVideo.a */; };
+		40C91FFFC9D049BDBCDBE122 /* libRNBackgroundTimer.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F415FA139B124926A9DEC95D /* libRNBackgroundTimer.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -404,6 +405,8 @@
 		CCF1A76350C94A2FA1B5B1B4 /* libRCTFBSDK.a */ = {isa = PBXFileReference; name = "libRCTFBSDK.a"; path = "libRCTFBSDK.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 		6FD2321B94E14B55B2A845FF /* RCTVideo.xcodeproj */ = {isa = PBXFileReference; name = "RCTVideo.xcodeproj"; path = "../node_modules/react-native-video/ios/RCTVideo.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
 		6D085ACFCE0F483C9BAD9E7D /* libRCTVideo.a */ = {isa = PBXFileReference; name = "libRCTVideo.a"; path = "libRCTVideo.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
+		100BE99941DF425C846FC8B0 /* RNBackgroundTimer.xcodeproj */ = {isa = PBXFileReference; name = "RNBackgroundTimer.xcodeproj"; path = "../node_modules/react-native-background-timer/ios/RNBackgroundTimer.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
+		F415FA139B124926A9DEC95D /* libRNBackgroundTimer.a */ = {isa = PBXFileReference; name = "libRNBackgroundTimer.a"; path = "libRNBackgroundTimer.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -439,6 +442,7 @@
 				0F4FA98979C745A0838B5B9E /* libRNGoogleSignin.a in Frameworks */,
 				E143E133B50E4CADB30C4707 /* libRCTFBSDK.a in Frameworks */,
 				5D233815D45B4105BDA9DDDA /* libRCTVideo.a in Frameworks */,
+				40C91FFFC9D049BDBCDBE122 /* libRNBackgroundTimer.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -634,6 +638,7 @@
 				8B30F45D2C2B4E98B04490E0 /* RNGoogleSignin.xcodeproj */,
 				83743B45B3754B8F9F6162DC /* RCTFBSDK.xcodeproj */,
 				6FD2321B94E14B55B2A845FF /* RCTVideo.xcodeproj */,
+				100BE99941DF425C846FC8B0 /* RNBackgroundTimer.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -1315,6 +1320,7 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1326,6 +1332,7 @@
 					"$(SRCROOT)\..\node_modules\react-native-google-signin\ios\RNGoogleSignin",
 					"$(SRCROOT)\..\node_modules\react-native-fbsdk\ios\RCTFBSDK/**",
 					"$(SRCROOT)\..\node_modules\react-native-video\ios/**",
+					"$(SRCROOT)\..\node_modules\react-native-background-timer\ios",
 				);
 			};
 			name = Debug;
@@ -1356,6 +1363,7 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1367,6 +1375,7 @@
 					"$(SRCROOT)\..\node_modules\react-native-google-signin\ios\RNGoogleSignin",
 					"$(SRCROOT)\..\node_modules\react-native-fbsdk\ios\RCTFBSDK/**",
 					"$(SRCROOT)\..\node_modules\react-native-video\ios/**",
+					"$(SRCROOT)\..\node_modules\react-native-background-timer\ios",
 				);
 			};
 			name = Release;
@@ -1397,6 +1406,7 @@
 					"$(SRCROOT)\..\node_modules\react-native-google-signin\ios\RNGoogleSignin",
 					"$(SRCROOT)\..\node_modules\react-native-fbsdk\ios\RCTFBSDK/**",
 					"$(SRCROOT)\..\node_modules\react-native-video\ios/**",
+					"$(SRCROOT)\..\node_modules\react-native-background-timer\ios",
 				);
 			};
 			name = Debug;
@@ -1426,6 +1436,7 @@
 					"$(SRCROOT)\..\node_modules\react-native-google-signin\ios\RNGoogleSignin",
 					"$(SRCROOT)\..\node_modules\react-native-fbsdk\ios\RCTFBSDK/**",
 					"$(SRCROOT)\..\node_modules\react-native-video\ios/**",
+					"$(SRCROOT)\..\node_modules\react-native-background-timer\ios",
 				);
 			};
 			name = Release;
@@ -1464,6 +1475,7 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1475,6 +1487,7 @@
 					"$(SRCROOT)\..\node_modules\react-native-google-signin\ios\RNGoogleSignin",
 					"$(SRCROOT)\..\node_modules\react-native-fbsdk\ios\RCTFBSDK/**",
 					"$(SRCROOT)\..\node_modules\react-native-video\ios/**",
+					"$(SRCROOT)\..\node_modules\react-native-background-timer\ios",
 				);
 			};
 			name = Debug;
@@ -1513,6 +1526,7 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1524,6 +1538,7 @@
 					"$(SRCROOT)\..\node_modules\react-native-google-signin\ios\RNGoogleSignin",
 					"$(SRCROOT)\..\node_modules\react-native-fbsdk\ios\RCTFBSDK/**",
 					"$(SRCROOT)\..\node_modules\react-native-video\ios/**",
+					"$(SRCROOT)\..\node_modules\react-native-background-timer\ios",
 				);
 			};
 			name = Release;
@@ -1561,6 +1576,7 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1572,6 +1588,7 @@
 					"$(SRCROOT)\..\node_modules\react-native-google-signin\ios\RNGoogleSignin",
 					"$(SRCROOT)\..\node_modules\react-native-fbsdk\ios\RCTFBSDK/**",
 					"$(SRCROOT)\..\node_modules\react-native-video\ios/**",
+					"$(SRCROOT)\..\node_modules\react-native-background-timer\ios",
 				);
 			};
 			name = Debug;
@@ -1609,6 +1626,7 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1620,6 +1638,7 @@
 					"$(SRCROOT)\..\node_modules\react-native-google-signin\ios\RNGoogleSignin",
 					"$(SRCROOT)\..\node_modules\react-native-fbsdk\ios\RCTFBSDK/**",
 					"$(SRCROOT)\..\node_modules\react-native-video\ios/**",
+					"$(SRCROOT)\..\node_modules\react-native-background-timer\ios",
 				);
 			};
 			name = Release;

@@ -6,12 +6,23 @@ import {NavigationActions} from 'react-navigation';
 import { GoogleSignin , statusCodes } from 'react-native-google-signin';
 import { LoginManager } from 'react-native-fbsdk';
 
+import { getUserData } from '../../../dataStore/sessionData';
+
 class Perfil extends Component {
     constructor(props){
       super(props);
         this.state = {
-          user:{}
+          userData:{}
         }
+    }
+
+    componentWillMount(){
+       userInfo();
+    }
+
+    async userInfo(){
+      const userData = await getUserData();
+      this.setState({userData});
     }
     signOut = async () => {
       try {
@@ -37,7 +48,9 @@ class Perfil extends Component {
                   <Row size={5} style={{ backgroundColor: 'rgba(41, 128, 185,1.0)', alignItems: 'center', justifyContent: 'center'}}>
                     <Image 
                         style={styles.image}
-                        source={require('../../../assets/reactIcon.png')}
+                        source={this.state.userData.image?
+                          this.state.userData.image:
+                          require('../../../assets/reactIcon.png')}
                         />
                   </Row>
                   <Row size={2}>
@@ -46,22 +59,22 @@ class Perfil extends Component {
                       <Text style={styles.textSeparator}>Teléfono</Text>
                     </Separator>
                     <ListItem>
-                      <Text>0424-0547850</Text>
+                      <Text>{this.state.userData.phone}</Text>
                     </ListItem>
                     <Separator bordered>
                       <Text style={styles.textSeparator}>Nómbre</Text>
                     </Separator>
                     <ListItem>
-                      <Text>Caroline Aaron</Text>
+                      <Text>{`${this.state.userData.names} ${this.state.userData.lastnames}`}</Text>
                     </ListItem>
                    </Col>
                    </Row>
                    <Row>
                     <Col>
                      <TouchableOpacity 
-                       style = {styles.buttonContainer}
+                       style = {style.buttonContainer}
                        onPress = {this.signOut}>
-                       <Text style = {styles.textButton}>SING OUT</Text>
+                       <Text style = {style.textButton}>SING OUT</Text>
                      </TouchableOpacity>
                     </Col>
                    </Row>

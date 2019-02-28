@@ -3,13 +3,14 @@ import {
     View, 
     Text, 
     TouchableOpacity,
-    TextInput, StyleSheet, Image, ScrollView} from 'react-native';
+    TextInput, StyleSheet, Image, ScrollView, ToastAndroid} from 'react-native';
 import Hr from 'react-native-hr-plus'
 import {Button, Icon} from 'native-base';
+import { signInGoogle } from '../../Api/SessionManager/googleApi'
 import { GoogleSignin , statusCodes } from 'react-native-google-signin';
 import { sendUserLogin, sendUserSignUp } from '../../Api/api';
 //import LinearGradient from 'react-native-linear-gradient';
-import { LoginManager, GraphRequest, GraphRequestManager, AccessToken } from 'react-native-fbsdk';
+import {singInFacebook} from '../../Api/SessionManager/facebookApi';
 
     
 // ...
@@ -22,6 +23,8 @@ class LogIn extends Component{
         super(props);
         this.googleFails= false;
         this.fromGoBack = false;
+        this.OAuthSingIn = false;
+        this.notSignedUp = false;
         this.userInfo = {};
         this.state = {
             user: '',
@@ -29,111 +32,73 @@ class LogIn extends Component{
             userInfo: {}
         }
     }
-    // componentWillMount(){
-    //     this.loginSilently();
-    // }
 
-    async loginSilently(){
+    signInAppOAuth = async (userData)=>{
         try {
-            if(!this.fromGoBack){
-                console.log('silently');
-                if(!this.googleFails){
-                    GoogleSignin.configure();
-                    await this.getCurrentUserInfo();
-                } else {
-                    AccessToken.getCurrentAccessToken().then((token)=>{
-                        if(token.accessToken){
-                            this.singInFacebook();
-                        } else console.log("No facebook token found")
-                        
-                    }).catch((ex)=>console.log(ex));
-                }
+            const {userAccount, userDataModel} = userData;
+            if(!this.notSignedUp)
+                await this.signInApp(userAccount);
+            else{
+                console.log('Entro Again');
+                this.notSignedUp = false;
+                await sendUserSignUp(userAccount);
+                await this.signInApp(userAccount, userDataModel);
             }
         } catch(ex){
-            if(!this.googleFails){
-                this.googleFails = true;
-                console.log('googlefails:'+ this.googleFails);
-                await this.loginSilently();
-            } else {
+            if(ex.message === 'Operation failed' && !this.notSignedUp){
+                this.notSignedUp = true;
+                console.log('Entro catch');
+                this.signInAppOAuth(userData);
+            }else
+                console.log('An error ocurred while login/registration, please try again');
                 console.log(ex);
-            }
-
         }
     }
 
-    async infoUserFacebookManager(){
-        const accessToken = (await AccessToken.getCurrentAccessToken()).accessToken;
-        const infoRequest = new GraphRequest(
-            '/me',{
-                parameters: {
-                  fields: {
-                    string: 'email,name'
-                  },
-                  accessToken:  {
-                    string: accessToken.toString() // put your accessToken here
-                  },
-                }
-              }, 
-            (error, result)=>{
-                if (error) {
-                  console.log('Error fetching data: ' + error.toString());
-                } else {
-                  console.log('Success fetching data: ' + JSON.stringify(result).toString());
-                  this.userInfo = result;
-                  console.log(`User: ${this.userInfo}`);
-                }
-            }
-          );
-                
-        await new GraphRequestManager().addRequest(infoRequest).start();
-    }
-    singInFacebook = () => {
-        LoginManager.logInWithReadPermissions(['public_profile', 'email']).then(
-          (result) =>{
-              console.log(`result: ${JSON.stringify(result)}`);
-            if (result.isCancelled) {
-              console.log('Login was cancelled');
-            } else {
-              console.log('Login was successful with permissions: '
-                + result.grantedPermissions.toString());
-              this.infoUserFacebookManager()
-            }
-          },
-          (error) => {
-            console.log('Login failed with error: ' + error);
-          });
-    }
-    signInGoogle = async () => {
+    signInApp = async(user, data) =>{
         try {
-          await GoogleSignin.hasPlayServices();
-          this.userInfo = await GoogleSignin.signIn();
-          this.signInAppOAuth({email:this.userInfo.email, password:this.userInfo.password, username:this.userInfo.name});
-        } catch (error) {
-          if (error.code === statusCodes.SIGN_IN_CANCELLED) {
-            console.log('user cancelled the login flow');
-          } else if (error.code === statusCodes.IN_PROGRESS) {
-            console.log('operation (f.e. sign in) is in progress already');
-          } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
-            console.log('play services not available or outdated');
-          } else {
-            console.log(error);
-          }
+            const response = await sendUserLogin(user, data);
+            if(response){
+               this.props.navigation.navigate('home', {expiration:response.information["Expiration-Time"]});
+            } else 
+                throw 'No data was received';
+        } catch(ex){
+            throw ex.message;
         }
-      };
-      getCurrentUserInfo = async () => {
-        try {
-          const {user} = await GoogleSignin.signInSilently();
-          console.log(user);
-          this.signInAppOAuth({email:user.email, password:user.id, username:user.name})
-        } catch (error) {
-          if (error.code === statusCodes.SIGN_IN_REQUIRED) {
-            console.log('Google: user has not signed in yet');
-          } else {
-            console.log(error);
-          }
-          throw "Error getting google info";
+    }
+
+    handlePressSingUp = ()=>{
+        this.props.navigation.navigate('singup');
+    }
+
+    handleLoginPress = async () => {
+        try{
+            const email = this.state.user;
+            const password = this.state.password;
+            await this.signInApp({email, password});
+        } catch(ex) {
+            console.log(ex);
         }
-      };
+    }
+
+    handlePressFacebook = async () => {
+        try{
+            const user = await singInFacebook();
+            await this.signInAppOAuth(user);
+        }catch(ex){
+            console.log(ex);
+        }
+    }
+
+    handlePressGoogle = async () => {
+        try{
+            const user = await signInGoogle();
+            await this.signInAppOAuth(user);
+        }catch(ex){
+            console.log(ex);
+        }
+    }
+    
     handleChangeUser = (value) => {
         this.setState({user:value});
     }
@@ -146,51 +111,8 @@ class LogIn extends Component{
         this.props.navigation.goBack();
     }
 
-    handleLoginPress = async () => {
-        try{
-            // const email = this.state.user;
-            // const password = this.state.password;
-            // await this.signInApp({email, password})
-            this.props.navigation.navigate('home');
-        } catch(ex) {
-            console.log(`${ex.method}: ${ex.message}`);
-        }
-    }
-
-    signInApp = async(userData) =>{
-        try {
-            let response;
-            response = await sendUserLogin(userData);
-            if(response.ok){
-               this.props.navigation.navigate('home', {
-                   user:userData,
-                   onGoBack: () => {this.fromGoBack=true;}
-                });
-               return false;
-            }
-            else return true;
-        } catch(ex){
-            console.log(JSON.stringify(ex));
-        }
-    }
-
-    signInAppOAuth = async (userData)=>{
-        try {
-            let invalid = await this.signInApp(userData);
-            if(invalid){
-                await sendUserSignUp(userData);
-                invalid = await this.signInApp(userData);
-                if(invalid)
-                    console.log('An error ocurred while login/registration, please try again');
-            }
-        } catch(ex){
-            console.log(ex);
-        }
-    }
-
-    handlePressSingUp = ()=>{
-        this.props.navigation.navigate('singup',
-        {onGoBack: () => {this.fromGoBack=true; console.log('Executed');}});
+    handleSubmitEditing = (value)=>{
+        this.secondTextInput.focus();
     }
     render(){
         return (
@@ -208,9 +130,12 @@ class LogIn extends Component{
                             placeholder = "Email"
                             placeholderTextColor = "rgba(255,255,255,0.7)"
                             onChangeText={this.handleChangeUser}
+                            onSubmitEditing = {this.handleSubmitEditing}
+                            returnKeyType = "next"
+                            blurOnSubmit={false}
                             value = {this.state.user}
                         ></TextInput>
-                        <TextInput
+                        <TextInput ref={(input) => { this.secondTextInput = input; }}
                             style = {styles.inputContainer}
                             placeholder = "Password"
                             placeholderTextColor = "rgba(255,255,255,0.7)"
@@ -242,10 +167,10 @@ class LogIn extends Component{
                     <View style={styles.socialButtonContainer}>
                         <Button style={[styles.socialButton,{ backgroundColor: '#3B5998' }]}>
                             <Icon name="logo-facebook" 
-                            onPress={this.singInFacebook}/>
+                            onPress={this.handlePressFacebook}/>
                         </Button>
                         <Button style={[styles.socialButton,{ backgroundColor: '#DD5144' }]}
-                            onPress={this.signInGoogle}>
+                            onPress={this.handlePressGoogle}>
                             <Icon name="logo-google" />
                         </Button>
                     </View>

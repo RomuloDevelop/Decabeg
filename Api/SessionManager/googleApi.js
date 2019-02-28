@@ -1,12 +1,30 @@
 
 import { GoogleSignin , statusCodes } from 'react-native-google-signin';
+import { getUserModelGoogle } from '../helpers';
 
-
-signInGoogle = async (signInAppOAuth) => {
+  async function signOut(){
     try {
+      if(await GoogleSignin.isSignedIn()){
+        console.log('google out');
+        await GoogleSignin.revokeAccess();
+        await GoogleSignin.signOut();
+        return true;
+      }
+      return false;
+    } catch (error) {
+      console.error(error);
+    }
+  }
+  
+  async function signInGoogle(){
+    try {
+      //GoogleSignin.configure();
+      console.log('entre aqui');
       await GoogleSignin.hasPlayServices();
-      const userInfo = await GoogleSignin.signIn();
-      signInAppOAuth({email: userInfo.email, password: userInfo.password, username: userInfo.name});
+      console.log('entre aqui');
+      const user = await GoogleSignin.signIn();
+      alert(JSON.stringify(user))
+      return getUserModelGoogle(user);
     } catch (error) {
       if (error.code === statusCodes.SIGN_IN_CANCELLED) {
         console.log('user cancelled the login flow');
@@ -19,11 +37,10 @@ signInGoogle = async (signInAppOAuth) => {
       }
     }
   };
-  getCurrentUserInfo = async (signInAppOAuth) => {
+  async function getCurrentUserInfo(){
     try {
       const {user} = await GoogleSignin.signInSilently();
-      console.log(user);
-      signInAppOAuth({email:user.email, password:user.id, username:user.name})
+      return getUserModelGoogle(user);
     } catch (error) {
       if (error.code === statusCodes.SIGN_IN_REQUIRED) {
         console.log('Google: user has not signed in yet');
@@ -34,7 +51,14 @@ signInGoogle = async (signInAppOAuth) => {
     }
   };
 
-async function googleSilently(signInAppOAuth){
-  GoogleSignin.configure();
-  await getCurrentUserInfo(signInAppOAuth);
+async function googleSilently(){
+  const user = await getCurrentUserInfo();
+  return user;  
+}
+
+export {
+  signOut,
+  signInGoogle,
+  getCurrentUserInfo,
+  googleSilently
 }

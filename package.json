@@ -8,13 +8,15 @@
     "menu": "adb shell input keyevent 82",
     "start-win": "react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res",
     "start-android": "react-native run-android",
-    "start-project": "yarn run start-win && yarn run start-android"
+    "start-project": "yarn run start-win && yarn run start-android",
+    "session": "adb shell \"input text 'romulo5@gmail.com'\" && adb shell input keyevent 66 && adb shell \"input text 'Romulo-0'\""
   },
   "dependencies": {
     "native-base": "^2.8.1",
     "prop-types": "^15.6.2",
     "react": "16.6.3",
     "react-native": "0.57.8",
+    "react-native-background-timer": "^2.1.1",
     "react-native-fbsdk": "^0.8.0",
     "react-native-google-signin": "^1.0.2",
     "react-native-hr-plus": "^1.0.6",
@@ -29,7 +31,7 @@
   },
   "devDependencies": {
     "babel-jest": "23.6.0",
-    "jest": "23.6.0",
+    "jest": "^24.1.0",
     "metro-react-native-babel-preset": "0.48.5",
     "react-test-renderer": "16.6.3"
   },

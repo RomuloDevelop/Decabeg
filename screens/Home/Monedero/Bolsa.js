@@ -5,6 +5,10 @@ import {
     TouchableOpacity,  StyleSheet, ScrollView, TextInput} from 'react-native';
     import { Icon } from 'native-base';
 import CardMonedero from './CardMonedero';
+import { updateUserPointsMovileLocalAndSend } from '../../../Api/helpers';
+import { getUserData } from '../../../dataStore/sessionData';
+
+import globalStyles from '../../../styles';
 
 const tasaConvertion = 0.5
 
@@ -19,34 +23,39 @@ class Bolsa extends Component {
         datosInput: '',
         saldoInput: '',
     }
-    getSaldoConvertion = () => {
-        const value = this.state.datosInput
-        if (typeof value !== 'undefined'){
-            if(value > this.state.mbyte){
-                alert('No posee esos datos')
-                return
+    getSaldoConvertion = async () => {
+        try{
+            const value = this.state.datosInput;
+            if (typeof value !== 'undefined'){
+                if(value > this.state.byte){
+                    alert('No posee esos datos')
+                    return;
+                }
+                await updateUserPointsMovileLocalAndSend((-1)*value, value * tasaConvertion);
+                const byte = this.state.mbyte - value;
+                const saldobyte = this.state.saldombyte + (value * tasaConvertion);
+                this.setState({
+                    byte,
+                    kbyte: byte/1000,
+                    mbyte: byte/1000000,
+                    saldobyte,
+                    saldokbyte: saldobyte/1000,
+                    saldombyte: saldobyte/1000000
+                })
+            } else {
+                alert('Especifique un valor a convertir');
             }
-            const mbyte = this.state.mbyte - value
-            const saldombyte = this.state.saldombyte + (value * tasaConvertion)
-            this.setState({
-                byte: mbyte*1000000,
-                kbyte: mbyte*1000,
-                mbyte,
-                saldobyte: saldombyte*1000000,
-                saldokbyte: saldombyte*1000,
-                saldombyte
-            })
-        } else {
-            alert('Especifique un valor a convertir');
+        } catch(ex) {
+            console.log(ex);
         }
-
     }
 
-    handleChangeSaldo = (text) =>{
+    handleChangeSaldo = async (text) =>{
         const datosInput = this.state.datosInput
         const saldoInput = this.state.saldoInput
         const testing = /[0-9]*/
         if(testing.test(text)) {
+            //await mergeUserData({movile_data: text * tasaConvertion});
             this.setState({
                 datosInput: text,
                 saldoInput: (text * tasaConvertion).toString()
@@ -63,33 +72,42 @@ class Bolsa extends Component {
         this.getSaldoConvertion(mbyte)
     }
     componentDidMount() {
-        const mbyte = require('../../../Api/data.json').money;
-        const saldombyte = mbyte * tasaConvertion
-        this.setState({
-            byte: mbyte*1000000,
-            kbyte: mbyte*1000,
-            mbyte,
-            saldobyte: saldombyte*1000000,
-            saldokbyte: saldombyte*1000,
-            saldombyte
-        })
+        const {navigation} = this.props;
+        navigation.addListener('didFocus',()=>{
+
+            getUserData().then((data)=>{
+                const {points = 0,movile_data = 0} = data;
+                console.log(points);
+                const byte = points;
+                const saldobyte = movile_data;
+                //const saldobyte = byte * tasaConvertion
+                this.setState({
+                    byte,
+                    kbyte: byte/1000,
+                    mbyte: byte/1000000,
+                    saldobyte,
+                    saldokbyte: saldobyte/1000,
+                    saldombyte: saldobyte/1000000
+                });
+            });
+        });
     }
     render() {
         return (
-            <ScrollView>
+            <ScrollView style={{backgroundColor:globalStyles.fontGrey}}>
                 <CardMonedero
                     textHeader = "Datos"
-                    text1 = "Byte" item1 = {this.state.byte}
-                    text2 = "Kb" item2 = {this.state.kbyte}
-                    text3 = "M" item3 = {this.state.mbyte}
+                    text1 = "Coins" item1 = {this.state.byte}
+                    text2 = "KCoins" item2 = {this.state.kbyte}
+                    text3 = "MCoins" item3 = {this.state.mbyte}
                     style = {{marginTop: 40}}
                 />
                 
                 <CardMonedero
                     textHeader = "Saldo"
-                    text1 = "Byte" item1 = {this.state.saldobyte}
-                    text2 = "Kb" item2 = {this.state.saldokbyte}
-                    text3 = "M" item3 = {this.state.saldombyte}
+                    text1 = "Coins" item1 = {this.state.saldobyte}
+                    text2 = "KCoins" item2 = {this.state.saldokbyte}
+                    text3 = "MCoins" item3 = {this.state.saldombyte}
                 />
                 <Text
                     style = {styles.convertionText}>
@@ -100,7 +118,7 @@ class Bolsa extends Component {
                             style = {styles.textInput}
                             spellCheck = {false}
                             onChangeText= {(text) => this.handleChangeSaldo(text)}
-                            placeholder = "Datos (Mb)"
+                            placeholder = "Datos"
                             keyboardType = 'numeric'
                             value = {this.state.datosInput}/>
                     <Icon type="FontAwesome" name="exchange"

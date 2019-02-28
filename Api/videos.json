@@ -1,0 +1,55 @@
+{
+    "status":200,
+    "response":"successful",
+    "resource": {
+        "videos":[
+            {
+                "video_id":"bfkafhisf",
+                "name":"nombre",
+                "link":"",
+                "question":"cual es el genero?",
+                "correct":1,
+                "responses":[
+                    "ciencia",
+                    "deporte",
+                    "comedia",
+                    "cultura",
+                    "politica"
+                ],
+                "visualizations": 0,
+                "create_date":"2019-02-14",
+                "update_date":null
+            },
+            {
+                "video_id":"bfkafhisf",
+                "name":"nombre",
+                "link":"",
+                "question":"de que trata?",
+                "correct":0,
+                "responses":[
+                    "Autos",
+                    "Deportes",
+                    "Calzado"
+                ],
+                "visualizations": 0,
+                "create_date":"2019-02-14",
+                "update_date":null
+            },
+            {
+                "video_id":"bfkafhisf",
+                "name":"nombre",
+                "link":"",
+                "question":"Esto es un?",
+                "correct":2,
+                "responses":[
+                    "Anuncio",
+                    "Comercial",
+                    "Propaganda"
+                ],
+                "visualizations": 0,
+                "create_date":"2019-02-14",
+                "update_date":null
+            }
+        ]
+    }
+}

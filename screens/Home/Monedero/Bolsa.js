@@ -32,8 +32,8 @@ class Bolsa extends Component {
                     return;
                 }
                 await updateUserPointsMovileLocalAndSend((-1)*value, value * tasaConvertion);
-                const byte = this.state.mbyte - value;
-                const saldobyte = this.state.saldombyte + (value * tasaConvertion);
+                const byte = parseFloat(this.state.byte) - value;
+                const saldobyte = parseFloat(this.state.saldobyte) + (value * tasaConvertion);
                 this.setState({
                     byte,
                     kbyte: byte/1000,
@@ -55,7 +55,6 @@ class Bolsa extends Component {
         const saldoInput = this.state.saldoInput
         const testing = /[0-9]*/
         if(testing.test(text)) {
-            //await mergeUserData({movile_data: text * tasaConvertion});
             this.setState({
                 datosInput: text,
                 saldoInput: (text * tasaConvertion).toString()
@@ -109,27 +108,26 @@ class Bolsa extends Component {
                     text2 = "KCoins" item2 = {this.state.saldokbyte}
                     text3 = "MCoins" item3 = {this.state.saldombyte}
                 />
-                <Text
-                    style = {styles.convertionText}>
+                <Text style = {styles.convertionText}>
                     Tasa de Conversion: {tasaConvertion}
                 </Text>
                 <View style = {styles.convertionForm}>
                     <TextInput
-                            style = {styles.textInput}
-                            spellCheck = {false}
-                            onChangeText= {(text) => this.handleChangeSaldo(text)}
-                            placeholder = "Datos"
-                            keyboardType = 'numeric'
-                            value = {this.state.datosInput}/>
+                        style = {styles.textInput}
+                        spellCheck = {false}
+                        onChangeText= {(text) => this.handleChangeSaldo(text)}
+                        placeholder = "Datos"
+                        keyboardType = 'numeric'
+                        value = {this.state.datosInput}/>
                     <Icon type="FontAwesome" name="exchange"
                         style = {{textAlign: 'center', transform: [{ rotate: '90deg' }]}}/>
                     <TextInput
-                            style = {styles.textInput}
-                            spellCheck = {false}
-                            //onChangeText= {this.handleChangePassword}
-                            placeholder = "Saldo"
-                            value = {this.state.saldoInput}
-                            editable= {false}/>
+                        style = {styles.textInput}
+                        spellCheck = {false}
+                        //onChangeText= {this.handleChangePassword}
+                        placeholder = "Saldo"
+                        value = {this.state.saldoInput}
+                        editable= {false}/>
                     
                     <TouchableOpacity
                         onPress = {this.handlePressConvertion}

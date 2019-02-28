@@ -175,9 +175,9 @@ async function updateUserMoneyLocalAndSend(type, data){
 
 async function updateUserPointsMovileLocalAndSend(pointsValue, movileDataValue){
     try{
-        let {points, movile_data} = await getUserData();
-        points += pointsValue;
-        movile_data += movileDataValue;
+        let {points:strPoints=0, movile_data:strData=0} = await getUserData();
+        const points = parseFloat(pointsValue) + parseFloat(strPoints);
+        const movile_data = parseFloat(movileDataValue) + parseFloat(strData);
         await sendUpdateUserData({points, movile_data});
     } catch(ex) {
         throw ex;

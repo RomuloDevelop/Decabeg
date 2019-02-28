@@ -65,7 +65,7 @@ export async function sendUserLogin(user, userData){
             console.log('iniciado');
             const token = data.resource.session["api_token"];
             const id = data.resource.session.user_id;
-            const expiration = data.information["Expiration-Time"];
+            const expiration = data.information["expiration-time"];
             await setAppToken(token, expiration, id);
             console.log('Result:' + JSON.stringify(data));
             if(userData){ //Inicia sesion por primera ves en google, facebook
@@ -73,7 +73,9 @@ export async function sendUserLogin(user, userData){
             } else {
                 const userDataApi = Object.create(data.information);
                 //const resultData = Object.assign(userDataApi, userData)
-                await setUserData(data.information.User);
+                console.log('Information');
+                console.log(data);
+                await setUserData(data.information.user);
             }
         } else if(response.status === 400) {
              console.log(await response.json());

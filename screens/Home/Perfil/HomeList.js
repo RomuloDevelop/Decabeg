@@ -1,6 +1,5 @@
 import React , {Component} from 'react';
 import {Container, Content, Icon,IconNB, List, ListItem, Text, Left, Right, Button} from 'native-base';
-import BackgroundTimer from 'react-native-background-timer'
 import {View,Image,TouchableOpacity, Alert, NativeEventEmitter } from 'react-native';
 import { getUserData, clearData } from '../../../dataStore/sessionData';
 import { signOut as googleSingOut } from '../../../Api/SessionManager/googleApi'

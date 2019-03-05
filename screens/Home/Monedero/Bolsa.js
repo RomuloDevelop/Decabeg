@@ -75,10 +75,10 @@ class Bolsa extends Component {
         navigation.addListener('didFocus',()=>{
 
             getUserData().then((data)=>{
-                const {points = 0,movile_data = 0} = data;
+                const {points = 0,money = 0} = data;
                 console.log(points);
                 const byte = points;
-                const saldobyte = movile_data;
+                const saldobyte = money;
                 //const saldobyte = byte * tasaConvertion
                 this.setState({
                     byte,

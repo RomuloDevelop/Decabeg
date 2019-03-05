@@ -8,8 +8,8 @@ import { StyleSheet, Text, Button } from 'react-native';
 
  import {calcRemainingTime, logout, appAlert} from './Api/helpers';
  import {sendUserLogOut, sendUserResetToken} from './Api/api';
- import { getAppToken } from './dataStore/sessionData';
-
+ import BackgroundTimer from 'react-native-background-timer'
+ import { getAppToken, clearData } from './dataStore/sessionData';
 const appStack = createSwitchNavigator({
   loading: {
     screen: LoadingSession,
@@ -20,36 +20,57 @@ const appStack = createSwitchNavigator({
   },
   sesion: {
     screen: SessionStack,
-    navigationOptions: ()=> ({
+    navigationOptions: ({navigation})=> {
+      navigation.addListener('didFocus',()=>{
+        console.log('sessioon focused');
+      });
+      return{
       title: '',
       header: null
-    }),
+    }},
   },
   home: {
     screen: HomeStack,
     navigationOptions: ({navigation})=> {
       let tokenExpiration;
+      let showMessage = true;
       navigation.addListener('didFocus',()=>{
-        tokenExpiration = setInterval(()=>{
+        //tokenExpiration = setInterval(()=>{
+          tokenExpiration = BackgroundTimer.setInterval(() => {  
           getAppToken().then(async (data)=>{
             let {expiration} = data;
             if(!expiration)
               return;
             const remainigTime = calcRemainingTime(expiration);
             console.log('Remain time from:' + JSON.stringify(remainigTime));
-            if(remainigTime.minutes === 3){ 
-              //after this call all code on background stop run.
-              clearInterval(tokenExpiration);
-              appAlert('Sesion','Desea mantener la sesion activa?',sendUserResetToken, logout);
-            } else if(remainigTime.minutes === 0){
+            if(remainigTime.minutes === 3) {
+              console.log('alert');
+              if(showMessage) {
+              appAlert('Sesion','Desea mantener la sesion activa?',sendUserResetToken/*,async ()=>{
+                try{
+                  showMessage = false;
+                  await logout();
+                  navigation.navigate('login');
+                } catch(ex){
+                  console.log(ex);
+                }
+              }*/);
+              showMessage = false;
+            } 
+            } else if(remainigTime.unix <= 0) {//remainigTime.minutes === 0 || remainigTime.hours < 0){
               await clearData();
               navigation.navigate('login');
+              //clearInterval(tokenExpiration);
             }
+              
           }).catch(ex=>console.log(ex));
-        }, 60000);
+        }, 25000);
       });
 
-      navigation.addListener('didBlur',()=>clearInterval(tokenExpiration))
+      navigation.addListener('didBlur',()=>{
+        BackgroundTimer.clearInterval(tokenExpiration);
+        console.log('did blur');
+      })
       return{ title: '', header: null }
     },
   },

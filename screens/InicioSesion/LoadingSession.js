@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {View, Platform, ProgressBarAndroid, Linking} from 'react-native';
+import {View, ProgressBarAndroid, Linking} from 'react-native';
 import { GoogleSignin } from 'react-native-google-signin';
 import { getAppToken, getUserData, clearData } from '../../dataStore/sessionData';
 import { facebookSilently } from '../../Api/SessionManager/facebookApi';
@@ -91,10 +91,12 @@ export default class LoadingSession extends Component {
         .then(async (data)=>{
             try{
                 if(data) {
+                    console.log(data)
                     const tokenDate = new Date(data.expiration*1000);
                     const actualDate = new Date();
-                    console.log(`${JSON.stringify(tokenDate)} - ${JSON.stringify(actualDate)}`);
-                    if(actualDate <= tokenDate)
+                    console.log(`${JSON.stringify(actualDate)} - ${JSON.stringify(tokenDate)}`);
+                    const unixToday = (actualDate.getTime()/1000);
+                    if( unixToday < data.expiration)
                         this.props.navigation.navigate('home', {expiration:data.expiration});
                     else {
                         this.props.navigation.navigate('sesion', {expiration:data.expiration});

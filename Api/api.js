@@ -26,10 +26,8 @@ export async function sendUserLogOut(){
             }
         };
         const response = await fetch(uriData, myInit);
-        console.log('llego');
         let data; 
         if(response.ok){
-            console.log('OK paso');
             data = await response.json();
         } else { 
             const error = await response.json();
@@ -45,6 +43,7 @@ export async function sendUserLogOut(){
 }
 export async function sendUserLogin(user, userData){
     try{
+        console.log('login');
         const {email, password} = user;
         const formBody = getUrlEncodedParams({email, password});
         console.log(formBody);
@@ -65,25 +64,21 @@ export async function sendUserLogin(user, userData){
             console.log('iniciado');
             const token = data.resource.session["api_token"];
             const id = data.resource.session.user_id;
-            const expiration = data.information["expiration-time"];
+            const expiration = data.information["expiration_time_unix"];
             await setAppToken(token, expiration, id);
-            console.log('Result:' + JSON.stringify(data));
+            console.log('Login:' + JSON.stringify(data));
             if(userData){ //Inicia sesion por primera ves en google, facebook
-                sendUpdateUserData(userData);
+                //await sendUpdateUserData(userData);
             } else {
-                const userDataApi = Object.create(data.information);
-                //const resultData = Object.assign(userDataApi, userData)
-                console.log('Information');
-                console.log(data);
-                await setUserData(data.information.user);
+                await sendGetUserData();
             }
-        } else if(response.status === 400) {
+        /*} else if(response.status === 400) {
              console.log(await response.json());
              console.log('User Already Registered');
-             data='notnull';
-        } else{
+             data='notnull';*/
+        } else {
             const error = await response.json();
-            const message = `Error:${error.description}, status:${error.status}`;
+            const message = `Error:${error.description}, Status:${error.status}`;
             throw message;
         }
         return checkResponse(data, getFunctionName(arguments), globalErrorMessage);
@@ -94,24 +89,25 @@ export async function sendUserLogin(user, userData){
 
 export async function sendUserResetToken(){
     try{
+        const {token, id} = await getAppToken(); 
         const uriLogin = `${url}sessions/`;
         console.log(uriLogin);
         const myInit = {
             method: 'PATCH',
             headers:{ 
-                'Content-Type': 'application/x-www-form-urlencoded'
+                'Api-Token': `${token}`
             }
         };
         const response = await fetch(uriLogin, myInit);
         let data;
         if(response.ok){
-            data = response.json();
+            data = await response.json();
             const token = data.resource.session['api_token'];
-            const expiration = data.information['Expiration-Time'];
+            const expiration = data.information['expiration_time_unix'];
             mergeAppToken({token, expiration});
         } else {
             const error = await response.json();
-            const message = `Error:${error.description}, status:${error.status}`;
+            const message = `Error:${error.description}, Status:${error.status}`;
             throw message;
         }
         return checkResponse(data, getFunctionName(arguments), globalErrorMessage);
@@ -122,6 +118,7 @@ export async function sendUserResetToken(){
 
 export async function sendUserSignUp(user){
     try{
+        console.log('Singup');
         const formBody = getUrlEncodedParams(user);
         const uriLogin = `${url}users/`;
         const myInit = {
@@ -140,7 +137,7 @@ export async function sendUserSignUp(user){
             const message = `Error:${error.description}, status:${error.status}`;
             throw message;
         }
-        console.log('Data SingUp:' + JSON.stringify(data));
+        console.log('SingUp:' + JSON.stringify(data));
         return checkResponse(data, getFunctionName(arguments), globalErrorMessage);
     } catch(ex){
         throw checkResponse(null, getFunctionName(arguments), ex);
@@ -174,6 +171,7 @@ export async function sendForgotPassword(user) {
 
 export async function sendGetUserData() {
     try{
+        console.log('GetUser');
         const {token, id} = await getAppToken();
         console.log(`Token: ${token} ${id}`)
         const uriData = `${url}users/${id}/`   
@@ -187,9 +185,9 @@ export async function sendGetUserData() {
         const response = await fetch(uriData, myInit);
         let data; 
         if(response.ok){
-            const response = await response.json();
-            data = response.resource.user;
-            await setUserData(data);
+            data = await response.json();
+            console.log(`GetData: ${JSON.stringify(data)}`)
+            await setUserData(data.resource.user);
         } else {
             const error = await response.json();
             const message = `Error:${error.description}, status:${error.status}`;
@@ -203,6 +201,7 @@ export async function sendGetUserData() {
 
 export async function sendUpdateUserData(userData){
     try{
+        console.log('update');
         const {token, id} = await getAppToken();
         console.log(`Token: ${token} ${id}`);
         //Form Data
@@ -230,7 +229,7 @@ export async function sendUpdateUserData(userData){
         let data; 
         if(response.ok){
             data = await response.json();
-            console.log(data);
+            console.log(`Update: ${JSON.stringify(data)}`);
             await mergeUserData(userData);
         } else {
             const error = await response.json();

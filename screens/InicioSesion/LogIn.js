@@ -1,22 +1,14 @@
-import React, {Component}  from 'react';
+import React, { Component }  from 'react';
 import { 
     View, 
     Text, 
     TouchableOpacity,
-    TextInput, StyleSheet, Image, ScrollView, ToastAndroid} from 'react-native';
+    TextInput, StyleSheet, Image, ScrollView, ToastAndroid } from 'react-native';
 import Hr from 'react-native-hr-plus'
-import {Button, Icon} from 'native-base';
-import { signInGoogle } from '../../Api/SessionManager/googleApi'
-import { GoogleSignin , statusCodes } from 'react-native-google-signin';
+import { Button, Icon } from 'native-base';
+import { signInGoogle } from '../../Api/SessionManager/googleApi';
 import { sendUserLogin, sendUserSignUp } from '../../Api/api';
-//import LinearGradient from 'react-native-linear-gradient';
-import {singInFacebook} from '../../Api/SessionManager/facebookApi';
-
-    
-// ...
-
-// Attempt a login using the Facebook login dialog,
-// asking for default permissions.
+import { singInFacebook} from '../../Api/SessionManager/facebookApi';
 
 class LogIn extends Component{
     constructor(props){
@@ -25,11 +17,9 @@ class LogIn extends Component{
         this.fromGoBack = false;
         this.OAuthSingIn = false;
         this.notSignedUp = false;
-        this.userInfo = {};
         this.state = {
             user: '',
-            password: '',
-            userInfo: {}
+            password: ''
         }
     }
 
@@ -45,13 +35,17 @@ class LogIn extends Component{
                 await this.signInApp(userAccount, userDataModel);
             }
         } catch(ex){
-            if(ex.message === 'Operation failed' && !this.notSignedUp){
+            console.log('login error');
+            console.log(ex);
+            const message = (ex.message)?ex.message:ex;
+            if(message.includes('email not exist') && !this.notSignedUp){
                 this.notSignedUp = true;
                 console.log('Entro catch');
                 this.signInAppOAuth(userData);
-            }else
+            }else{
                 console.log('An error ocurred while login/registration, please try again');
                 console.log(ex);
+            }
         }
     }
 
@@ -59,7 +53,7 @@ class LogIn extends Component{
         try {
             const response = await sendUserLogin(user, data);
             if(response){
-               this.props.navigation.navigate('home', {expiration:response.information["Expiration-Time"]});
+               this.props.navigation.navigate('home');
             } else 
                 throw 'No data was received';
         } catch(ex){
@@ -84,6 +78,7 @@ class LogIn extends Component{
     handlePressFacebook = async () => {
         try{
             const user = await singInFacebook();
+            const username = prompt('Inserte nombre de usuario');
             await this.signInAppOAuth(user);
         }catch(ex){
             console.log(ex);
@@ -93,6 +88,7 @@ class LogIn extends Component{
     handlePressGoogle = async () => {
         try{
             const user = await signInGoogle();
+            const username = prompt('Inserte nombre de usuario');
             await this.signInAppOAuth(user);
         }catch(ex){
             console.log(ex);
@@ -117,7 +113,6 @@ class LogIn extends Component{
     render(){
         return (
             <ScrollView style ={{backgroundColor: 'rgba(52, 152, 219,1.0)'}}>
-                {/*<LinearGradient style ={styles.container} colors={['#0fbcf9','#0174DF']}>*/}
                 <View style ={styles.container}>
                     <Image 
                         style={styles.image}
@@ -174,7 +169,6 @@ class LogIn extends Component{
                             <Icon name="logo-google" />
                         </Button>
                     </View>
-                {/*<LinearGradient*/}
                 </View>
             </ScrollView>
         );

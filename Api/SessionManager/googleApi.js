@@ -1,6 +1,22 @@
 
 import { GoogleSignin , statusCodes } from 'react-native-google-signin';
-import { getUserModelGoogle } from '../helpers';
+
+
+  function getUserModelGoogle(user){
+    const userDataModel = {
+      username:user.name,
+      avatar: user.photo,
+      lastnames: user.familyName
+    };
+
+    const userAccount = {
+        password: user.id,
+        email: user.email
+    };
+    console.log({userAccount, userDataModel})
+    const data = {userAccount, userDataModel};
+    return data;
+  }
 
   async function signOut(){
     try {
@@ -11,19 +27,17 @@ import { getUserModelGoogle } from '../helpers';
         return true;
       }
       return false;
-    } catch (error) {
-      console.error(error);
+    } catch (ex) {
+      throw ex;
     }
   }
   
   async function signInGoogle(){
     try {
-      //GoogleSignin.configure();
-      console.log('entre aqui');
       await GoogleSignin.hasPlayServices();
-      console.log('entre aqui');
-      const user = await GoogleSignin.signIn();
-      alert(JSON.stringify(user))
+      console.log('has play services!');
+      const {user} = await GoogleSignin.signIn();
+      console.log(user);
       return getUserModelGoogle(user);
     } catch (error) {
       if (error.code === statusCodes.SIGN_IN_CANCELLED) {

@@ -1,7 +1,21 @@
 
 import { LoginManager, GraphRequest, GraphRequestManager, AccessToken } from 'react-native-fbsdk';
 import { setUserData, setUserPicture } from '../../dataStore/sessionData';
-import { getUserModelFacebook } from '../helpers';
+
+
+function getUserModelFacebook(user){
+  const userDataModel = {
+      username: user.name,
+      avatar: user.picture
+  }
+
+  const userAccount = {
+      password: user.id,
+      email: user.email
+  }
+  const data = {userAccount, userDataModel};
+  return data;
+}
 
 async function signOut(){
   try {
@@ -56,10 +70,7 @@ function infoUserFacebookManager(){
               reject(error.toString());
             } else {
               console.log('Success fetching data: ' + JSON.stringify(result).toString());
-              //const picture = await getFacebookPicture();
-              //console.log(`Picture: ${JSON.stringify(picture)}`)
-              //await setUserData(result);
-              result.picture = await getFacebookPicture();
+              result.picture = null; //await getFacebookPicture();
               const user = getUserModelFacebook(result);
               resolve(user);
             }

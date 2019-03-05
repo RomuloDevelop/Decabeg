@@ -1,5 +1,4 @@
 import { AsyncStorage } from "react-native"
-import { objToArray } from "./helpers";
 const notFoundError = 'No data was found';
 const tokenAppKey = 'tokenApp';
 const userData = 'userData';
@@ -80,10 +79,10 @@ async function mergeUserPoints(newPoints){
                 if(error) {
                     throw error;
                 } else {
-                    const {points, movile_data} = JSON.parse(data);
-                    let money = (type==="points")?points:movile_data;
-                    money += newPoints;
-                    const dataToMerge = {[type]:money};
+                    const {points, money} = JSON.parse(data);
+                    let value = (type==="points")?points:money;
+                    value += newPoints;
+                    const dataToMerge = {[type]:value};
                     AsyncStorage.mergeItem(userData,JSON.stringify(dataToMerge))
                     .catch(ex=>console.log(`Error while merging data: ${JSON.stringify(ex)}`));
                 }
@@ -96,7 +95,7 @@ async function mergeUserPoints(newPoints){
     }
 }
 //     points: '',
-//     movile_data: '',
+//     money: '',
 
 async function setUserPicture(data){
     try{

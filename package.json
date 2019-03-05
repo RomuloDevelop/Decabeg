@@ -17,6 +17,7 @@
     "react": "16.6.3",
     "react-native": "0.57.8",
     "react-native-background-timer": "^2.1.1",
+    "react-native-dialog": "^5.5.0",
     "react-native-fbsdk": "^0.8.0",
     "react-native-google-signin": "^1.0.2",
     "react-native-hr-plus": "^1.0.6",

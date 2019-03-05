@@ -3,12 +3,12 @@
 //     username  = '',
 //     names: '',
 //     lastnames: '',
-//     image: '',
+//     autor: '',
 //     age: '',
 //     phone: '',
 //     points: '',
-//     movile_data: '',
-//     code: ''
+//     money: '',
+//     invite_code: ''
 //   }
   
 //   userAccount = {
@@ -17,8 +17,8 @@
 //   }
 import qs from 'qs';
 import { Linking, Alert } from 'react-native';
-import { mergeUserData, getUserData } from '../dataStore/sessionData';
-import { sendUpdateUserData } from './api';
+import { mergeUserData, getUserData, clearData } from '../dataStore/sessionData';
+import { sendUpdateUserData, sendUserLogOut } from './api';
 import { signOut as googleSingOut } from './SessionManager/googleApi';
 import { signOut as facebookSingOut } from './SessionManager/facebookApi';
 
@@ -77,40 +77,6 @@ function getUrlEncodedParams(params){
     .replace(/%20/g, '+');
 }
 
-function getUserModelGoogle(user){
-    const userDataModel = {
-        names:user.name,
-        image: user.photo,
-        lastnames: user.familyName
-    };
-
-    const userAccount = {
-        password: user.id,
-        email: user.email
-    };
-    console.log({userAccount, userDataModel})
-    const data = {userAccount, userDataModel};
-    return data;
-}
-
-function getUserModelFacebook(user){
-    const userDataModel = {
-        names: user.name,
-        image: user.picture
-    }
-
-    const userAccount = {
-        password: user.id,
-        email: user.email
-    }
-    const data = {userAccount, userDataModel};
-    return data;
-}
-
-function showObject(obj){
-    alert(JSON.stringify(obj));
-}
-
 function appAlert(title,answer,onPressOK, onPressCancel){
     
     Alert.alert(
@@ -136,7 +102,9 @@ function appAlert(title,answer,onPressOK, onPressCancel){
 function calcRemainingTime(unixtime){
     const date = new Date(unixtime*1000);
     const actualDate = new Date();
-
+    const unixDate = date.getTime()/1000;
+    const actualUnixDate = actualDate.getTime()/1000;
+    console.log(`${date} - ${actualDate}`);
     let sNegative=false;
     let mNegative=false;
     let seconds;
@@ -158,14 +126,14 @@ function calcRemainingTime(unixtime){
     let remainingHour = date.getHours() - actualDate.getHours();
     if(mNegative)remainingHour -=1; 
 	hours = remainingHour;
-    return {hours, minutes, seconds};
+    return {hours, minutes, seconds, unix:(unixDate-actualUnixDate)};
 }
 
 async function updateUserMoneyLocalAndSend(type, data){
     try{
-        let {points, movile_data} = await getUserData();
+        let {points, money} = await getUserData();
         let value;
-        value = (type === "points")? points += data:movile_data += data;
+        value = (type === "points")? points += data:money += data;
         await sendUpdateUserData({[type]:value});
         await mergeUserData({[type]:value});
     } catch(ex) {
@@ -175,10 +143,10 @@ async function updateUserMoneyLocalAndSend(type, data){
 
 async function updateUserPointsMovileLocalAndSend(pointsValue, movileDataValue){
     try{
-        let {points:strPoints=0, movile_data:strData=0} = await getUserData();
-        const points = parseFloat(pointsValue) + parseFloat(strPoints);
-        const movile_data = parseFloat(movileDataValue) + parseFloat(strData);
-        await sendUpdateUserData({points, movile_data});
+        let {points:strPoints=0, money:strData=0} = await getUserData();
+        const points = parseInt(pointsValue) + parseInt(strPoints);
+        const money = parseFloat(movileDataValue) + parseFloat(strData);
+        await sendUpdateUserData({points, money});
     } catch(ex) {
         throw ex;
     }
@@ -188,13 +156,10 @@ async function logout(){
     try {
         await googleSingOut();
         await facebookSingOut();
-        const data = await sendUserLogOut();
-        if(data){
-          await clearData();
-          this.props.navigation.navigate('login');
-        }
-    } catch (error) {
-        console.log(JSON.stringify(error));
+        await sendUserLogOut();
+        await clearData();
+    } catch (ex) {
+        throw ex;
     }
 }
 export {
@@ -202,8 +167,6 @@ export {
     checkResponse,
     getFunctionName,
     getUrlEncodedParams,
-    getUserModelGoogle,
-    getUserModelFacebook,
     appAlert,
     calcRemainingTime,
     updateUserMoneyLocalAndSend,

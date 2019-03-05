@@ -3,7 +3,7 @@ import Video from 'react-native-video';
 import {View, StyleSheet, TouchableOpacity,
     Platform,
     ProgressBarAndroid,ScrollView} from 'react-native';
-import {Button, Text, Icon, ListItem, Radio, Right, Left, Badge, Toast } from 'native-base';
+import { Button, Text, Icon, ListItem, Radio, Right, Left, Badge, Card, CardItem } from 'native-base';
 import FadeIn from '../../../Animations/FadeIn';
 
 import { sendGetVideos } from '../../../Api/api';
@@ -13,7 +13,43 @@ import { updateUserMoneyLocalAndSend } from '../../../Api/helpers';
 // Within your render function, assuming you have a file called
 // "background.mp4" in your project. You can include multiple videos
 // on a single screen if you like.
-export default class Anuncios extends Component {
+
+
+function Answers({video, onPressRadioButton}){
+  try{
+    console.log('Video List');
+    console.log(video);
+    const CardItems = video.responses.map((item)=>{
+      return(
+        <CardItem
+          key={item.key}>
+          <Left>
+            <Text>{item.response}</Text>
+          </Left>
+          <Right>
+            <Radio 
+              selected = {item.selected}
+              onPress = {()=>{
+                onPressRadioButton(item.key)
+              }}/>
+          </Right>
+        </CardItem>
+      )
+    });
+    return(
+      <Card>            
+        <CardItem header >
+          <Text>{video.question}</Text>
+        </CardItem>
+        {CardItems}
+      </Card>
+    );
+  } catch(ex){
+    console.log(ex);
+  }
+}
+
+class Anuncios extends Component {
     constructor(props){
         super(props);
         this.result = false;
@@ -32,7 +68,7 @@ export default class Anuncios extends Component {
             showQuestion:false,
             showResult:false,
             disabledButton:false,
-            question: "De que trata el video?"
+            disableButtonSend:false
           };
     }
 
@@ -96,7 +132,7 @@ export default class Anuncios extends Component {
     onEnd = ()=>{
         
         //const index = (actualIndex === this.state.uriArray.length -1)?0:this.state.index +1;
-        this.setState({showQuestion:true, pause:true});
+        this.setState({showQuestion:true, pause:true, disabledButton:true});
     }
 
     onBuffer = ()=>{
@@ -107,28 +143,30 @@ export default class Anuncios extends Component {
     }
 
     onPressAnswer = async ()=>{
-      /*Si es correcto envia saldo a la api */
-      const responses =  this.state.videos[this.state.index].responses
-      for (let index = 0; index < responses.length; index ++){
-          const item = responses[index];
-          if(item.selected){
-              const {correct} = this.state.videos[this.state.index];
-              this.result = correct === index;
-              break;
-          }
-      }
-      console.log(`Result: ${this.result}`);
-      console.log(this.state.videos[this.state.index].video_id);
-      //Videos
-      if(this.result) await updateUserMoneyLocalAndSend("points", 5);
-      await sendPostHistory(this.state.videos[this.state.index].video_id);
-      this.setState(()=>({
-                  pause: false,
-                  showQuestion: false,
-                  disabledButton: false,
-                  showResult: true
-              }), () => this.resutViewHandle = setTimeout(()=>this.setState({showResult:false}),3000)
-      );
+      this.setState(()=>({disableButtonSend:true}), async()=>{
+        const responses =  this.state.videos[this.state.index].responses
+        for (let index = 0; index < responses.length; index ++){
+            const item = responses[index];
+            if(item.selected){
+                const {correct} = this.state.videos[this.state.index];
+                this.result = correct === index;
+                break;
+            }
+        }
+        console.log(`Result: ${this.result}`);
+        console.log(this.state.videos[this.state.index].video_id);
+        //Videos
+        if(this.result) await updateUserMoneyLocalAndSend("points", 5);
+        await sendPostHistory(this.state.videos[this.state.index].video_id);
+        this.setState(()=>({
+                    pause: false,
+                    showQuestion: false,
+                    disabledButton: false,
+                    disableButtonSend: false,
+                    showResult: true
+                }), () => this.resutViewHandle = setTimeout(()=>this.setState(()=>({showResult:false}),this.onSkip),3000)
+        );
+      })
   }
 
     radioHandle = (itemID)=>{
@@ -150,33 +188,6 @@ export default class Anuncios extends Component {
         console.log(ex);
       }
     }
-    radioListView = ()=>{
-      try{
-      const videos = this.state.videos;
-      console.log('Video List');
-      console.log(videos)
-      return videos[this.state.index].responses.map(
-      (item)=>{
-        return(
-          <ListItem
-            key={item.key}>
-            <Left>
-              <Text>{item.response}</Text>
-            </Left>
-            <Right>
-              <Radio 
-                selected = {item.selected}
-                onPress = {()=>{
-                  this.radioHandle(item.key)
-                }}/>
-            </Right>
-          </ListItem>
-        )
-    })
-  } catch(ex){
-    console.log(ex);
-  }
-  }
     render(){    
 
         return(
@@ -206,19 +217,19 @@ export default class Anuncios extends Component {
                       indeterminate={false}
                       progress={this.state.progressValue}/> 
                     <View style={{flex:1,flexDirection: 'row', justifyContent:'space-between', margin:10}}>
-                        <TouchableOpacity onPress={this.onBack}>
+                        <TouchableOpacity onPress={this.onBack} disabled={this.state.disabledButton}>
                             <Icon style={styles.itemControl} type='FontAwesome' name='arrow-circle-left'/>
                         </TouchableOpacity>
-                        <TouchableOpacity onPress={() => this.setState({ paused: false})}>
+                        <TouchableOpacity onPress={() => this.setState({ paused: false})} disabled={this.state.disabledButton}>
                             <Icon style={styles.itemControl} type='FontAwesome' name='play-circle'/>
                         </TouchableOpacity>
-                        <TouchableOpacity onPress={() => this.setState({ paused: true })}>
+                        <TouchableOpacity onPress={() => this.setState({ paused: true })} disabled={this.state.disabledButton}>
                             <Icon style={styles.itemControl} type='FontAwesome' name='pause-circle'/>
                         </TouchableOpacity>
-                        <TouchableOpacity >
+                        <TouchableOpacity disabled={this.state.disabledButton}>
                             <Icon style={[styles.itemControl,{fontWeight:900}]} type='FontAwesome' name='star-o'/>
                         </TouchableOpacity>
-                        <TouchableOpacity onPress={this.onSkip}>
+                        <TouchableOpacity onPress={this.onSkip} disabled={this.state.disabledButton}>
                             <Icon style={styles.itemControl} type='FontAwesome' name='arrow-circle-right'/>
                         </TouchableOpacity>
                     </View>
@@ -226,9 +237,10 @@ export default class Anuncios extends Component {
                     <View style={{marginTop:10}}>
                     {this.state.showQuestion && (
                     <FadeIn style={{marginHorizontal:15, marginBottom: 10}}>
-                        <Text style={{fontSize:20, fontWeight:'bold', textAlign:'center'}}>{this.state.question}</Text>
-                        {this.radioListView()}
-                        <TouchableOpacity style={styles.buttonContainer} onPress = {this.onPressAnswer}>
+                        <Answers 
+                          video = {this.state.videos[this.state.index]}
+                          onPressRadioButton = {this.radioHandle}/>
+                        <TouchableOpacity style={styles.buttonContainer} onPress = {this.onPressAnswer} disabled={this.state.disableButtonSend}>
                             <Text style={styles.textButton}>Send</Text>
                         </TouchableOpacity>
                     </FadeIn>)}
@@ -298,3 +310,5 @@ const styles = StyleSheet.create({
     textAlign: 'center'
 }
 });
+
+export default Anuncios;

@@ -72,10 +72,6 @@ export async function sendUserLogin(user, userData){
             } else {
                 await sendGetUserData();
             }
-        /*} else if(response.status === 400) {
-             console.log(await response.json());
-             console.log('User Already Registered');
-             data='notnull';*/
         } else {
             const error = await response.json();
             const message = `Error:${error.description}, Status:${error.status}`;

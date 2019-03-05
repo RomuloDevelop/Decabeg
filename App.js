@@ -9,7 +9,7 @@ import { StyleSheet, Text, Button } from 'react-native';
  import {calcRemainingTime, logout, appAlert} from './Api/helpers';
  import {sendUserLogOut, sendUserResetToken} from './Api/api';
  import BackgroundTimer from 'react-native-background-timer'
- import { getAppToken, clearData } from './dataStore/sessionData';
+ import { getAppToken, clearData, getShowResetTokenMessage, setShowResetTokenMessage } from './dataStore/sessionData';
 const appStack = createSwitchNavigator({
   loading: {
     screen: LoadingSession,
@@ -21,12 +21,17 @@ const appStack = createSwitchNavigator({
   sesion: {
     screen: SessionStack,
     navigationOptions: ({navigation})=> {
-      navigation.addListener('didFocus',()=>{
-        console.log('sessioon focused');
+      navigation.addListener('didFocus',async()=>{
+        try{
+          await setShowResetTokenMessage({flag:true});
+          console.log('sessioon focused');
+        } catch(ex){
+          console.log(ex);
+        }
       });
       return{
-      title: '',
-      header: null
+        title: '',
+        header: null,
     }},
   },
   home: {
@@ -43,20 +48,16 @@ const appStack = createSwitchNavigator({
               return;
             const remainigTime = calcRemainingTime(expiration);
             console.log('Remain time from:' + JSON.stringify(remainigTime));
-            if(remainigTime.minutes === 3) {
-              console.log('alert');
-              if(showMessage) {
-              appAlert('Sesion','Desea mantener la sesion activa?',sendUserResetToken/*,async ()=>{
-                try{
-                  showMessage = false;
-                  await logout();
-                  navigation.navigate('login');
-                } catch(ex){
-                  console.log(ex);
-                }
-              }*/);
-              showMessage = false;
-            } 
+            if(remainigTime.minutes < 2) {
+              const {flag} = await getShowResetTokenMessage();
+              console.log(`alert: ${flag}`);
+              if(flag) {
+                await setShowResetTokenMessage({flag:false});
+                appAlert('Sesion','Desea mantener la sesion activa?',async ()=>{
+                  await sendUserResetToken();
+                  await setShowResetTokenMessage({flag:true});
+                });
+              } 
             } else if(remainigTime.unix <= 0) {//remainigTime.minutes === 0 || remainigTime.hours < 0){
               await clearData();
               navigation.navigate('login');

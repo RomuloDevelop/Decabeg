@@ -85,8 +85,9 @@ function appAlert(title,answer,onPressOK, onPressCancel){
       [
         {
           text: 'Cancel',
-          onPress: () => {
-              if(onPressCancel)onPressCancel();
+          onPress: async () => {
+              if(onPressCancel)
+                await onPressCancel();
               console.log('Cancel Pressed');
             },
           style: 'cancel',

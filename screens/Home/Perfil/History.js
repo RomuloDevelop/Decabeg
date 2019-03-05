@@ -2,14 +2,16 @@ import React, { Component } from "react";
 import {StyleSheet, View} from "react-native";
 import { Container, Content, Card, CardItem, Text, Body,
     Icon, IconNB, List, ListItem, Left, Right} from "native-base";
-import {sendGetHistory} from '../../../Api/historyApi';
+import {sendGetHistory, deleteHistory} from '../../../Api/historyApi';
+
+import { appAlert } from '../../../Api/helpers';
 
 import globalStyles from '../../../styles';
 
 function HistoryCard({history, onClick}){
   const historyView = history.map((item, index)=>{
   return(
-    <CardItem key={index} onPress={()=>console.log(onClick)}>
+    <CardItem key={index}>
       <Icon type='FontAwesome' active name="file-video-o"
       style={{color: 'rgba(41, 128, 185,1.0)'}}/>
       <View style={{flexDirection:'column'}}>
@@ -46,6 +48,10 @@ export default class History extends Component {
     }
   }
 
+  deleteHistory=(id)=>{
+    appAlert('Eliminar', 'Desea eliminar este item del historial',()=>sendDeleteHistory(false, id));
+  }
+
   groupHistoriesByDate(histories){
     const date = new Date();
     const day = date.getDate();
@@ -69,10 +75,13 @@ export default class History extends Component {
   }
 
   componentWillMount(){
-    sendGetHistory().then((histories)=>{
-      console.log('mount')
-      this.groupHistoriesByDate(histories);
-    }).catch(ex=>console.log(ex));
+    const {navigation} = this.props; 
+    navigation.addListener('didFocus',()=>{
+      sendGetHistory().then((histories)=>{
+        console.log('mount');
+        this.groupHistoriesByDate(histories);
+      }).catch(ex=>console.log(ex));
+    })   
   }
 
   onClickHistoryItem = () =>{ 

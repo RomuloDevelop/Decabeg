@@ -19,7 +19,8 @@ class LogIn extends Component{
         this.notSignedUp = false;
         this.state = {
             user: '',
-            password: ''
+            password: '',
+            disableButton: false,
         }
     }
 
@@ -78,7 +79,6 @@ class LogIn extends Component{
     handlePressFacebook = async () => {
         try{
             const user = await singInFacebook();
-            const username = prompt('Inserte nombre de usuario');
             await this.signInAppOAuth(user);
         }catch(ex){
             console.log(ex);
@@ -88,7 +88,6 @@ class LogIn extends Component{
     handlePressGoogle = async () => {
         try{
             const user = await signInGoogle();
-            const username = prompt('Inserte nombre de usuario');
             await this.signInAppOAuth(user);
         }catch(ex){
             console.log(ex);
@@ -140,12 +139,14 @@ class LogIn extends Component{
                         ></TextInput>
                         <TouchableOpacity 
                             style = {styles.buttonContainer}
-                            onPress = {this.handleLoginPress}>
+                            onPress = {this.handleLoginPress}
+                            disabled={this.state.disableButton}>
                             <Text style = {styles.textButton}>LOGIN</Text>
                         </TouchableOpacity>
                         <TouchableOpacity 
                             style = {[styles.buttonContainer ,{backgroundColor:"rgba(65, 197, 240,1.0)"}]}
-                            onPress={this.handlePressSingUp}>
+                            onPress={this.handlePressSingUp}
+                            disabled={this.state.disableButton}>
                             <Text style = {styles.textButton}>SING UP</Text>
                         </TouchableOpacity>
                         <Text style={{color:"rgba(65, 197, 240,1.0)", textAlign:'center' , marginBottom:10}}
@@ -160,12 +161,12 @@ class LogIn extends Component{
                         <Text style={styles.textHr}>OR</Text>
                     </Hr>
                     <View style={styles.socialButtonContainer}>
-                        <Button style={[styles.socialButton,{ backgroundColor: '#3B5998' }]}>
+                        <Button style={[styles.socialButton,{ backgroundColor: '#3B5998' }]} disabled={this.state.disableButton}>
                             <Icon name="logo-facebook" 
                             onPress={this.handlePressFacebook}/>
                         </Button>
                         <Button style={[styles.socialButton,{ backgroundColor: '#DD5144' }]}
-                            onPress={this.handlePressGoogle}>
+                            onPress={this.handlePressGoogle} disabled={this.state.disableButton}>
                             <Icon name="logo-google" />
                         </Button>
                     </View>

@@ -6,9 +6,9 @@
     "start": "node node_modules/react-native/local-cli/cli.js start",
     "test": "jest",
     "menu": "adb shell input keyevent 82",
-    "start-win": "react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res",
-    "start-android": "react-native run-android",
-    "start-project": "yarn run start-win && yarn run start-android",
+    "bundle": "react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res",
+    "android": "react-native run-android",
+    "project": "yarn run start-win && yarn run start-android",
     "session": "adb shell \"input text 'romulo5@gmail.com'\" && adb shell input keyevent 66 && adb shell \"input text 'Romulo-0'\""
   },
   "dependencies": {

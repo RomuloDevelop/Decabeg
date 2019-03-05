@@ -66,3 +66,32 @@ export async function sendPostHistory(videoId){
         return checkResponse(null, getFunctionName(arguments), ex);
     }
 }
+
+export async function sendDeleteHistory(deleteAll, historyId){
+    try{
+        const {token, id} = await getAppToken();
+        console.log(`Token: ${token} ${id}`);
+        const uriData = deleteAll? `${url}users/${id}/history/`:`${url}users/${id}/history/${historyId}/`
+        console.log(uriData);
+        const myInit = {
+            method: 'DELETE',
+            headers:{
+                'Api-Token': `${token}`,
+                'Content-Type': 'application/x-www-form-urlencoded'
+            }
+        };
+        const response = await fetch(uriData, myInit);
+        let history;
+        if(response.ok){
+            const data = await response.json();
+            console.log(data);
+        } else {
+            const error = await response.json();
+            const message = `Error:${error.description}, status:${error.status}`;
+            throw message;
+        }
+        return checkResponse(history, getFunctionName(arguments), globalErrorMessage);
+    } catch(ex){
+        return checkResponse(null, getFunctionName(arguments), ex);
+    }
+}

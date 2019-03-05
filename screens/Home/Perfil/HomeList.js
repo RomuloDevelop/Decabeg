@@ -14,9 +14,6 @@ export default class HomeList extends Component {
     this.state = {
       userData:{}
     }
-
-    //this.eventEmitter = new NativeEventEmitter();
-    //this.listener = new NativeEventEmitter();
   }
 
   componentWillMount(){
@@ -27,24 +24,6 @@ export default class HomeList extends Component {
       }).catch((ex)=>console.log(ex));
     });
   }
-  // showMessageToContinueLogin(unixtime) {
-  //   BackgroundTimer.runBackgroundTimer(() => { 
-  //     try{
-  //       const remainigTime = calcRemainingTime(1550768905);
-  //       console.log('van:' + JSON.stringify(remainigTime));
-  //       if(remainigTime.minutes < 2 || remainigTime.hours < 0){ 
-  //         this.eventEmitter.emit('termino', { type: 'custom' });
-  //           //after this call all code on background stop run.
-  //          appAlert('Sesion','Desea mantener la sesion activa?',()=>{
-  //          //Enviar token antiguo
-  //          });
-  //         }
-  //     } catch(ex){
-  //       console.log(ex)
-  //     }
-  //   },60000);
-  //     //rest of code will be performing for iOS on background too
-  // }
 
   signOutConfirmation=()=>{
     Alert.alert(
@@ -165,11 +144,6 @@ export default class HomeList extends Component {
                   style = {buttonForm.buttonContainer}
                   onPress = {this.signOutConfirmation}>
                   <Text style = {buttonForm.textButton}>SING OUT</Text>
-            </TouchableOpacity>
-            <TouchableOpacity 
-                  style = {buttonForm.buttonContainer}
-                  onPress = {async ()=>await clearData()}>
-                  <Text style = {buttonForm.textButton}>CLEAR DATA</Text>
             </TouchableOpacity>
         </Content>
       </Container>

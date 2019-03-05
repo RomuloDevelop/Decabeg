@@ -3,6 +3,7 @@ const notFoundError = 'No data was found';
 const tokenAppKey = 'tokenApp';
 const userData = 'userData';
 const userPicture = 'userPicture';
+const showMessageFlag = 'showMessageFlag';
 async function setAppToken(token,expiration, id){
     try{
         console.log('Saving data' + JSON.stringify({token,expiration, id}));
@@ -137,6 +138,27 @@ async function clearData(){
     }
 }
 
+async function setShowResetTokenMessage(data){
+    try{
+        const flag = JSON.stringify(data);
+        console.log(`flag:${flag}`);
+        await AsyncStorage.setItem(showMessageFlag,flag);
+    } catch(ex) {
+        throw ex;
+    }
+}
+
+async function getShowResetTokenMessage(){
+    try{
+        const flagJson = await AsyncStorage.getItem(showMessageFlag);
+        const flag = JSON.parse(flagJson);
+        console.log(`Show mwssage?:${flag}`);
+        return flag;
+    } catch(ex) {
+        throw ex;
+    }
+}
+
 export {
     setAppToken,
     getAppToken,
@@ -147,5 +169,7 @@ export {
     mergeUserPoints,
     setUserPicture,
     getUserPicture,
-    clearData
+    clearData,
+    setShowResetTokenMessage,
+    getShowResetTokenMessage
 }

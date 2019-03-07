@@ -12,6 +12,7 @@
     "session": "adb shell \"input text 'romulo5@gmail.com'\" && adb shell input keyevent 66 && adb shell \"input text 'Romulo-0'\""
   },
   "dependencies": {
+    "moment": "^2.24.0",
     "native-base": "^2.8.1",
     "prop-types": "^15.6.2",
     "react": "16.6.3",

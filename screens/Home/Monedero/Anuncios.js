@@ -10,6 +10,7 @@ import { sendGetVideos } from '../../../Api/api';
 import { sendPostHistory } from '../../../Api/historyApi';
 import { updateUserMoneyLocalAndSend } from '../../../Api/helpers';
 
+import LoaderScreen from '../../sharedComponents/LoadScreen';
 // Within your render function, assuming you have a file called
 // "background.mp4" in your project. You can include multiple videos
 // on a single screen if you like.
@@ -192,6 +193,7 @@ class Anuncios extends Component {
 
         return(
             <ScrollView style={styles.container}>
+              <LoaderScreen loading ={this.state.disableButtonSend}/>
                 <TouchableOpacity
                     style={styles.videoButton}
                     onPress={() => this.setState({ paused: !this.state.paused })}>
@@ -226,9 +228,9 @@ class Anuncios extends Component {
                         <TouchableOpacity onPress={() => this.setState({ paused: true })} disabled={this.state.disabledButton}>
                             <Icon style={styles.itemControl} type='FontAwesome' name='pause-circle'/>
                         </TouchableOpacity>
-                        <TouchableOpacity disabled={this.state.disabledButton}>
+                        {/* <TouchableOpacity disabled={this.state.disabledButton}>
                             <Icon style={[styles.itemControl,{fontWeight:900}]} type='FontAwesome' name='star-o'/>
-                        </TouchableOpacity>
+                        </TouchableOpacity> */}
                         <TouchableOpacity onPress={this.onSkip} disabled={this.state.disabledButton}>
                             <Icon style={styles.itemControl} type='FontAwesome' name='arrow-circle-right'/>
                         </TouchableOpacity>

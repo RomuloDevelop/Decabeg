@@ -1,6 +1,6 @@
 import React, { Component }  from 'react';
 import { 
-    View, 
+    View,
     Text, 
     TouchableOpacity,
     TextInput, StyleSheet, Image, ScrollView, ToastAndroid } from 'react-native';
@@ -9,18 +9,17 @@ import { Button, Icon } from 'native-base';
 import { signInGoogle } from '../../Api/SessionManager/googleApi';
 import { sendUserLogin, sendUserSignUp } from '../../Api/api';
 import { singInFacebook} from '../../Api/SessionManager/facebookApi';
+import LoaderScreen from '../sharedComponents/LoadScreen';
 
 class LogIn extends Component{
     constructor(props){
         super(props);
-        this.googleFails= false;
         this.fromGoBack = false;
-        this.OAuthSingIn = false;
         this.notSignedUp = false;
         this.state = {
             user: '',
             password: '',
-            disableButton: false,
+            disableSubmit: false,
         }
     }
 
@@ -70,7 +69,13 @@ class LogIn extends Component{
         try{
             const email = this.state.user;
             const password = this.state.password;
-            await this.signInApp({email, password});
+            this.setState(()=>({disableSubmit:true}),()=>{
+                this.signInApp({email, password})
+                .catch((ex)=>{
+                    this.setState({disableSubmit:false});
+                    console.log(ex);
+                });
+            })
         } catch(ex) {
             console.log(ex);
         }
@@ -113,10 +118,10 @@ class LogIn extends Component{
         return (
             <ScrollView style ={{backgroundColor: 'rgba(52, 152, 219,1.0)'}}>
                 <View style ={styles.container}>
+                    <LoaderScreen loading ={this.state.disableSubmit}/>
                     <Image 
                         style={styles.image}
-                        source={require('../../assets/DICABEG.jpeg')}
-                    />
+                        source={require('../../assets/DICABEG.jpeg')}/>
                     <Text style={styles.textImage}>DICABEG</Text>
                     <View style = {styles.formContainer}>
                         <TextInput
@@ -140,33 +145,33 @@ class LogIn extends Component{
                         <TouchableOpacity 
                             style = {styles.buttonContainer}
                             onPress = {this.handleLoginPress}
-                            disabled={this.state.disableButton}>
+                            disabled={this.state.disableSubmit}>
                             <Text style = {styles.textButton}>LOGIN</Text>
                         </TouchableOpacity>
                         <TouchableOpacity 
                             style = {[styles.buttonContainer ,{backgroundColor:"rgba(65, 197, 240,1.0)"}]}
                             onPress={this.handlePressSingUp}
-                            disabled={this.state.disableButton}>
+                            disabled={this.state.disableSubmit}>
                             <Text style = {styles.textButton}>SING UP</Text>
                         </TouchableOpacity>
-                        <Text style={{color:"rgba(65, 197, 240,1.0)", textAlign:'center' , marginBottom:10}}
+                        {/* <Text style={{color:"rgba(65, 197, 240,1.0)", textAlign:'center' , marginBottom:10}}
                             onPress={()=>{this.props.navigation.navigate('forgotPassword',{
                                     onGoBack: () => {this.fromGoBack=true;}
                                 });
                             }}>
                             Forgot Password?
-                        </Text>
+                        </Text> */}
                     </View>
                     <Hr color='white' width={1}>
                         <Text style={styles.textHr}>OR</Text>
                     </Hr>
                     <View style={styles.socialButtonContainer}>
-                        <Button style={[styles.socialButton,{ backgroundColor: '#3B5998' }]} disabled={this.state.disableButton}>
+                        <Button style={[styles.socialButton,{ backgroundColor: '#3B5998' }]} disabled={this.state.disableSubmit}>
                             <Icon name="logo-facebook" 
                             onPress={this.handlePressFacebook}/>
                         </Button>
                         <Button style={[styles.socialButton,{ backgroundColor: '#DD5144' }]}
-                            onPress={this.handlePressGoogle} disabled={this.state.disableButton}>
+                            onPress={this.handlePressGoogle} disabled={this.state.disableSubmit}>
                             <Icon name="logo-google" />
                         </Button>
                     </View>

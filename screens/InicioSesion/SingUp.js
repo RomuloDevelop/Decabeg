@@ -9,24 +9,30 @@ import {
 } from 'native-base';
 import { sendUserLogin, sendUserSignUp } from '../../Api/api';
 
+import LoaderScreen from '../sharedComponents/LoadScreen';
 
 class SingUp extends Component{
-    state = {
-        username: '',
-        email: '',
-        password: '',
-        invite_code:'',
-        repeatpassword: '',
-        validPassword: false,
-        validEmail: false,
-        showInvalidRepeatPassword: false,
-        showInvalidPassword: false,
-        iconName: 'eye',
-        security: true,
-        showValidRepeatPassword: false,
-        showCode:false,
+    constructor(props){
+        super(props);
+        this.validEmail= false,
+        this.validRepassword = false;
+        this.validPassword = false;
+        this.state = {
+            username: '',
+            email: '',
+            password: '',
+            invite_code:'',
+            repeatpassword: '',
+            validEmail: false,
+            showInvalidEmail:false,
+            showInvalidRepeatPassword: false,
+            showInvalidPassword: false,
+            iconName: 'eye',
+            security: true,
+            showCode:false,
+            disableSubmit: false
+        }
     }
-
     componentDidMount(){
         const {navigation} = this.props;
         const showCode = navigation.getParam('showCode', false);
@@ -43,45 +49,57 @@ class SingUp extends Component{
         const validEmail = testing.test(value);
         this.setState({email:value, validEmail});
     }
+    
+    handleBlurEmail = (value) => {
+        this.setState({showInvalidEmail:true});
+    }
 
     handleChangePassword = (value) => {
-        let {validPassword} = this.state
         const testing = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&_\-])[A-Za-z\d@$!%*#?&_\-]{8,}$/
-        validPassword = testing.test(value);
-        this.setState({password:value, validPassword});
+        this.validPassword = testing.test(value);
+        this.validRepassword = this.state.repeatpassword === value;
+        this.setState({password:value});
     }
     
     handleBlurPassword = () => {
-        const {validPassword} = this.state
-        this.setState({showInvalidPassword: !validPassword});
+        this.setState({showInvalidPassword: !this.validPassword});
     }
 
     handleChangeRepeatpassword = (value) => {
-        let {password, validRepassword} = this.state
-        validRepassword = (password === value)
-        this.setState({repeatpassword: value, validRepassword});
+        let {password} = this.state;
+        this.validRepassword = (password === value);
+        this.setState({repeatpassword: value});
     }
 
     handleBlurRepeatpassword = () => {
-        const {validRepassword} = this.state
-        this.setState({showInvalidRepeatPassword: !validRepassword});
+        this.setState({showInvalidRepeatPassword: !this.validRepassword});
     }
 
     handlePressSingUp = async ()=>{
         try {
-            if(this.state.validEmail && this.state.validPassword){
+            if(this.state.validEmail && this.validPassword && this.validRepassword){
                 const userAccount = {
                     username:this.state.username,
                     email:this.state.email,
                     password:this.state.password
                 };
                 if(this.state.showCode) userAccount.invite_code = this.state.invite_code;
-                await sendUserSignUp(userAccount);
-                this.props.navigation.goBack();
+                //active page
+                this.setState(()=>({disableSubmit:true}),()=>{
+                    sendUserSignUp(userAccount).then((data)=>{
+                        this.props.navigation.goBack();
+                    }).catch((ex)=>{
+                        alert(JSON.stringify(ex));
+                        this.setState({disableSubmit:false});
+                    });
+                })
+            } else {
+                alert('no valido');
+                this.setState({showInvalidPassword:!this.validPassword, showInvalidRepeatPassword:!this.validRepassword});
             }
         } catch(ex){
+            //Inactive load page
             console.log(ex);
-            alert(JSON.stringify(ex));
         }
       }
     render(){
@@ -89,33 +107,39 @@ class SingUp extends Component{
         <ScrollView style ={{backgroundColor: 'rgba(52, 152, 219,1.0)'}}>
             {/*<LinearGradient style ={styles.container} colors={['#0fbcf9','#0174DF']}>*/}
             <View style ={styles.container}>
+                    <LoaderScreen loading ={this.state.disableSubmit}/>
                     <Text style={{fontSize:20, color:'#fff', textAlign:'center', margin:30}}>
                         CREATE ACCOUNT
                     </Text>
                     <Text style={{fontSize:14, color:'rgba(255,255,255,0.5)', textAlign:'left', margin:10}}>
                         * Password must have lenght 8, at least 1 digit, 1 special character (@$!%*#?&_-)
                     </Text>
-                    <TextInput
+                    {/* <TextInput
                         style = {styles.inputContainer}
                         placeholder = "Username"
                         placeholderTextColor = "rgba(255,255,255,0.7)"
                         value = {this.state.username}
                         onChangeText={this.handleChangeUsername}
-                    ></TextInput>
+                    ></TextInput> */}
                     <View style={[styles.inputIconContainer,styles.inputContainer,
-                        {borderColor:this.state.validEmail?'green':'red', 
+                        {borderColor:this.state.showInvalidEmail?(this.state.validEmail?'green':'red'):'rgba(255,255,255,0)', 
                         borderWidth:1}]}>
                         <TextInput
                             style = {styles.innerInput}
                             placeholder = "Email"
                             placeholderTextColor = "rgba(255,255,255,0.7)"
                             value = {this.state.email}
+                            onBlur = {this.handleBlurEmail}
                             onChangeText={this.handleChangeEmail}
-                        ></TextInput>
+                        ></TextInput>{
+                            this.state.showInvalidEmail&&
                         <Icon 
-                            style={[styles.inputIcon, {color:this.state.validEmail?'green':'red'}]}
+                            style={[styles.inputIcon, {
+                                color:(this.state.validEmail?'green':'red')
+                            }]}
                             name={this.state.validEmail?'checkmark-circle':'close-circle'}
                             size={20} />
+                        }
                     </View>
                     <View style={[styles.inputIconContainer,styles.inputContainer]}>
                         <TextInput
@@ -179,7 +203,8 @@ class SingUp extends Component{
                     )}
                     <TouchableOpacity 
                         style = {[styles.buttonContainer ,{backgroundColor:"rgba(65, 197, 240,1.0)"}]}
-                        onPress={this.handlePressSingUp}>
+                        onPress={this.handlePressSingUp}
+                        disabled={this.state.disableSubmit}>
                         <Text style = {styles.textButton}>REGISTER</Text>
                     </TouchableOpacity>
             {/*<LinearGradient*/}

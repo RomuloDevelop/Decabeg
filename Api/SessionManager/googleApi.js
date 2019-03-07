@@ -4,7 +4,7 @@ import { GoogleSignin , statusCodes } from 'react-native-google-signin';
 
   function getUserModelGoogle(user){
     const userDataModel = {
-      username:user.name,
+      //username:user.name,
       avatar: user.photo,
       lastnames: user.familyName
     };

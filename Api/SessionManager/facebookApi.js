@@ -5,7 +5,7 @@ import { setUserData, setUserPicture } from '../../dataStore/sessionData';
 
 function getUserModelFacebook(user){
   const userDataModel = {
-      username: user.name,
+      //username: user.name,
       avatar: user.picture
   }
 

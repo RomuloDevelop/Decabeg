@@ -68,6 +68,8 @@ export async function sendUserLogin(user, userData){
             await setAppToken(token, expiration, id);
             console.log('Login:' + JSON.stringify(data));
             if(userData){ //Inicia sesion por primera ves en google, facebook
+                console.log('primera ves');
+                await sendGetUserData();
                 //await sendUpdateUserData(userData);
             } else {
                 await sendGetUserData();
@@ -124,6 +126,7 @@ export async function sendUserSignUp(user){
                 'Content-Type': 'application/x-www-form-urlencoded'
             }
         };
+        
         const response = await fetch(uriLogin, myInit);
         let data;
         if(response.ok){
@@ -302,7 +305,7 @@ export async function sendDeleteUserReferrals(referralId){
         console.log(`Token: ${token} ${id}`);
         const uriData = `${url}users/${id}/referrals/${referralId}/`;
         const myInit = {
-            method: 'GET',
+            method: 'DELETE',
             headers:{
                 'Api-Token': `${token}`,
                 'Content-Type': 'application/x-www-form-urlencoded'

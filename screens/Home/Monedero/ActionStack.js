@@ -42,32 +42,3 @@ export default Actions = createMaterialTopTabNavigator({
     }
 });
 
-const Tabs = createStackNavigator({
-    tabs:{
-    screen:Actions,    
-    navigationOptions: ({ navigation }) => {
-        return {
-          headerLeft: backButton('Coin Purse', navigation),
-        //   headerRight: (
-        //     <View style={{flex: 1, flexDirection: 'row'}}>
-        //         <Button transparent 
-        //           onPress={() => navigation.navigate('anuncios')}
-        //         > 
-        //            <Icon type="FontAwesome" name="video-camera" style = {{color: 'rgba(41, 128, 185,1.0)'}}/>
-        //         </Button>
-        //     </View>
-        //   ),
-          headerStyle:{
-              elevation:0,
-              backgroundColor:globalStyles.mediumBlue
-          },
-          heder:null
-        };
-    }}//,  anuncios: {
-//     screen: Anuncios,
-//     navigationOptions:{
-//       title: 'Anuncios'
-//     },
-//   }
-})
-

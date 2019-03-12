@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, Text, Button } from 'react-native';
- import { createSwitchNavigator} from 'react-navigation';
+ import { createSwitchNavigator, createAppContainer} from 'react-navigation';
  import HomeStack from './screens/Home/HomeStack';
  import SessionStack from './screens/InicioSesion/SessionStack';
  import LoadingSession from './screens/InicioSesion/LoadingSession';
@@ -38,7 +38,6 @@ const appStack = createSwitchNavigator({
     screen: HomeStack,
     navigationOptions: ({navigation})=> {
       let tokenExpiration;
-      let showMessage = true;
       navigation.addListener('didFocus',()=>{
         //tokenExpiration = setInterval(()=>{
           tokenExpiration = BackgroundTimer.setInterval(() => {  
@@ -77,4 +76,4 @@ const appStack = createSwitchNavigator({
   },
 });
 
-export default appStack;
+export default createAppContainer(appStack);

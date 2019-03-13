@@ -74,6 +74,10 @@ class Anuncios extends Component {
     }
 
     componentWillMount(){
+      this.props.navigation.addListener('didFocus',()=>{
+        console.log('c');
+        console.log(this.props.navigation.isFocused());
+      })
       sendGetVideos().then((data)=>{
         try{
           if(data){

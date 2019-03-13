@@ -72,7 +72,12 @@ class Bolsa extends Component {
     }
     componentDidMount() {
         const {navigation} = this.props;
+        navigation.addListener('didBlur',()=>{
+            console.log('b blur');
+            console.log(this.props.navigation.isFocused());})
         navigation.addListener('didFocus',()=>{
+        console.log('b');
+        console.log(this.props.navigation.isFocused());
 
             getUserData().then((data)=>{
                 const {points = 0,money = 0} = data;

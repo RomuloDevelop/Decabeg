@@ -12,6 +12,15 @@ class Recarga extends Component {
     handleChange = (value)=>{
       this.setState({selected:value});
     }
+    componentDidMount(){
+      this.props.navigation.addListener('didBlur',()=>{
+          console.log('a blur');
+          console.log(this.props.navigation.isFocused());})
+      this.props.navigation.addListener('didFocus',()=>{
+        console.log('a');
+        console.log(this.props.navigation.isFocused());
+      })
+    }
     render(){
         return(
             <Container>

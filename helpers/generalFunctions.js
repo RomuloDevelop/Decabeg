@@ -13,6 +13,17 @@ function checkResponse(response, method, message){
     }
 }
 
+function responseError(error, method){
+  if (error.response) {
+    console.log(error.response.data);
+    console.log(error.response.status);
+    console.log(error.response.headers);
+    throw {message: error.response.data, status: error.response.status, method};
+  } else if (error.request) throw {message:error.request, method};
+  else if(error.message) throw {message: error.message, method};
+  else throw error;
+}
+
 function getFunctionName(arg){
   let myName = arg.callee.toString();
   myName = myName.substr('function '.length);
@@ -79,6 +90,7 @@ async function sendEmail(to, subject, body, options = {}) {
 
 export {
     checkResponse,
+    responseError,
     getFunctionName,
     getUrlEncodedParams,
     appAlert,

@@ -1,8 +1,8 @@
 import axios from 'axios';
 import {
     getAppToken,
-    checkResponse,
-    getFunctionName
+    getFunctionName,
+    responseError
 } from '../helpers';
 
 const baseURL = 'https://api-dicabeg.herokuapp.com/v1/';
@@ -22,7 +22,7 @@ export async function sendGetUserReferrals(){
         const data = response.data.resource.referrals;
         return data
     } catch(ex){
-        throw ex;
+        responseError(ex, getFunctionName(arguments));
     }
 }
 
@@ -38,6 +38,6 @@ export async function sendDeleteUserReferrals(referralId){
         const data = response.data;
         return data;
     } catch(ex){
-        return ex;
+        responseError(ex, getFunctionName(arguments));
     }
 }

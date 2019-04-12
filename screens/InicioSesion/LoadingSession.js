@@ -1,16 +1,19 @@
 import React, {Component} from 'react';
 import {View, ProgressBarAndroid, Linking} from 'react-native';
 import { GoogleSignin } from 'react-native-google-signin';
-import { getAppToken, getUserData, clearData } from '../../dataStore/sessionData';
+import { getAppToken, getUserData, clearData } from '../../helpers/sessionData';
 import { facebookSilently } from '../../Api/SessionManager/facebookApi';
 import { googleSilently } from '../../Api/SessionManager/googleApi';
 import { sendUserLogin } from '../../Api/api';
-
+import config from '../../config';
 import globalStyles from '../../styles';
 
 export default class LoadingSession extends Component {
     constructor(props){
-        GoogleSignin.configure();
+        GoogleSignin.configure({
+            webClientId: config.webClientId,
+            offlineAccess: false,
+        });
         super(props);
         this.googleFails = false;
     }
@@ -87,41 +90,39 @@ export default class LoadingSession extends Component {
     }
 
     componentDidMount(){
-        this.getActualData()
-        .then(async (data)=>{
-            try{
-                if(data) {
-                    console.log(data)
-                    const tokenDate = new Date(data.expiration*1000);
-                    const actualDate = new Date();
-                    console.log(`${JSON.stringify(actualDate)} - ${JSON.stringify(tokenDate)}`);
-                    const unixToday = (actualDate.getTime()/1000);
-                    if( unixToday < data.expiration)
-                        this.props.navigation.navigate('home', {expiration:data.expiration});
-                    else {
-                        this.props.navigation.navigate('sesion', {expiration:data.expiration});
-                        await clearData();
-                    }
-                } 
-            } catch(ex){
-                console.log(ex);
-            }
-        })
-        .catch((ex)=>{
-            if(ex === 'No data was found'){
-                console.log('confirm url');
-                Linking.getInitialURL().then(url => {
-                    if(url)this.navigate(url);
-                    else this.props.navigation.navigate('sesion');        
-                }).catch((ex)=>console.error('An error ocurred', ex));
-            } else {
-                this.props.navigation.navigate('sesion');
-                console.log(ex);
-            }
+        //this.props.navigation.navigate('history');
+         this.getActualData()
+         .then(async (data)=>{
+             try{
+                 if(data) {
+                     console.log(data)
+                     const tokenDate = new Date(data.expiration*1000);
+                     const actualDate = new Date();
+                     console.log(`${JSON.stringify(actualDate)} - ${JSON.stringify(tokenDate)}`);
+                     const unixToday = (actualDate.getTime()/1000);
+                     if( unixToday < data.expiration)
+                         this.props.navigation.navigate('home', {expiration:data.expiration});
+                     else {
+                         this.props.navigation.navigate('sesion', {expiration:data.expiration});
+                         await clearData();
+                     }
+                 } 
+             } catch(ex){
+                 console.log(ex);
+             }
+         })
+         .catch((ex)=>{
+             if(ex === 'No data was found'){
+                 console.log('confirm url');
+                 Linking.getInitialURL().then(url => {
+                     if(url)this.navigate(url);
+                     else this.props.navigation.navigate('sesion');        
+                 }).catch((ex)=>console.error('An error ocurred', ex));
+             } else {
+                 this.props.navigation.navigate('sesion');
+                 console.log(ex);
+             }
         });
-        
-        //this.loginSilently();
-        //this.props.navigation.navigate('home');
     }
 
     handleOpenURL = (event) => {

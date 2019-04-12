@@ -4,12 +4,12 @@ import {
     mergeAppToken,
     setUserData,
     mergeUserData
-} from '../dataStore/sessionData';
+} from '../helpers/sessionData';
 import {
     checkResponse,
     getFunctionName,
     getUrlEncodedParams
-} from './helpers';
+} from '../helpers/generalFunctions';
 
 const globalErrorMessage = 'Operation failed';
 const url = 'https://api-dicabeg.herokuapp.com/v1/';
@@ -254,7 +254,7 @@ export async function sendGetVideos(){
             }
         };
         const response = await fetch(uriData, myInit);
-        let videos; //= require("./videos.json").resource.videos; 
+        let videos;
         if(response.ok){
             const data = await response.json();
             videos = data.resource.videos;
@@ -270,55 +270,32 @@ export async function sendGetVideos(){
     }
 }
 
-export async function sendGetUserReferrals(){
-    try{
-        const {token, id} = await getAppToken();
-        console.log(`Token: ${token} ${id}`);
-        const uriData = `${url}users/${id}/referrals/`;
-        const myInit = {
-            method: 'GET',
-            headers:{
-                'Api-Token': `${token}`,
-                'Content-Type': 'application/x-www-form-urlencoded'
-            }
-        };
-        const response = await fetch(uriData, myInit);
-        let data; 
-        if(response.ok){
-            const resource = await response.json();
-            data = resource.resource.referrals;
-            console.log(data);
-        } else {
-            const error = await response.json();
-            const message = `Error:${error.description}, status:${error.status}`;
-            throw message;
-        }
-        return checkResponse(data, getFunctionName(arguments), globalErrorMessage);
-    } catch(ex){
-        return checkResponse(null, getFunctionName(arguments), ex);
-    }
-}
-
-export async function sendDeleteUserReferrals(referralId){
-    try{
-        const {token, id} = await getAppToken();
-        console.log(`Token: ${token} ${id}`);
-        const uriData = `${url}users/${id}/referrals/${referralId}/`;
-        const myInit = {
-            method: 'DELETE',
-            headers:{
-                'Api-Token': `${token}`,
-                'Content-Type': 'application/x-www-form-urlencoded'
-            }
-        };
-        const response = await fetch(uriData, myInit);
-        let data; 
-        if(response.ok){
-            data = await response.json();
-            mergeUserData({data}).catch((ex)=>checkResponse(data, getFunctionName(arguments), ex));
-        }
-        return checkResponse(data, getFunctionName(arguments), globalErrorMessage);
-    } catch(ex){
-        return checkResponse(null, getFunctionName(arguments), ex);
-    }
-}
+// function calcRemainingTime(unixtime){
+//     const date = new Date(unixtime*1000);
+//     const actualDate = new Date();
+//     const unixDate = date.getTime()/1000;
+//     const actualUnixDate = actualDate.getTime()/1000;
+//     console.log(`${date} - ${actualDate}`);
+//     let sNegative=false;
+//     let mNegative=false;
+//     let seconds;
+//     let minutes;
+//     let hours;
+//     let remainingSeconds = date.getSeconds() - actualDate.getSeconds();
+//     if(remainingSeconds < 0){
+//     	sNegative = true
+//     	seconds = 60 + remainingSeconds;
+//     } else seconds = remainingSeconds
+    
+//     let remainingMinutes = date.getMinutes() - actualDate.getMinutes();
+//     if(sNegative) remainingMinutes -= 1;
+//     if(remainingMinutes < 0){
+//     	mNegative = true;
+//     	minutes = 60 + remainingMinutes;
+//     } else minutes = remainingMinutes;
+    
+//     let remainingHour = date.getHours() - actualDate.getHours();
+//     if(mNegative)remainingHour -=1; 
+// 	hours = remainingHour;
+//     return {hours, minutes, seconds, unix:(unixDate-actualUnixDate)};
+// }

@@ -1,15 +1,20 @@
 import React from 'react';
-import { StyleSheet, Text, Button } from 'react-native';
- import { createSwitchNavigator, createAppContainer} from 'react-navigation';
- import HomeStack from './screens/Home/HomeStack';
- import SessionStack from './screens/InicioSesion/SessionStack';
- import LoadingSession from './screens/InicioSesion/LoadingSession';
+import { StyleSheet, Text, Button, ToastAndroid } from 'react-native';
+import { createSwitchNavigator, createAppContainer} from 'react-navigation';
+import HomeStack from './screens/Home/HomeStack';
+import SessionStack from './screens/InicioSesion/SessionStack';
+import LoadingSession from './screens/InicioSesion/LoadingSession';
 
-
- import {calcRemainingTime, logout, appAlert} from './Api/helpers';
- import {sendUserLogOut, sendUserResetToken} from './Api/api';
- import BackgroundTimer from 'react-native-background-timer'
- import { getAppToken, clearData, getShowResetTokenMessage, setShowResetTokenMessage } from './dataStore/sessionData';
+//import {calcRemainingTime, logout, appAlert} from './Api/helpers';
+import { 
+  appAlert, 
+  timeForExpiration, 
+  getAppToken, clearData, 
+  getShowResetTokenMessage, 
+  setShowResetTokenMessage, 
+  NetInfoManager } from './helpers';
+import { sendUserResetToken } from './Api/api';
+import BackgroundTimer from 'react-native-background-timer'
 const appStack = createSwitchNavigator({
   loading: {
     screen: LoadingSession,
@@ -24,7 +29,10 @@ const appStack = createSwitchNavigator({
       navigation.addListener('didFocus',async()=>{
         try{
           await setShowResetTokenMessage({flag:true});
-          console.log('sessioon focused');
+          NetInfoManager.addListener((connectionInfo)=>{
+            const message = (connectionInfo.type === 'none')?'Device is offline':'Device is online';
+            ToastAndroid.showWithGravity(message,ToastAndroid.LONG,ToastAndroid.BOTTOM);
+          });
         } catch(ex){
           console.log(ex);
         }
@@ -39,17 +47,15 @@ const appStack = createSwitchNavigator({
     navigationOptions: ({navigation})=> {
       let tokenExpiration;
       navigation.addListener('didFocus',()=>{
-        //tokenExpiration = setInterval(()=>{
           tokenExpiration = BackgroundTimer.setInterval(() => {  
           getAppToken().then(async (data)=>{
             let {expiration} = data;
             if(!expiration)
               return;
-            const remainigTime = calcRemainingTime(expiration);
-            console.log('Remain time from:' + JSON.stringify(remainigTime));
-            if(remainigTime.minutes < 2) {
-              const {flag} = await getShowResetTokenMessage();
-              console.log(`alert: ${flag}`);
+            const remainigTime = timeForExpiration(expiration);
+            console.log('Remain time from:' + remainigTime);
+            if(remainigTime < 120 && remainigTime >= 4) {
+              const flag = await getShowResetTokenMessage();
               if(flag) {
                 await setShowResetTokenMessage({flag:false});
                 appAlert('Sesion','Desea mantener la sesion activa?',async ()=>{
@@ -57,10 +63,9 @@ const appStack = createSwitchNavigator({
                   await setShowResetTokenMessage({flag:true});
                 });
               } 
-            } else if(remainigTime.unix <= 0) {//remainigTime.minutes === 0 || remainigTime.hours < 0){
+            } else if(remainigTime <= 0) {
               await clearData();
               navigation.navigate('login');
-              //clearInterval(tokenExpiration);
             }
               
           }).catch(ex=>console.log(ex));
@@ -70,8 +75,8 @@ const appStack = createSwitchNavigator({
       navigation.addListener('didBlur',()=>{
         BackgroundTimer.clearInterval(tokenExpiration);
         console.log('did blur');
-      })
-      return{ title: '', header: null }
+      });
+      return { title: '', header: null }
     },
   },
 });

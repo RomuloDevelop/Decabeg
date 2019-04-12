@@ -3,7 +3,7 @@ import {
     View, 
     Text, StyleSheet, Image } from 'react-native';
 
-import globalStyles from '../../../styles';
+import globalStyles from '../../styles';
 
 class CardMonedero extends Component {
 
@@ -44,8 +44,6 @@ class CardMonedero extends Component {
     }
 
 }
-export default CardMonedero;
-
  
 // Later on in your styles..
 var styles = StyleSheet.create({
@@ -99,3 +97,5 @@ var styles = StyleSheet.create({
         fontSize: 15,
     }
 });
+
+export default CardMonedero;

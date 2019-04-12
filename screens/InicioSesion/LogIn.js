@@ -4,22 +4,25 @@ import {
     Text, 
     TouchableOpacity,
     TextInput, StyleSheet, Image, ScrollView, ToastAndroid } from 'react-native';
-import Hr from 'react-native-hr-plus'
+//import Hr from 'react-native-hr-plus';
+import Hr from '../sharedComponents/Hr';
 import { Button, Icon } from 'native-base';
 import { signInGoogle } from '../../Api/SessionManager/googleApi';
-import { sendUserLogin, sendUserSignUp } from '../../Api/api';
 import { singInFacebook} from '../../Api/SessionManager/facebookApi';
+import { sendUserLogin, sendUserSignUp } from '../../Api/api';
+import { validateEmail,validatePassword } from '../../helpers/loginUtils';
 import LoaderScreen from '../sharedComponents/LoadScreen';
 
 class LogIn extends Component{
     constructor(props){
         super(props);
-        this.fromGoBack = false;
         this.notSignedUp = false;
         this.state = {
             user: '',
             password: '',
             disableSubmit: false,
+            errorUser:'',
+            errorPassword:''
         }
     }
 
@@ -29,22 +32,18 @@ class LogIn extends Component{
             if(!this.notSignedUp)
                 await this.signInApp(userAccount);
             else{
-                console.log('Entro Again');
                 this.notSignedUp = false;
                 await sendUserSignUp(userAccount);
                 await this.signInApp(userAccount, userDataModel);
             }
         } catch(ex){
             console.log('login error');
-            console.log(ex);
             const message = (ex.message)?ex.message:ex;
             if(message.includes('email not exist') && !this.notSignedUp){
                 this.notSignedUp = true;
-                console.log('Entro catch');
                 this.signInAppOAuth(userData);
             }else{
-                console.log('An error ocurred while login/registration, please try again');
-                console.log(ex);
+                throw message;
             }
         }
     }
@@ -62,41 +61,46 @@ class LogIn extends Component{
     }
 
     handlePressSingUp = ()=>{
-        this.props.navigation.navigate('singup');
+        this.setState(()=>({user:'', password:'', errorUser:'', errorPassword: ''}),()=>{
+            this.props.navigation.navigate('singup');
+        })
     }
 
     handleLoginPress = async () => {
         try{
             const email = this.state.user;
             const password = this.state.password;
-            this.setState(()=>({disableSubmit:true}),()=>{
-                this.signInApp({email, password})
-                .catch((ex)=>{
-                    this.setState({disableSubmit:false});
-                    console.log(ex);
+            let errorUser = '';
+            let errorPassword = '';
+            if(!validateEmail(this.state.user)) errorUser = "This email doesn't exist"
+            if(!validatePassword(this.state.password)) errorPassword = "The password doesn't match the format"; 
+            if(errorUser !== '' || errorPassword !== '') 
+                this.setState({errorUser, errorPassword});
+            else {
+                this.setState(()=>({disableSubmit:true, errorUser: '', errorPassword:''}),()=>{
+                    this.signInApp({email, password})
+                    .catch((ex)=>{
+                        this.setState({disableSubmit:false});
+                        console.log(ex);
+                    });
                 });
-            })
+            }
         } catch(ex) {
             console.log(ex);
         }
     }
 
-    handlePressFacebook = async () => {
-        try{
-            const user = await singInFacebook();
-            await this.signInAppOAuth(user);
-        }catch(ex){
-            console.log(ex);
-        }
-    }
-
-    handlePressGoogle = async () => {
-        try{
-            const user = await signInGoogle();
-            await this.signInAppOAuth(user);
-        }catch(ex){
-            console.log(ex);
-        }
+    handlePressGoogleFacebook = async (isGoogle) => {
+        this.setState(()=>({disableSubmit:true}),async ()=>{
+            try{
+                let user;
+                if(isGoogle) user = await signInGoogle(); else user = await singInFacebook();
+                await this.signInAppOAuth(user);
+            }catch(ex){
+                this.setState({disableSubmit:false});
+                console.log(ex);
+            }
+        })
     }
     
     handleChangeUser = (value) => {
@@ -125,7 +129,7 @@ class LogIn extends Component{
                     <Text style={styles.textImage}>DICABEG</Text>
                     <View style = {styles.formContainer}>
                         <TextInput
-                            style = {styles.inputContainer}
+                            style = {[styles.inputContainer,{borderColor:this.state.errorUser?'red':'rgba(255,255,255,0)',borderWidth:1}]}
                             placeholder = "Email"
                             placeholderTextColor = "rgba(255,255,255,0.7)"
                             onChangeText={this.handleChangeUser}
@@ -134,14 +138,16 @@ class LogIn extends Component{
                             blurOnSubmit={false}
                             value = {this.state.user}
                         ></TextInput>
+                        {(this.state.errorUser !== '')&&(<Text style={styles.errorMessage}>{this.state.errorUser}</Text>)}
                         <TextInput ref={(input) => { this.secondTextInput = input; }}
-                            style = {styles.inputContainer}
+                            style = {[styles.inputContainer,{borderColor:this.state.errorPassword?'red':'rgba(255,255,255,0)', borderWidth:1}]}
                             placeholder = "Password"
                             placeholderTextColor = "rgba(255,255,255,0.7)"
                             secureTextEntry = {true}
                             onChangeText={this.handleChangePassword}
                             value = {this.state.password}
                         ></TextInput>
+                        {(this.state.errorPassword !== '')&&(<Text style={styles.errorMessage}>{this.state.errorPassword}</Text>)}
                         <TouchableOpacity 
                             style = {styles.buttonContainer}
                             onPress = {this.handleLoginPress}
@@ -155,10 +161,7 @@ class LogIn extends Component{
                             <Text style = {styles.textButton}>SING UP</Text>
                         </TouchableOpacity>
                         {/* <Text style={{color:"rgba(65, 197, 240,1.0)", textAlign:'center' , marginBottom:10}}
-                            onPress={()=>{this.props.navigation.navigate('forgotPassword',{
-                                    onGoBack: () => {this.fromGoBack=true;}
-                                });
-                            }}>
+                            onPress={()=>this.props.navigation.navigate('forgotPassword')}>
                             Forgot Password?
                         </Text> */}
                     </View>
@@ -166,12 +169,12 @@ class LogIn extends Component{
                         <Text style={styles.textHr}>OR</Text>
                     </Hr>
                     <View style={styles.socialButtonContainer}>
-                        <Button style={[styles.socialButton,{ backgroundColor: '#3B5998' }]} disabled={this.state.disableSubmit}>
-                            <Icon name="logo-facebook" 
-                            onPress={this.handlePressFacebook}/>
+                        <Button style={[styles.socialButton,{ backgroundColor: '#3B5998' }]} disabled={this.state.disableSubmit}
+                            onPress={()=>this.handlePressGoogleFacebook(false)}>
+                            <Icon name="logo-facebook"/>
                         </Button>
-                        <Button style={[styles.socialButton,{ backgroundColor: '#DD5144' }]}
-                            onPress={this.handlePressGoogle} disabled={this.state.disableSubmit}>
+                        <Button style={[styles.socialButton,{ backgroundColor: '#DD5144' }]} disabled={this.state.disableSubmit}
+                            onPress={()=>this.handlePressGoogleFacebook(true)}>
                             <Icon name="logo-google" />
                         </Button>
                     </View>
@@ -180,7 +183,6 @@ class LogIn extends Component{
         );
     }
 }
-export default LogIn;
 
 const styles = StyleSheet.create({
     container: {
@@ -241,5 +243,11 @@ const styles = StyleSheet.create({
     socialButton: {
         margin: 10,
         borderRadius: 20
+    },
+    errorMessage: {
+        color:'red',
+        marginBottom: 10,
     }
 });
+
+export default LogIn;

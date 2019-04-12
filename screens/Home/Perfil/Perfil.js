@@ -6,7 +6,7 @@ import {NavigationActions} from 'react-navigation';
 import { GoogleSignin , statusCodes } from 'react-native-google-signin';
 import { LoginManager } from 'react-native-fbsdk';
 
-import { getUserData } from '../../../dataStore/sessionData';
+import { getUserData } from '../../../helpers/sessionData';
 
 class Perfil extends Component {
     constructor(props){

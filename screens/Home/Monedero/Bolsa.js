@@ -4,9 +4,9 @@ import {
     Text, 
     TouchableOpacity,  StyleSheet, ScrollView, TextInput} from 'react-native';
     import { Icon } from 'native-base';
-import CardMonedero from './CardMonedero';
-import { updateUserPointsMovileLocalAndSend } from '../../../Api/helpers';
-import { getUserData } from '../../../dataStore/sessionData';
+import CardMonedero from '../../sharedComponents/CardMonedero';
+import { updateUserPointsMovileLocalAndSend } from '../../../helpers/moneyOperations';
+import { getUserData } from '../../../helpers/sessionData';
 
 import globalStyles from '../../../styles';
 

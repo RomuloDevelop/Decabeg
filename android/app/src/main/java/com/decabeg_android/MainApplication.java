@@ -7,12 +7,14 @@ import com.facebook.CallbackManager;
 import com.facebook.appevents.AppEventsLogger;
 //
 import com.facebook.react.ReactApplication;
+import com.reactnativecommunity.netinfo.NetInfoPackage;
+
 import com.swmansion.gesturehandler.react.RNGestureHandlerPackage;
 import com.ocetnik.timer.BackgroundTimerPackage;
 import com.brentvatne.react.ReactVideoPackage;
 import com.facebook.reactnative.androidsdk.FBSDKPackage;
 import co.apptailor.googlesignin.RNGoogleSigninPackage;
-import com.github.yamill.orientation.OrientationPackage;
+
 import com.imagepicker.ImagePickerPackage;
 
 import com.oblador.vectoricons.VectorIconsPackage;
@@ -44,12 +46,12 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new NetInfoPackage(),
             new RNGestureHandlerPackage(),
             new BackgroundTimerPackage(),
             new ReactVideoPackage(),
             new FBSDKPackage(mCallbackManager),
             new RNGoogleSigninPackage(),
-            new OrientationPackage(),
             new ImagePickerPackage(),
             new VectorIconsPackage()
       );

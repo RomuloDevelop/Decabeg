@@ -1,10 +1,8 @@
 import {
-    getAppToken
-} from '../dataStore/sessionData';
-import {
+    getAppToken,    
     checkResponse,
     getFunctionName
-} from './helpers';
+} from '../helpers';
 
 const globalErrorMessage = 'Operation failed';
 const url = 'https://api-dicabeg.herokuapp.com/v1/';
@@ -68,14 +66,14 @@ export async function sendPostHistory(videoId){
 }
 
 export async function sendDeleteHistory(deleteAll, historyId){
-    try{
+    try {
         const {token, id} = await getAppToken();
         console.log(`Token: ${token} ${id}`);
-        const uriData = deleteAll? `${url}users/${id}/history/`:`${url}users/${id}/history/${historyId}/`
+        const uriData = deleteAll? `${url}users/${id}/history/`:`${url}users/${id}/history/${historyId}/`;
         console.log(uriData);
         const myInit = {
             method: 'DELETE',
-            headers:{
+            headers: {
                 'Api-Token': `${token}`,
                 'Content-Type': 'application/x-www-form-urlencoded'
             }
@@ -83,7 +81,7 @@ export async function sendDeleteHistory(deleteAll, historyId){
         const response = await fetch(uriData, myInit);
         let history;
         if(response.ok){
-            const data = await response.json();
+            history = await response.json();
             console.log(data);
         } else {
             const error = await response.json();

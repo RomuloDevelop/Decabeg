@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">DICABEG</string>
     <string name="facebook_app_id">281746922539468</string>
+    <string name="fb_login_protocol_scheme">fb281746922539468</string>
 </resources>

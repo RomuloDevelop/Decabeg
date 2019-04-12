@@ -92,9 +92,8 @@ class SingUp extends Component{
                         alert(JSON.stringify(ex));
                         this.setState({disableSubmit:false});
                     });
-                })
+                });
             } else {
-                alert('no valido');
                 this.setState({showInvalidPassword:!this.validPassword, showInvalidRepeatPassword:!this.validRepassword});
             }
         } catch(ex){

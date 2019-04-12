@@ -5,7 +5,8 @@ export default globalStyles = {
     mediumLightBlue: 'rgba(58, 174, 229,1.0)',
     mediumBlue: 'rgba(52, 152, 219,1.0)',
     darkBlue:'rgba(41, 128, 185,1.0)',
-    fontGrey:'rgb(235,235,235)'
+    fontGrey:'rgb(235,235,235)',
+    navbarColor:'rgba(22, 122, 199, 1.0)' 
 };
 
 export const buttonForm = StyleSheet.create({

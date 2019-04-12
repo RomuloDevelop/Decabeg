@@ -1,6 +1,6 @@
 
 import { LoginManager, GraphRequest, GraphRequestManager, AccessToken } from 'react-native-fbsdk';
-import { setUserData, setUserPicture } from '../../dataStore/sessionData';
+import { setUserData, setUserPicture } from '../../helpers/sessionData';
 
 
 function getUserModelFacebook(user){

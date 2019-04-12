@@ -25,7 +25,7 @@ export default Actions = createMaterialTopTabNavigator({
     Anuncios
 },{
     tabBarOptions: {
-        optimizationsEnabled: true,
+        optimizationsEnabled: false,
         scrollEnabled: false,
         swipeEnabled: true,
         activeTintColor: '#FFF',

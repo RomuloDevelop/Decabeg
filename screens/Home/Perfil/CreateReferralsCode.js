@@ -1,11 +1,11 @@
 import React, {Component} from 'react';
-import {TouchableOpacity, Clipboard} from 'react-native';
+import {TouchableOpacity, Clipboard, Share} from 'react-native';
 import { Container, Content, Text, Icon, Form, Item, Input, Label, Row, Col, Grid } from 'native-base';
 
 import { sendGetUserCode } from '../../../Api/api';
-import { sendEmail } from '../../../Api/helpers';
+import { sendEmail } from '../../../helpers/generalFunctions';
 
-import { getUserData } from '../../../dataStore/sessionData';
+import { getUserData } from '../../../helpers/sessionData';
 
 import  globalStyles, { buttonForm } from '../../../styles';
 
@@ -17,6 +17,29 @@ export default class CreateReferralsCode extends Component {
         iconCpyColor:'grey'
     }
 
+    onShare = async () => {
+        try {
+          const result = await Share.share({
+            title: 'Greeting!',
+            message:
+            'I want you to joing me in this adventure \r\n' +
+            `With this code you can help me and become a user of this app: \r\n` +
+            `http://dicabeg/signup/${this.state.invite_code}`,
+          });
+    
+          if (result.action === Share.sharedAction) {
+            if (result.activityType) {
+              // shared with activity type of result.activityType
+            } else {
+              // shared
+            }
+          } else if (result.action === Share.dismissedAction) {
+            // dismissed
+          }
+        } catch (error) {
+          alert(error.message);
+        }
+      };
 
     componentDidMount(){
         getUserData().then((data)=>{
@@ -25,10 +48,10 @@ export default class CreateReferralsCode extends Component {
         })
     }
 
-    generateCode = async ()=>{
-        //const invite_code = await getUserCode();
-        //this.setState({invite_code});
-    }
+/*     generateCode = async ()=>{
+        const invite_code = await getUserCode();
+        this.setState({invite_code});
+    } */
 
     sendCode = ()=>{
         if(this.state.validEmail)
@@ -69,11 +92,11 @@ export default class CreateReferralsCode extends Component {
                                     }}
                                     style={{color:this.state.iconCpyColor}}/>
                                 </Item>
-                                <Item floatingLabel error={!this.state.validEmail} success={this.state.validEmail}>
+{/*                                 <Item floatingLabel error={!this.state.validEmail} success={this.state.validEmail}>
                                     <Label>Email</Label>
                                     <Input onChangeText={this.handleChangeEmail} value={this.state.email}/>
                                     <Icon name={this.state.validEmail?'checkmark-circle':'close-circle'} />
-                                </Item>
+                                </Item> */}
                             </Form>
                         </Col>
                     </Row>
@@ -88,8 +111,8 @@ export default class CreateReferralsCode extends Component {
                     <Row>
                         <Col>
                             <TouchableOpacity style={[buttonForm.buttonContainer, {backgroundColor:globalStyles.lightBlue}]}
-                                onPress={this.sendCode}>
-                                <Text style={buttonForm.textButton}>Send Email</Text>
+                                onPress={this.onShare}>
+                                <Text style={buttonForm.textButton}>Share</Text>
                             </TouchableOpacity>
                         </Col>
                     </Row>

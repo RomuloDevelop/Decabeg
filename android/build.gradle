@@ -36,14 +36,14 @@ allprojects {
 
 subprojects {
   project.configurations.all {
-    //    afterEvaluate {project ->
-    //      if (project.hasProperty("android")) {
-    //          android {
-    //              compileSdkVersion 28
-    //              buildToolsVersion '28.0.3'
-    //          }
-    //      }
-    //  }
+    //   afterEvaluate {project ->
+    //     if (project.hasProperty("android")) {
+    //         android {
+    //             compileSdkVersion 28
+    //             buildToolsVersion '28.0.3'
+    //         }
+    //     }
+    // }
      resolutionStrategy.eachDependency { details ->
         if (details.requested.group == 'com.android.support'
               && !details.requested.name.contains('multidex') ) {

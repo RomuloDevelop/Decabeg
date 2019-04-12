@@ -1,6 +1,16 @@
-
+//@ flow
 import { GoogleSignin , statusCodes } from 'react-native-google-signin';
 
+  interface UserGoogle {
+    userDataModel: {
+      avatar: string,
+      lastnames: string
+    },
+    userAccount: {
+      email: string,
+      password: string
+    }
+  }
 
   function getUserModelGoogle(user){
     const userDataModel = {
@@ -14,8 +24,7 @@ import { GoogleSignin , statusCodes } from 'react-native-google-signin';
         email: user.email
     };
     console.log({userAccount, userDataModel})
-    const data = {userAccount, userDataModel};
-    return data;
+    return {userAccount, userDataModel};
   }
 
   async function signOut(){

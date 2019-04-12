@@ -16,13 +16,15 @@ public class MainActivity extends ReactActivity {
     protected String getMainComponentName() {
         return "DECABEG_ANDROID";
     }
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-      super.onConfigurationChanged(newConfig);
-      Intent intent = new Intent("onConfigurationChanged");
-      intent.putExtra("newConfig", newConfig);
-      this.sendBroadcast(intent);
-    }
+    //#region orientation 
+    // @Override
+    // public void onConfigurationChanged(Configuration newConfig) {
+    //   super.onConfigurationChanged(newConfig);
+    //   Intent intent = new Intent("onConfigurationChanged");
+    //   intent.putExtra("newConfig", newConfig);
+    //   this.sendBroadcast(intent);
+    // }
+    //#endregion
     //#region facebook SingIn 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -32,14 +34,14 @@ public class MainActivity extends ReactActivity {
     //#endregion
 
     //#region Gesture Handler 
-    @Override
-    protected ReactActivityDelegate createReactActivityDelegate() {
-      return new ReactActivityDelegate(this, getMainComponentName()) {
-        @Override
-        protected ReactRootView createRootView() {
-         return new RNGestureHandlerEnabledRootView(MainActivity.this);
-        }
-      };
-    }
+     @Override
+     protected ReactActivityDelegate createReactActivityDelegate() {
+       return new ReactActivityDelegate(this, getMainComponentName()) {
+         @Override
+         protected ReactRootView createRootView() {
+          return new RNGestureHandlerEnabledRootView(MainActivity.this);
+         }
+       };
+     }
     //#endregion
 }

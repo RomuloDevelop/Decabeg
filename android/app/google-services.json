@@ -23,6 +23,14 @@
           }
         },
         {
+          "client_id": "777376602447-1qd2i80q96evc7gdcdu2gcdsck0eai6i.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.decabeg_android",
+            "certificate_hash": "bdbfef06f08fe710f0da3efc2a8970fb6e0764e3"
+          }
+        },
+        {
           "client_id": "777376602447-me2kaqsrsffl25doe91kuhol1c41nmv3.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -33,20 +41,13 @@
         }
       ],
       "services": {
-        "analytics_service": {
-          "status": 1
-        },
         "appinvite_service": {
-          "status": 2,
           "other_platform_oauth_client": [
             {
               "client_id": "777376602447-me2kaqsrsffl25doe91kuhol1c41nmv3.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
-        },
-        "ads_service": {
-          "status": 2
         }
       }
     }

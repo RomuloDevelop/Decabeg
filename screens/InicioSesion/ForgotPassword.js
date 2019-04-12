@@ -4,7 +4,6 @@ import {
     Text, 
     TouchableOpacity,
     TextInput, StyleSheet, Image, ScrollView} from 'react-native';
-import Hr from 'react-native-hr-plus'
 import {Button, Icon} from 'native-base';
 import { GoogleSignin , statusCodes } from 'react-native-google-signin';
 import { sendForgotPassword } from '../../Api/api';

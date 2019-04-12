@@ -1,19 +1,21 @@
 import React, {Component} from 'react';
 import Video from 'react-native-video';
-import {View, StyleSheet, TouchableOpacity,
-    Platform,
-    ProgressBarAndroid,ScrollView} from 'react-native';
+import {
+  View, 
+  StyleSheet, 
+  TouchableOpacity,
+  Dimensions,
+  ProgressBarAndroid,
+  ScrollView
+} from 'react-native';
 import { Button, Text, Icon, ListItem, Radio, Right, Left, Badge, Card, CardItem } from 'native-base';
 import FadeIn from '../../../Animations/FadeIn';
 
 import { sendGetVideos } from '../../../Api/api';
-import { sendPostHistory } from '../../../Api/historyApi';
-import { updateUserMoneyLocalAndSend } from '../../../Api/helpers';
+import { sendPostHistory } from '../../../Api/history';
+import { updateUserMoneyLocalAndSend } from '../../../helpers/moneyOperations';
 
 import LoaderScreen from '../../sharedComponents/LoadScreen';
-// Within your render function, assuming you have a file called
-// "background.mp4" in your project. You can include multiple videos
-// on a single screen if you like.
 
 
 function Answers({video, onPressRadioButton}){
@@ -74,10 +76,6 @@ class Anuncios extends Component {
     }
 
     componentWillMount(){
-      this.props.navigation.addListener('didFocus',()=>{
-        console.log('c');
-        console.log(this.props.navigation.isFocused());
-      })
       sendGetVideos().then((data)=>{
         try{
           if(data){
@@ -193,10 +191,9 @@ class Anuncios extends Component {
         console.log(ex);
       }
     }
-    render(){    
-
+    render(){
         return(
-            <ScrollView style={styles.container}>
+            <ScrollView>
               <LoaderScreen loading ={this.state.disableButtonSend}/>
                 <TouchableOpacity
                     style={styles.videoButton}
@@ -276,16 +273,10 @@ class Anuncios extends Component {
     }
 } 
 
-// Later on in your styles..
 const controlColor='rgba(41, 128, 185,1.0)';
 const styles = StyleSheet.create({
-  container: {
-    // flex: 1,
-    // justifyContent: 'flex-start',
-    // alignItems: 'stretch'
-  },
   itemControl:{
-    fontSize:50,
+    fontSize:Math.round(Dimensions.get('window').height / 12),
     color:controlColor,
     textShadowOffset :{width: 2,height: 3},
     textShadowRadius: 5
@@ -295,7 +286,7 @@ const styles = StyleSheet.create({
   },
   videoButton: {
     width:'100%',
-    height:250
+    height:Math.round(Dimensions.get('window').height)*0.45
   },
   video: {
     height:'100%',

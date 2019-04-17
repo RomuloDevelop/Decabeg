@@ -2,7 +2,7 @@ import React, {Component, useState} from 'react';
 import {Container, Content, ListItem, List, Thumbnail, Left, Right, Body, Text} from 'native-base';
 import LoaderScreen from '../../sharedComponents/LoadScreen';
 
-import {sendGetUserReferrals, sendDeleteUserReferrals} from '../../../Api/referrals2';
+import {sendGetUserReferrals, sendDeleteUserReferrals} from '../../../Api';
 import {appAlert} from '../../../helpers';
 
 export default class Contacts extends Component {

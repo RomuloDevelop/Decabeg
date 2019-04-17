@@ -1,19 +1,13 @@
 import React, {Component} from 'react';
 import Video from 'react-native-video';
-import {
-  View, 
-  StyleSheet, 
-  TouchableOpacity,
-  Dimensions,
-  ProgressBarAndroid,
-  ScrollView
-} from 'react-native';
+import { View, StyleSheet, TouchableOpacity, Dimensions, ProgressBarAndroid, ScrollView } from 'react-native';
+import * as Progress from 'react-native-progress';
 import { Button, Text, Icon, ListItem, Radio, Right, Left, Badge, Card, CardItem } from 'native-base';
 import FadeIn from '../../../Animations/FadeIn';
 
-import { sendGetVideos } from '../../../Api/api';
-import { sendPostHistory } from '../../../Api/history';
-import { updateUserMoneyLocalAndSend } from '../../../helpers/moneyOperations';
+import { sendGetVideos } from '../../../Api';
+import { sendPostHistory } from '../../../Api';
+import { updateUserMoneyLocalAndSend } from '../../../helpers';
 
 import LoaderScreen from '../../sharedComponents/LoadScreen';
 
@@ -68,6 +62,7 @@ class Anuncios extends Component {
             videos:[],
             index:0,
             start:false,
+            isBuffering: false,
             showQuestion:false,
             showResult:false,
             disabledButton:false,
@@ -111,7 +106,7 @@ class Anuncios extends Component {
     onProgress = (data)=>{
         const currentTime = data.currentTime;
         const duration = this.state.duration;
-        this.setState({progressValue:(currentTime/duration)});
+        this.setState({progressValue:(currentTime/duration), isBuffering:false});
     }
     onSkip = ()=>{
         const actualIndex = this.state.index;
@@ -139,6 +134,7 @@ class Anuncios extends Component {
     }
 
     onBuffer = ()=>{
+      this.setState({isBuffering:true});
     }
 
     videoError = (error)=>{
@@ -198,6 +194,16 @@ class Anuncios extends Component {
                 <TouchableOpacity
                     style={styles.videoButton}
                     onPress={() => this.setState({ paused: !this.state.paused })}>
+                {/* {this.state.isBuffering && ( */}
+                
+                            
+                  <View style={{
+                    zIndex:100,
+                    marginLeft: 'auto', 
+                    marginRight: 'auto'}}>
+                    <Progress.Circle indeterminate={true}/>
+                  </View>
+                 {/* )} */}
                     {this.state.start && (
                         <Video source={{uri: this.state.videos[this.state.index].link}}   // Can be a URL or a local file.
                             ref={(ref) => {
@@ -215,9 +221,8 @@ class Anuncios extends Component {
                     )}
                 </TouchableOpacity>
                 <View style={styles.videoControl}>
-                    <ProgressBarAndroid
-                      styleAttr="Horizontal"
-                      indeterminate={false}
+                    <Progress.Bar
+                      width = {null}
                       progress={this.state.progressValue}/> 
                     <View style={{flex:1,flexDirection: 'row', justifyContent:'space-between', margin:10}}>
                         <TouchableOpacity onPress={this.onBack} disabled={this.state.disabledButton}>
@@ -268,6 +273,7 @@ class Anuncios extends Component {
                         </View>
                 
                         </View>
+                        
             </ScrollView>
         );
     }
@@ -276,7 +282,7 @@ class Anuncios extends Component {
 const controlColor='rgba(41, 128, 185,1.0)';
 const styles = StyleSheet.create({
   itemControl:{
-    fontSize:Math.round(Dimensions.get('window').height / 12),
+    fontSize:Math.round(Dimensions.get('window').height / 13),
     color:controlColor,
     textShadowOffset :{width: 2,height: 3},
     textShadowRadius: 5

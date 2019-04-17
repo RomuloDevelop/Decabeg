@@ -15,12 +15,17 @@ function checkResponse(response, method, message){
 
 function responseError(error, method){
   if (error.response) {
-    console.log(error.response.data);
-    console.log(error.response.status);
+    console.log('response error');
     console.log(error.response.headers);
-    throw {message: error.response.data, status: error.response.status, method};
-  } else if (error.request) throw {message:error.request, method};
-  else if(error.message) throw {message: error.message, method};
+    console.log(error.response.data);
+    throw {message:error.response.data, method};
+  } else if (error.request){
+    console.log('request error'); 
+    throw {message:error.request, method};}
+  else if(error.message) {
+    console.log('message error');
+    throw {message: error.message, method};
+  }
   else throw error;
 }
 

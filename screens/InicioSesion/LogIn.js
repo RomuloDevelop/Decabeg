@@ -9,8 +9,8 @@ import Hr from '../sharedComponents/Hr';
 import { Button, Icon } from 'native-base';
 import { signInGoogle } from '../../Api/SessionManager/googleApi';
 import { singInFacebook} from '../../Api/SessionManager/facebookApi';
-import { sendUserLogin, sendUserSignUp } from '../../Api/api';
-import { validateEmail,validatePassword } from '../../helpers/loginUtils';
+import { sendUserLogin, sendUserSignUp } from '../../Api';
+import { validateEmail,validatePassword } from '../../helpers';
 import LoaderScreen from '../sharedComponents/LoadScreen';
 
 class LogIn extends Component{
@@ -39,7 +39,10 @@ class LogIn extends Component{
         } catch(ex){
             console.log('login error');
             const message = (ex.message)?ex.message:ex;
-            if(message.includes('email not exist') && !this.notSignedUp){
+            console.log(message);
+            const description = message.description?message.description:'other';
+            console.log('description'+JSON.stringify(description));
+            if(description.includes('email not exist') && !this.notSignedUp){
                 this.notSignedUp = true;
                 this.signInAppOAuth(userData);
             }else{

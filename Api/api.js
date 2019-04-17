@@ -241,35 +241,6 @@ export async function sendUpdateUserData(userData){
     }
 }
 
-export async function sendGetVideos(){
-    try{
-        const {token, id} = await getAppToken();
-        console.log(`Token: ${token} ${id}`);
-        const uriData = `${url}videos/`;
-        const myInit = {
-            method: 'GET',
-            headers:{
-                'Api-Token': `${token}`,
-                'Content-Type': 'application/x-www-form-urlencoded'
-            }
-        };
-        const response = await fetch(uriData, myInit);
-        let videos;
-        if(response.ok){
-            const data = await response.json();
-            videos = data.resource.videos;
-            console.log(videos);
-        } else {
-            const error = await response.json();
-            const message = `Error:${error.description}, status:${error.status}`;
-            throw message;
-        }
-        return checkResponse(videos, getFunctionName(arguments), globalErrorMessage);
-    } catch(ex){
-        return checkResponse(null, getFunctionName(arguments), ex);
-    }
-}
-
 // function calcRemainingTime(unixtime){
 //     const date = new Date(unixtime*1000);
 //     const actualDate = new Date();

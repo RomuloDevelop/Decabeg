@@ -2,7 +2,7 @@ import React , {Component} from 'react';
 import {Container, Content, Icon,IconNB, List, ListItem, Text, Left, Right, Button} from 'native-base';
 import {View,Image,TouchableOpacity, Alert, NativeEventEmitter } from 'react-native';
 import LoaderScreen from '../../sharedComponents/LoadScreen';
-import { getUserData, clearData } from '../../../helpers/sessionData';
+import { getUserData, clearData } from '../../../helpers';
 import { signOut as googleSingOut } from '../../../Api/SessionManager/googleApi'
 import { signOut as facebookSingOut } from '../../../Api/SessionManager/facebookApi'
 import {sendUserLogOut} from '../../../Api/api';

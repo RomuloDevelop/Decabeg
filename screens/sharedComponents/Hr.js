@@ -1,13 +1,7 @@
 //@flow
-import * as React from 'react'
+import React from 'react';
 import {View} from 'react-native';
-
-
-type HrProps = {
-  width: number,
-  color: string,
-  children: React.Node
-}
+import type {HrProps} from 'screen-module';
 
 const Side = (props: HrProps)=>(
     <View style={
@@ -25,7 +19,7 @@ export default class Hr extends React.Component<HrProps> {
     return (
       <View style={[{flexDirection: 'row'}, this.props.style]}>
         <Side width={this.props.width} color={this.props.color}/>
-            {this.props.children}
+        {this.props.children}
         <Side width={this.props.width} color={this.props.color}/>
       </View>
     )

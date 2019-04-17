@@ -7,7 +7,7 @@ import {
 import {
     Badge, Text, Icon
 } from 'native-base';
-import { sendUserLogin, sendUserSignUp } from '../../Api/api';
+import { sendUserLogin, sendUserSignUp } from '../../Api';
 
 import LoaderScreen from '../sharedComponents/LoadScreen';
 
@@ -87,7 +87,9 @@ class SingUp extends Component{
                 //active page
                 this.setState(()=>({disableSubmit:true}),()=>{
                     sendUserSignUp(userAccount).then((data)=>{
-                        this.props.navigation.goBack();
+                        this.setState(()=>({disableSubmit:false}),()=>{
+                            this.props.navigation.goBack();
+                        });
                     }).catch((ex)=>{
                         alert(JSON.stringify(ex));
                         this.setState({disableSubmit:false});

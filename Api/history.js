@@ -1,95 +1,44 @@
-import {
-    getAppToken,    
-    checkResponse,
-    getFunctionName
-} from '../helpers';
+import { executeRequest } from './axiosInstance';
+import {getAppToken} from '../helpers';
 
-const globalErrorMessage = 'Operation failed';
-const url = 'https://api-dicabeg.herokuapp.com/v1/';
-export async function sendGetHistory(){
+async function sendGetHistory(){
     try{
         const {token, id} = await getAppToken();
         console.log(`Token: ${token} ${id}`);
-        const uriData = `${url}users/${id}/history/`;
-        const myInit = {
-            method: 'GET',
-            headers:{
-                'Api-Token': `${token}`,
-                'Content-Type': 'application/x-www-form-urlencoded'
-            }
-        };
-        const response = await fetch(uriData, myInit);
-        let history; 
-        if(response.ok){
-            const data = await response.json();
-            history = data.resource.history;
-            console.log(history);
-        } else {
-            const error = await response.json();
-            const message = `Error:${error.description}, status:${error.status}`;
-            throw message;
-        }
-        return checkResponse(history, getFunctionName(arguments), globalErrorMessage);
-    } catch(ex){
-        return checkResponse(null, getFunctionName(arguments), ex);
+        const response = await executeRequest('get', `users/${id}/history/`, token);
+        const data = response.data.resource.history;
+        return data;
+    } catch(ex) {
+        throw ex;
     }
 }
 
-export async function sendPostHistory(videoId){
+async function sendPostHistory(videoId){
     try{
         const {token, id} = await getAppToken();
         console.log(`Token: ${token} ${id}`);
-        const uriData = `${url}users/${id}/history/${videoId}/`;
-        console.log(uriData);
-        const myInit = {
-            method: 'POST',
-            headers:{
-                'Api-Token': `${token}`,
-                'Content-Type': 'application/x-www-form-urlencoded'
-            }
-        };
-        const response = await fetch(uriData, myInit);
-        let history;
-        if(response.ok){
-            const data = await response.json();
-            console.log(data);
-            history = data.resource.history;
-        } else {
-            const error = await response.json();
-            const message = `Error:${error.description}, status:${error.status}`;
-            throw message;
-        }
-        return checkResponse(history, getFunctionName(arguments), globalErrorMessage);
+        const response = await executeRequest('post', `users/${id}/history/${videoId}/`, token);
+        const data = response.data.resource.history;
+        return data;
     } catch(ex){
-        return checkResponse(null, getFunctionName(arguments), ex);
+        throw ex;
     }
 }
 
-export async function sendDeleteHistory(deleteAll, historyId){
+async function sendDeleteHistory(deleteAll, historyId){
     try {
         const {token, id} = await getAppToken();
         console.log(`Token: ${token} ${id}`);
-        const uriData = deleteAll? `${url}users/${id}/history/`:`${url}users/${id}/history/${historyId}/`;
-        console.log(uriData);
-        const myInit = {
-            method: 'DELETE',
-            headers: {
-                'Api-Token': `${token}`,
-                'Content-Type': 'application/x-www-form-urlencoded'
-            }
-        };
-        const response = await fetch(uriData, myInit);
-        let history;
-        if(response.ok){
-            history = await response.json();
-            console.log(data);
-        } else {
-            const error = await response.json();
-            const message = `Error:${error.description}, status:${error.status}`;
-            throw message;
-        }
-        return checkResponse(history, getFunctionName(arguments), globalErrorMessage);
+        const uriData = deleteAll? `users/${id}/history/`:`users/${id}/history/${historyId}/`;
+        const response = await executeRequest('delete', uriData, token);
+        return response;
     } catch(ex){
-        return checkResponse(null, getFunctionName(arguments), ex);
+        throw ex;
     }
+}
+
+export {
+    sendGetHistory,
+    sendPostHistory,
+    sendDeleteHistory
 }

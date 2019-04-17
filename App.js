@@ -2,10 +2,9 @@ import React from 'react';
 import { StyleSheet, Text, Button, ToastAndroid } from 'react-native';
 import { createSwitchNavigator, createAppContainer} from 'react-navigation';
 import HomeStack from './screens/Home/HomeStack';
+//import HomeDrawerStack from './screens/Home/HomeDrawerStack';
 import SessionStack from './screens/InicioSesion/SessionStack';
 import LoadingSession from './screens/InicioSesion/LoadingSession';
-
-//import {calcRemainingTime, logout, appAlert} from './Api/helpers';
 import { 
   appAlert, 
   timeForExpiration, 

@@ -23,7 +23,7 @@ function expirationAddListener() {
         return;
       const remainigTime = timeForExpiration(expiration);
       console.log('Remain time from:' + remainigTime);
-      if(remainigTime < 1100 && remainigTime >= 1000) {
+      if(remainigTime < 120 && remainigTime >= 4) {
         const state = AppState.currentState;
         console.log(state);
         if(state !== 'active')
@@ -36,7 +36,7 @@ function expirationAddListener() {
             await setShowResetTokenMessage({flag:true});
           });
         } 
-      } else if(remainigTime <= 1000) {
+      } else if(remainigTime <= 0) {
         await clearData();
         appAlert('Fin de sesion','Su sesion expiro');
         _navigator.dispatch(navigateAction);

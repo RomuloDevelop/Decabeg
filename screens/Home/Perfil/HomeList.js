@@ -89,7 +89,7 @@ export default class HomeList extends Component {
                       ((this.state.userData.lastnames && this.state.userData.names)?`${this.state.userData.names} ${this.state.userData.lastnames}`:
                       (this.state.userData.names?`${this.state.userData.names}`:' '))} */}
                     </Text>
-                    <Text style={{fontSize:20, textAlign:'center', color:'white'}}>{(this.state.userData.phone)?this.state.userData.phone:' '}</Text>
+                    <Text style={{fontSize:20, textAlign:'center', color:'white'}}>{(this.state.userData.phone===null)?this.state.userData.phone:'Sin numero'}</Text>
                 </View>
             </View>
           <List>

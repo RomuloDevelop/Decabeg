@@ -5,12 +5,24 @@ import {
     TouchableOpacity,  StyleSheet, ScrollView, TextInput} from 'react-native';
     import { Icon } from 'native-base';
 import CardMonedero from '../../sharedComponents/CardMonedero';
-import { updateUserPointsMovileLocalAndSend } from '../../../helpers/moneyOperations';
-import { getUserData } from '../../../helpers/sessionData';
+import { getUserData } from '../../../helpers';
+import { sendUpdateUserData } from '../../../Api';
 
 import globalStyles from '../../../styles';
 
 const tasaConvertion = 0.5
+
+
+async function updateUserPointsMovileLocalAndSend(pointsValue, movileDataValue){
+    try{
+        let {points:strPoints=0, money:strData=0} = await getUserData();
+        const points = parseInt(pointsValue) + parseInt(strPoints);
+        const money = parseFloat(movileDataValue) + parseFloat(strData);
+        await sendUpdateUserData({points, money});
+    } catch(ex) {
+        throw ex;
+    }
+}
 
 class Bolsa extends Component {
     state = {

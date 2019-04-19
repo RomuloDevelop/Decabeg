@@ -152,7 +152,6 @@ async function getShowResetTokenMessage(){
     try{
         const flagJson = await AsyncStorage.getItem(showMessageFlag);
         const {flag} = JSON.parse(flagJson);
-        console.log(`Show mwssage?:${flag}`);
         return flag;
     } catch(ex) {
         throw ex;

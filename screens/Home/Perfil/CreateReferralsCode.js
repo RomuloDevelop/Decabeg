@@ -2,10 +2,7 @@ import React, {Component} from 'react';
 import {TouchableOpacity, Clipboard, Share} from 'react-native';
 import { Container, Content, Text, Icon, Form, Item, Input, Label, Row, Col, Grid } from 'native-base';
 
-import { sendGetUserCode } from '../../../Api/api';
-import { sendEmail } from '../../../helpers/generalFunctions';
-
-import { getUserData } from '../../../helpers/sessionData';
+import { sendEmail, getUserData } from '../../../helpers';
 
 import  globalStyles, { buttonForm } from '../../../styles';
 

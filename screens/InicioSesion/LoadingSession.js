@@ -1,10 +1,10 @@
 import React, {Component} from 'react';
 import {View, ProgressBarAndroid, Linking} from 'react-native';
 import { GoogleSignin } from 'react-native-google-signin';
-import { getAppToken, getUserData, clearData } from '../../helpers/sessionData';
+import { getAppToken, getUserData, clearData } from '../../helpers';
 import { facebookSilently } from '../../Api/SessionManager/facebookApi';
 import { googleSilently } from '../../Api/SessionManager/googleApi';
-import { sendUserLogin } from '../../Api/api';
+import { sendUserLogin } from '../../Api';
 import config from '../../config';
 import globalStyles from '../../styles';
 

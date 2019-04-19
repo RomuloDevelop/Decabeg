@@ -7,6 +7,7 @@ async function sendGetHistory(){
         console.log(`Token: ${token} ${id}`);
         const response = await executeRequest('get', `users/${id}/history/`, token);
         const data = response.data.resource.history;
+        console.log(data);
         return data;
     } catch(ex) {
         throw ex;

@@ -1,5 +1,5 @@
 import qs from 'qs';
-import { Linking, Alert } from 'react-native';
+import { Linking, Alert, ToastAndroid } from 'react-native';
 
 function checkResponse(response, method, message){
   if(response){
@@ -26,6 +26,11 @@ function responseError(error, method){
     console.log('message error');
     throw {message: error.message, method};
   }
+  else if(error==="No connected"){
+    console.log('No conectado');
+    ToastAndroid.showWithGravity(error,ToastAndroid.LONG,ToastAndroid.BOTTOM);
+    throw error;
+  }
   else throw error;
 }
 
@@ -44,10 +49,7 @@ function getUrlEncodedParams(params){
 }
 
 function appAlert(title,answer,onPressOK, onPressCancel){
-    
-    Alert.alert(
-      title,
-      answer,
+    const buttons = (!onPressOK)?[{text:'OK'}]:
       [
         {
           text: 'Cancel',
@@ -61,7 +63,11 @@ function appAlert(title,answer,onPressOK, onPressCancel){
         {
           text: 'OK', onPress:onPressOK
         },
-      ],
+      ]
+    Alert.alert(
+      title,
+      answer,
+      buttons,
       {cancelable: false},
     );
   }

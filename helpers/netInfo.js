@@ -4,8 +4,7 @@ const eventName = 'connectionChange';
 
 //Get Info
 async function GetConnectionInfo(){
-    const connectionInfoNetInfo = await NetInfo.getConnectionInfo();
-    return connectionInfo;
+    return await NetInfo.getConnectionInfo();
 }
 
 //Default Listener

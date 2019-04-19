@@ -5,8 +5,8 @@ import {
 import { Container, Header, Content, Form, Item, Input, Label, Left, Button, Icon, Body, Right, Text } from 'native-base';
 import { Col, Row, Grid } from 'react-native-easy-grid';
 import ImagePicker from 'react-native-image-picker';
-import { getUserData } from '../../../helpers/sessionData';
-import { sendUpdateUserData } from '../../../Api/api';
+import { getUserData } from '../../../helpers';
+import { sendUpdateUserData } from '../../../Api';
 
 class UpdatePerfil extends Component {
     state ={

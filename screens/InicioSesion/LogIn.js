@@ -10,7 +10,7 @@ import { Button, Icon } from 'native-base';
 import { signInGoogle } from '../../Api/SessionManager/googleApi';
 import { singInFacebook} from '../../Api/SessionManager/facebookApi';
 import { sendUserLogin, sendUserSignUp } from '../../Api';
-import { validateEmail,validatePassword } from '../../helpers';
+import { validateEmail,validatePassword, appAlert } from '../../helpers';
 import LoaderScreen from '../sharedComponents/LoadScreen';
 
 class LogIn extends Component{
@@ -46,6 +46,8 @@ class LogIn extends Component{
                 this.notSignedUp = true;
                 this.signInAppOAuth(userData);
             }else{
+                if(description === 'active session')
+                    appAlert('Sesion ya iniciada','Cierre la sesion activa y vuelva a ingresar');
                 throw message;
             }
         }

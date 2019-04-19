@@ -4,13 +4,22 @@ import { View, StyleSheet, TouchableOpacity, Dimensions, ProgressBarAndroid, Scr
 import * as Progress from 'react-native-progress';
 import { Button, Text, Icon, ListItem, Radio, Right, Left, Badge, Card, CardItem } from 'native-base';
 import FadeIn from '../../../Animations/FadeIn';
-
-import { sendGetVideos } from '../../../Api';
-import { sendPostHistory } from '../../../Api';
-import { updateUserMoneyLocalAndSend } from '../../../helpers';
-
+import { sendGetVideos, sendPostHistory, sendUpdateUserData } from '../../../Api';
+import { mergeUserData, getUserData } from '../../../helpers';
 import LoaderScreen from '../../sharedComponents/LoadScreen';
 
+
+async function updateUserMoneyLocalAndSend(type, data){
+    try{
+        let {points, money} = await getUserData();
+        let value;
+        value = (type === "points")? points += data:money += data;
+        await sendUpdateUserData({[type]:value});
+        await mergeUserData({[type]:value});
+    } catch(ex) {
+        throw ex;
+    }
+}
 
 function Answers({video, onPressRadioButton}){
   try{
@@ -197,12 +206,12 @@ class Anuncios extends Component {
                 {/* {this.state.isBuffering && ( */}
                 
                             
-                  <View style={{
+                  {/* <View style={{
                     zIndex:100,
                     marginLeft: 'auto', 
                     marginRight: 'auto'}}>
                     <Progress.Circle indeterminate={true}/>
-                  </View>
+                  </View> */}
                  {/* )} */}
                     {this.state.start && (
                         <Video source={{uri: this.state.videos[this.state.index].link}}   // Can be a URL or a local file.

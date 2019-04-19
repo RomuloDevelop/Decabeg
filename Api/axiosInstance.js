@@ -1,4 +1,5 @@
 //@flow
+import NetInfo from "@react-native-community/netinfo"
 import type {RequestType} from 'api-module';
 import axios from 'axios';
 import { responseError, getFunctionName } from '../helpers';
@@ -10,6 +11,9 @@ const axiosInstance = axios.create({
 
 async function executeRequest(type: RequestType, uri: string, token: string, data: any, setHeaders: any){
     try{
+        const isConnected = await NetInfo.isConnected.fetch();
+        if(!isConnected) throw "No connected";
+
         const headers = (setHeaders)?setHeaders:{
             'Api-Token': `${token}`,
             'Content-Type': 'application/x-www-form-urlencoded'

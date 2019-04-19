@@ -2,10 +2,10 @@ import React , {Component} from 'react';
 import {Container, Content, Icon,IconNB, List, ListItem, Text, Left, Right, Button} from 'native-base';
 import {View,Image,TouchableOpacity, Alert, NativeEventEmitter } from 'react-native';
 import LoaderScreen from '../../sharedComponents/LoadScreen';
-import { getUserData, clearData } from '../../../helpers';
+import { getUserData, clearData, expirationAddListener } from '../../../helpers';
 import { signOut as googleSingOut } from '../../../Api/SessionManager/googleApi'
 import { signOut as facebookSingOut } from '../../../Api/SessionManager/facebookApi'
-import {sendUserLogOut} from '../../../Api/api';
+import {sendUserLogOut} from '../../../Api';
 
 import globalStyles, {buttonForm} from '../../../styles';
 
@@ -19,6 +19,7 @@ export default class HomeList extends Component {
   }
 
   componentWillMount(){
+    expirationAddListener(navigation);
     const {navigation} = this.props;
     navigation.addListener('didFocus',()=>{
       getUserData().then((userData)=>{
@@ -82,13 +83,13 @@ export default class HomeList extends Component {
                             require('../../../assets/user.png')} />
                 <View style={{justifyContent:'center'}}>
                     <Text style={{fontSize:20, textAlign:'center', color:'white'}}>
-                      {(this.state.userData.username)?
+                      {this.state.userData.username}
+                      {/* {(this.state.userData.username)?
                       `${this.state.userData.username}`:
-                      (this.state.userData.lastnames?`
-                      ${this.state.userData.names} ${this.state.userData.lastnames}`:
-                      `${this.state.userData.names}`)}
+                      ((this.state.userData.lastnames && this.state.userData.names)?`${this.state.userData.names} ${this.state.userData.lastnames}`:
+                      (this.state.userData.names?`${this.state.userData.names}`:' '))} */}
                     </Text>
-                    <Text style={{fontSize:20, textAlign:'center', color:'white'}}>{this.state.userData.phone}</Text>
+                    <Text style={{fontSize:20, textAlign:'center', color:'white'}}>{(this.state.userData.phone)?this.state.userData.phone:' '}</Text>
                 </View>
             </View>
           <List>

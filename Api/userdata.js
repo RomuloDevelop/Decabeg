@@ -3,6 +3,7 @@ import {
     getAppToken,
     setUserData,
     mergeUserData,
+    getUrlEncodedParams
 } from '../helpers';
 
 async function sendGetUserData() {

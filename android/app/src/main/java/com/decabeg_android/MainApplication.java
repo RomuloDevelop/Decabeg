@@ -7,6 +7,7 @@ import com.facebook.CallbackManager;
 import com.facebook.appevents.AppEventsLogger;
 //
 import com.facebook.react.ReactApplication;
+import com.geektime.rnonesignalandroid.ReactNativeOneSignalPackage;
 import com.reactnativecommunity.netinfo.NetInfoPackage;
 
 import com.swmansion.gesturehandler.react.RNGestureHandlerPackage;
@@ -46,6 +47,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new ReactNativeOneSignalPackage(),
             new NetInfoPackage(),
             new RNGestureHandlerPackage(),
             new BackgroundTimerPackage(),

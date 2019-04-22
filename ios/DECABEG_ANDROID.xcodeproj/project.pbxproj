@@ -68,6 +68,7 @@
 		ED2971652150620600B7C4FE /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ED2971642150620600B7C4FE /* JavaScriptCore.framework */; };
 		AB5CE846AEF042BFB9BD3B55 /* libRNCNetInfo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 04A66B152EF14E62B127C6A9 /* libRNCNetInfo.a */; };
 		C1F09B79B48E4164B7D56505 /* libRNCNetInfo-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 36F13051F5174277B92B6413 /* libRNCNetInfo-tvOS.a */; };
+		8C9AEB093D5E4B1088CFE9A9 /* libRCTOneSignal.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1EF0F58B7BA84F70825792CF /* libRCTOneSignal.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -412,6 +413,8 @@
 		B5D53AAA90E84EBAB547CEF8 /* RNCNetInfo.xcodeproj */ = {isa = PBXFileReference; name = "RNCNetInfo.xcodeproj"; path = "../node_modules/@react-native-community/netinfo/ios/RNCNetInfo.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
 		04A66B152EF14E62B127C6A9 /* libRNCNetInfo.a */ = {isa = PBXFileReference; name = "libRNCNetInfo.a"; path = "libRNCNetInfo.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 		36F13051F5174277B92B6413 /* libRNCNetInfo-tvOS.a */ = {isa = PBXFileReference; name = "libRNCNetInfo-tvOS.a"; path = "libRNCNetInfo-tvOS.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
+		24D45161E67344F18B37B3DC /* RCTOneSignal.xcodeproj */ = {isa = PBXFileReference; name = "RCTOneSignal.xcodeproj"; path = "../node_modules/react-native-onesignal/ios/RCTOneSignal.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
+		1EF0F58B7BA84F70825792CF /* libRCTOneSignal.a */ = {isa = PBXFileReference; name = "libRCTOneSignal.a"; path = "libRCTOneSignal.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -448,6 +451,7 @@
 				40C91FFFC9D049BDBCDBE122 /* libRNBackgroundTimer.a in Frameworks */,
 				F215D97339FF4087BF3D25E6 /* libRNGestureHandler.a in Frameworks */,
 				AB5CE846AEF042BFB9BD3B55 /* libRNCNetInfo.a in Frameworks */,
+				8C9AEB093D5E4B1088CFE9A9 /* libRCTOneSignal.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -649,6 +653,7 @@
 				100BE99941DF425C846FC8B0 /* RNBackgroundTimer.xcodeproj */,
 				C0A9C8B96F8E4155BEE99F97 /* RNGestureHandler.xcodeproj */,
 				B5D53AAA90E84EBAB547CEF8 /* RNCNetInfo.xcodeproj */,
+				24D45161E67344F18B37B3DC /* RCTOneSignal.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -1321,6 +1326,7 @@
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/DECABEG_ANDROID.app/DECABEG_ANDROID";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1332,6 +1338,7 @@
 					"$(SRCROOT)\..\node_modules\react-native-background-timer\ios",
 					"$(SRCROOT)\..\node_modules\react-native-gesture-handler\ios/**",
 					"$(SRCROOT)\..\node_modules\@react-native-community\netinfo\ios",
+					"$(SRCROOT)\..\node_modules\react-native-onesignal\ios/**",
 				);
 			};
 			name = Debug;
@@ -1353,6 +1360,7 @@
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/DECABEG_ANDROID.app/DECABEG_ANDROID";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1364,6 +1372,7 @@
 					"$(SRCROOT)\..\node_modules\react-native-background-timer\ios",
 					"$(SRCROOT)\..\node_modules\react-native-gesture-handler\ios/**",
 					"$(SRCROOT)\..\node_modules\@react-native-community\netinfo\ios",
+					"$(SRCROOT)\..\node_modules\react-native-onesignal\ios/**",
 				);
 			};
 			name = Release;
@@ -1394,6 +1403,7 @@
 					"$(SRCROOT)\..\node_modules\react-native-background-timer\ios",
 					"$(SRCROOT)\..\node_modules\react-native-gesture-handler\ios/**",
 					"$(SRCROOT)\..\node_modules\@react-native-community\netinfo\ios",
+					"$(SRCROOT)\..\node_modules\react-native-onesignal\ios/**",
 				);
 			};
 			name = Debug;
@@ -1423,6 +1433,7 @@
 					"$(SRCROOT)\..\node_modules\react-native-background-timer\ios",
 					"$(SRCROOT)\..\node_modules\react-native-gesture-handler\ios/**",
 					"$(SRCROOT)\..\node_modules\@react-native-community\netinfo\ios",
+					"$(SRCROOT)\..\node_modules\react-native-onesignal\ios/**",
 				);
 			};
 			name = Release;
@@ -1452,6 +1463,7 @@
 				TVOS_DEPLOYMENT_TARGET = 9.2;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1463,6 +1475,7 @@
 					"$(SRCROOT)\..\node_modules\react-native-background-timer\ios",
 					"$(SRCROOT)\..\node_modules\react-native-gesture-handler\ios/**",
 					"$(SRCROOT)\..\node_modules\@react-native-community\netinfo\ios",
+					"$(SRCROOT)\..\node_modules\react-native-onesignal\ios/**",
 				);
 			};
 			name = Debug;
@@ -1492,6 +1505,7 @@
 				TVOS_DEPLOYMENT_TARGET = 9.2;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1503,6 +1517,7 @@
 					"$(SRCROOT)\..\node_modules\react-native-background-timer\ios",
 					"$(SRCROOT)\..\node_modules\react-native-gesture-handler\ios/**",
 					"$(SRCROOT)\..\node_modules\@react-native-community\netinfo\ios",
+					"$(SRCROOT)\..\node_modules\react-native-onesignal\ios/**",
 				);
 			};
 			name = Release;
@@ -1531,6 +1546,7 @@
 				TVOS_DEPLOYMENT_TARGET = 10.1;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1542,6 +1558,7 @@
 					"$(SRCROOT)\..\node_modules\react-native-background-timer\ios",
 					"$(SRCROOT)\..\node_modules\react-native-gesture-handler\ios/**",
 					"$(SRCROOT)\..\node_modules\@react-native-community\netinfo\ios",
+					"$(SRCROOT)\..\node_modules\react-native-onesignal\ios/**",
 				);
 			};
 			name = Debug;
@@ -1570,6 +1587,7 @@
 				TVOS_DEPLOYMENT_TARGET = 10.1;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1581,6 +1599,7 @@
 					"$(SRCROOT)\..\node_modules\react-native-background-timer\ios",
 					"$(SRCROOT)\..\node_modules\react-native-gesture-handler\ios/**",
 					"$(SRCROOT)\..\node_modules\@react-native-community\netinfo\ios",
+					"$(SRCROOT)\..\node_modules\react-native-onesignal\ios/**",
 				);
 			};
 			name = Release;

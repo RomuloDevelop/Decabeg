@@ -14,7 +14,9 @@ import {
   setShowResetTokenMessage, 
   NetInfoManager } from './helpers';
 import { sendUserResetToken } from './Api';
-import BackgroundTimer from 'react-native-background-timer'
+import BackgroundTimer from 'react-native-background-timer';
+import OneSignal from 'react-native-onesignal';
+
 const AppStack = createSwitchNavigator({
   loading: {
     screen: LoadingSession,
@@ -54,6 +56,37 @@ const AppStack = createSwitchNavigator({
 const AppContainer = createAppContainer(AppStack);
 
 export default class App extends React.Component {
+
+  constructor(props) {
+    super(props);
+    //OneSignal.setLogLevel(5, 4);
+    OneSignal.init("84e9a73f-0e37-4b1a-94cb-ecf464328fb1");
+
+    OneSignal.addEventListener('received', this.onReceived);
+    OneSignal.addEventListener('opened', this.onOpened);
+    OneSignal.addEventListener('ids', this.onIds);
+  }
+
+  componentWillUnmount() {
+    OneSignal.removeEventListener('received', this.onReceived);
+    OneSignal.removeEventListener('opened', this.onOpened);
+    OneSignal.removeEventListener('ids', this.onIds);
+  }
+
+  onReceived(notification) {
+    console.log("Notification received: ", notification);
+  }
+
+  onOpened(openResult) {
+    console.log('Message: ', openResult.notification.payload.body);
+    console.log('Data: ', openResult.notification.payload.additionalData);
+    console.log('isActive: ', openResult.notification.isAppInFocus);
+    console.log('openResult: ', openResult);
+  }
+
+  onIds(device) {
+    console.log('Device info: ', device);
+  }
   render() {
     /* In the root component we are rendering the app navigator */
     return( 

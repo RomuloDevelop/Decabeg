@@ -106,109 +106,107 @@ class SingUp extends Component{
     render(){
         return (           
         <ScrollView style ={{backgroundColor: 'rgba(52, 152, 219,1.0)'}}>
-            {/*<LinearGradient style ={styles.container} colors={['#0fbcf9','#0174DF']}>*/}
             <View style ={styles.container}>
-                    <LoaderScreen loading ={this.state.disableSubmit}/>
-                    <Text style={{fontSize:20, color:'#fff', textAlign:'center', margin:30}}>
-                        CREATE ACCOUNT
-                    </Text>
-                    <Text style={{fontSize:14, color:'rgba(255,255,255,0.5)', textAlign:'left', margin:10}}>
-                        * Password must have lenght 8, at least 1 digit, 1 special character (@$!%*#?&_-)
-                    </Text>
-                    {/* <TextInput
-                        style = {styles.inputContainer}
-                        placeholder = "Username"
-                        placeholderTextColor = "rgba(255,255,255,0.7)"
-                        value = {this.state.username}
-                        onChangeText={this.handleChangeUsername}
-                    ></TextInput> */}
-                    <View style={[styles.inputIconContainer,styles.inputContainer,
-                        {borderColor:this.state.showInvalidEmail?(this.state.validEmail?'green':'red'):'rgba(255,255,255,0)', 
-                        borderWidth:1}]}>
-                        <TextInput
-                            style = {styles.innerInput}
-                            placeholder = "Email"
-                            placeholderTextColor = "rgba(255,255,255,0.7)"
-                            value = {this.state.email}
-                            onBlur = {this.handleBlurEmail}
-                            onChangeText={this.handleChangeEmail}
-                        ></TextInput>{
-                            this.state.showInvalidEmail&&
-                        <Icon 
-                            style={[styles.inputIcon, {
-                                color:(this.state.validEmail?'green':'red')
-                            }]}
-                            name={this.state.validEmail?'checkmark-circle':'close-circle'}
-                            size={20} />
-                        }
-                    </View>
-                    <View style={[styles.inputIconContainer,styles.inputContainer]}>
-                        <TextInput
-                            style={styles.innerInput}
-                            placeholder="Password"
-                            placeholderTextColor = "rgba(255,255,255,0.7)"
-                            maxLength={8}
-                            secureTextEntry={this.state.security}
-                            onChangeText={this.handleChangePassword}
-                            onBlur={this.handleBlurPassword}
-                        />
-                        <Icon 
-                            style={styles.inputIcon} name={this.state.iconName} type='FontAwesome' 
-                            size={20}
-                            value = {this.state.password}
-                            onPress = {()=>{
-                                    if (this.state.iconName === 'eye')
-                                        this.setState({iconName:'eye-slash', security:false})
-                                    else 
-                                        this.setState({iconName:'eye', security:true})
-                                }}/>
-                            
-                    </View>
-                    {this.state.showInvalidPassword && (
-                        <Badge danger style={{marginBottom: 20}}>
-                            <View style={{flexDirection:'row', justifyContent:'center', alignItems: 'center'}}>
-                                <Icon name="times-circle" type='FontAwesome' style={styles.badgeIcon}/>
-                                <Text>Invalid Password</Text> 
-                            </View>
-                        </Badge>
-                    )
-                    }
+                <LoaderScreen loading ={this.state.disableSubmit}/>
+                <Text style={{fontSize:20, color:'#fff', textAlign:'center', margin:30}}>
+                    CREATE ACCOUNT
+                </Text>
+                <Text style={{fontSize:14, color:'rgba(255,255,255,0.5)', textAlign:'left', margin:10}}>
+                    * Password must have lenght 8, at least 1 digit, 1 special character (@$!%*#?&_-)
+                </Text>
+                {/* <TextInput
+                    style = {styles.inputContainer}
+                    placeholder = "Username"
+                    placeholderTextColor = "rgba(255,255,255,0.7)"
+                    value = {this.state.username}
+                    onChangeText={this.handleChangeUsername}
+                ></TextInput> */}
+                <View style={[styles.inputIconContainer,styles.inputContainer,
+                    {borderColor:this.state.showInvalidEmail?(this.state.validEmail?'green':'red'):'rgba(255,255,255,0)', 
+                    borderWidth:1}]}>
                     <TextInput
-                        style = {styles.inputContainer}
-                        placeholder = "Repeat Password"
+                        style = {styles.innerInput}
+                        placeholder = "Email"
                         placeholderTextColor = "rgba(255,255,255,0.7)"
-                        secureTextEntry = {true}
-                        value = {this.state.repeatpassword}
-                        secureTextEntry={true}
+                        value = {this.state.email}
+                        onBlur = {this.handleBlurEmail}
+                        onChangeText={this.handleChangeEmail}
+                    ></TextInput>{
+                        this.state.showInvalidEmail&&
+                    <Icon 
+                        style={[styles.inputIcon, {
+                            color:(this.state.validEmail?'green':'red')
+                        }]}
+                        name={this.state.validEmail?'checkmark-circle':'close-circle'}
+                        size={20} />
+                    }
+                </View>
+                <View style={[styles.inputIconContainer,styles.inputContainer]}>
+                    <TextInput
+                        style={styles.innerInput}
+                        placeholder="Password"
+                        placeholderTextColor = "rgba(255,255,255,0.7)"
                         maxLength={8}
-                        onChangeText={this.handleChangeRepeatpassword}
-                        onBlur={this.handleBlurRepeatpassword}
-                    ></TextInput>
-                    {this.state.showInvalidRepeatPassword && (
-                        <Badge danger style={{marginBottom: 20}}>
-                            <View style={{flexDirection:'row', justifyContent:'center', alignItems: 'center'}}>
-                                <Icon name="times-circle" type='FontAwesome' style={styles.badgeIcon}/>
-                                <Text>Password its not the same</Text> 
-                            </View>
-                        </Badge>
-                    )
-                    }
-                    {this.state.showCode&&(
-                    <TextInput
-                        style = {styles.inputContainer}
-                        placeholder = "Code"
-                        placeholderTextColor = "rgba(255,255,255,0.7)"
-                        value = {this.state.invite_code}
-                        editable = {false}
-                    ></TextInput>
-                    )}
-                    <TouchableOpacity 
-                        style = {[styles.buttonContainer ,{backgroundColor:"rgba(65, 197, 240,1.0)"}]}
-                        onPress={this.handlePressSingUp}
-                        disabled={this.state.disableSubmit}>
-                        <Text style = {styles.textButton}>REGISTER</Text>
-                    </TouchableOpacity>
-            {/*<LinearGradient*/}
+                        secureTextEntry={this.state.security}
+                        onChangeText={this.handleChangePassword}
+                        onBlur={this.handleBlurPassword}
+                    />
+                    <Icon 
+                        style={styles.inputIcon} name={this.state.iconName} type='FontAwesome' 
+                        size={20}
+                        value = {this.state.password}
+                        onPress = {()=>{
+                                if (this.state.iconName === 'eye')
+                                    this.setState({iconName:'eye-slash', security:false})
+                                else 
+                                    this.setState({iconName:'eye', security:true})
+                            }}/>
+                        
+                </View>
+                {this.state.showInvalidPassword && (
+                    <Badge danger style={{marginBottom: 20}}>
+                        <View style={{flexDirection:'row', justifyContent:'center', alignItems: 'center'}}>
+                            <Icon name="times-circle" type='FontAwesome' style={styles.badgeIcon}/>
+                            <Text>Invalid Password</Text> 
+                        </View>
+                    </Badge>
+                )
+                }
+                <TextInput
+                    style = {styles.inputContainer}
+                    placeholder = "Repeat Password"
+                    placeholderTextColor = "rgba(255,255,255,0.7)"
+                    secureTextEntry = {true}
+                    value = {this.state.repeatpassword}
+                    secureTextEntry={true}
+                    maxLength={8}
+                    onChangeText={this.handleChangeRepeatpassword}
+                    onBlur={this.handleBlurRepeatpassword}
+                ></TextInput>
+                {this.state.showInvalidRepeatPassword && (
+                    <Badge danger style={{marginBottom: 20}}>
+                        <View style={{flexDirection:'row', justifyContent:'center', alignItems: 'center'}}>
+                            <Icon name="times-circle" type='FontAwesome' style={styles.badgeIcon}/>
+                            <Text>Password its not the same</Text> 
+                        </View>
+                    </Badge>
+                )
+                }
+                {this.state.showCode&&(
+                <TextInput
+                    style = {styles.inputContainer}
+                    placeholder = "Code"
+                    placeholderTextColor = "rgba(255,255,255,0.7)"
+                    value = {this.state.invite_code}
+                    editable = {false}
+                ></TextInput>
+                )}
+                <TouchableOpacity 
+                    style = {[styles.buttonContainer ,{backgroundColor:"rgba(65, 197, 240,1.0)"}]}
+                    onPress={this.handlePressSingUp}
+                    disabled={this.state.disableSubmit}>
+                    <Text style = {styles.textButton}>REGISTER</Text>
+                </TouchableOpacity>
             </View>
         </ScrollView>
         );

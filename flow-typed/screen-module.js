@@ -7,4 +7,10 @@ declare module 'screen-module' {
       style?: any,
       children?: React.Node
     }
+
+    declare type SubmitButtonProps = {
+      onPress: function,
+      style?: any,
+      text: string
+    }
 }

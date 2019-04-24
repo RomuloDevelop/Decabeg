@@ -12,15 +12,14 @@
 
 
 const HomeDrawerStack = createDrawerNavigator({  
-  tabs:{
+  Home:{
     screen: Actions,
-      navigationOptions: {
-        tabBarLabel: 'Monedero', 
-        tabBarIcon:({tintColor})=> {
-            
-          return(<Icon name='ios-card' style={{color:'#fff', fontSize:35}}/>)
-        }
+    navigationOptions: {
+      tabBarLabel: 'Monedero', 
+      tabBarIcon:({tintColor})=> {
+        return(<Icon name='ios-card' style={{color:'#fff', fontSize:35}}/>)
       }
+    }
   },
   perfil: {
     screen: HomeList,

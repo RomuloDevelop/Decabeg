@@ -5,6 +5,7 @@ import {Icon, Text, Button} from 'native-base';
 import Bolsa from './Bolsa';
 import Recarga from './Recarga';
 import Anuncios from './Anuncios';
+import Transferir from './Transferir';
 
 //styles
 import globalStyles from '../../../styles';
@@ -20,18 +21,19 @@ const backButton = (text, navigation)=>(
     </View>)
 
 export default Actions = createMaterialTopTabNavigator({
-    Recarga,
+    //Recarga,
     Bolsa,
-    Anuncios
+    Anuncios,
+    Transferir
 },{
     tabBarOptions: {
         optimizationsEnabled: false,
-        scrollEnabled: false,
+        scrollEnabled: true,
         swipeEnabled: true,
         activeTintColor: '#FFF',
         inactiveTintColor: 'rgba(255,255,255,0.7)',
         labelStyle:{
-            fontSize:14
+            fontSize:13
         },
         style: {
             backgroundColor: globalStyles.mediumBlue

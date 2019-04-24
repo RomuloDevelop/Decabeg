@@ -1,8 +1,9 @@
 import React from 'react';
-import { StyleSheet, Text, Button, ToastAndroid } from 'react-native';
+import { StyleSheet, Text, Button, ToastAndroid, View } from 'react-native';
 import { createSwitchNavigator, createAppContainer} from 'react-navigation';
 import HomeStack from './screens/Home/HomeStack';
 //import HomeDrawerStack from './screens/Home/HomeDrawerStack';
+import OfflineMessage from './screens/sharedComponents/OfflineMessage';
 import SessionStack from './screens/InicioSesion/SessionStack';
 import LoadingSession from './screens/InicioSesion/LoadingSession';
 import { expirationClearListener, setTopLevelNavigator } from './helpers';
@@ -31,10 +32,6 @@ const AppStack = createSwitchNavigator({
       navigation.addListener('didFocus',async()=>{
         try{
           await setShowResetTokenMessage({flag:true});
-          NetInfoManager.addListener((connectionInfo)=>{
-            if(connectionInfo.type === 'none')
-              ToastAndroid.showWithGravity('Device is offline',ToastAndroid.SHORT,ToastAndroid.BOTTOM);
-          });
         } catch(ex){
           console.log(ex);
         }
@@ -59,18 +56,27 @@ export default class App extends React.Component {
 
   constructor(props) {
     super(props);
-    //OneSignal.setLogLevel(5, 4);
-    OneSignal.init("84e9a73f-0e37-4b1a-94cb-ecf464328fb1");
-
+    this.state = {
+      connected: true
+    }
+    OneSignal.init("2c4010d0-c7b2-458d-923a-eda58dfbd643");
     OneSignal.addEventListener('received', this.onReceived);
     OneSignal.addEventListener('opened', this.onOpened);
     OneSignal.addEventListener('ids', this.onIds);
+    NetInfoManager.addListener((connectionInfo)=>{
+      if(connectionInfo.type === 'none'){
+        //ToastAndroid.showWithGravity('Device is offline',ToastAndroid.SHORT,ToastAndroid.BOTTOM);
+        this.setState({connected:false});
+      } else 
+        this.setState({connected:true});
+    });
   }
 
   componentWillUnmount() {
     OneSignal.removeEventListener('received', this.onReceived);
     OneSignal.removeEventListener('opened', this.onOpened);
     OneSignal.removeEventListener('ids', this.onIds);
+    NetInfoManager.removeListener();
   }
 
   onReceived(notification) {
@@ -88,12 +94,14 @@ export default class App extends React.Component {
     console.log('Device info: ', device);
   }
   render() {
-    /* In the root component we are rendering the app navigator */
     return( 
+      <View style={{flex:1}}>
       <AppContainer 
         ref={navigatorRef => {
           setTopLevelNavigator(navigatorRef);
       }}/>
+      {(!this.state.connected)&&(<OfflineMessage/>)}
+      </View>
     );
   }
 }

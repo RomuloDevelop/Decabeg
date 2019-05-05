@@ -3,7 +3,10 @@ import { StyleSheet, Text, Button, Easing, Animated } from 'react-native';
  import {createStackNavigator} from 'react-navigation';
  import LogIn from './LogIn';
  import SingUp from './SingUp';
+ import SendEmail from './SendEmail';
  import ForgotPassword from './ForgotPassword';
+
+ import globalStyles from '../../styles';
 
 let CollapseExpand = (index, position) => {
   const inputRange = [index - 1, index, index + 1];
@@ -73,17 +76,27 @@ export default SessionStack = createStackNavigator({
     navigationOptions: ()=> ({
       title: 'Sing Up',
       headerStyle: {
-        backgroundColor: 'rgba(22, 122, 199,1.0)',
+        backgroundColor: globalStyles.navbarColor,
       },
       headerTintColor: '#fff'
     }),
+  },
+  sendEmail: {
+    screen: SendEmail,
+    navigationOptions: ()=> ({
+      title: 'Send Email',
+      headerStyle: {
+        backgroundColor: globalStyles.navbarColor,
+      },
+      headerTintColor: '#fff'
+    })
   },
   forgotPassword: {
     screen: ForgotPassword,
     navigationOptions: ()=> ({
       title: 'Forgot Password',
       headerStyle: {
-        backgroundColor: 'rgba(22, 122, 199,1.0)',
+        backgroundColor: globalStyles.navbarColor,
       },
       headerTintColor: '#fff'
     })

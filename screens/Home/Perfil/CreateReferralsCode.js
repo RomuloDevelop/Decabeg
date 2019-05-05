@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {TouchableOpacity, Clipboard, Share} from 'react-native';
 import { Container, Content, Text, Icon, Form, Item, Input, Label, Row, Col, Grid } from 'native-base';
-
+import SubmitButton from '../../sharedComponents/SubmitButton';
 import { sendEmail, getUserData } from '../../../helpers';
 
 import  globalStyles, { buttonForm } from '../../../styles';
@@ -107,10 +107,7 @@ export default class CreateReferralsCode extends Component {
                     </Row> */}
                     <Row>
                         <Col>
-                            <TouchableOpacity style={[buttonForm.buttonContainer, {backgroundColor:globalStyles.lightBlue}]}
-                                onPress={this.onShare}>
-                                <Text style={buttonForm.textButton}>Share</Text>
-                            </TouchableOpacity>
+                          <SubmitButton onPress={this.onShare} text="Share"/>
                         </Col>
                     </Row>
                     </Grid>

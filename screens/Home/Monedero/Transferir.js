@@ -32,7 +32,7 @@ class Transferir extends Component {
               </Item>
           </Form>
           <SubmitButton
-            style={{marginVertical:20}}
+            style={{marginVertical:25}}
             onPress = {this.onPress}
             text = "Transfer"/>
         </Content>

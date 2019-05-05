@@ -4,6 +4,7 @@ import { createStackNavigator, createBottomTabNavigator, NavigationActions } fro
 import { IconNB, Icon, Button, Text } from 'native-base';
 import UpdatePerfil from './UpdatePerfil';
 import History from './History';
+import Transacciones from './Transacciones'
 import Contacts from './Contacts';
 import HomeList from './HomeList';
 import CreateReferralsCode from './CreateReferralsCode';
@@ -44,6 +45,10 @@ const ProfileStack = createStackNavigator({
   history: {
     screen: History,
     navigationOptions: ({navigation})=>options(navigation,'History'),
+  },
+  transacciones:{
+    screen: Transacciones,
+    navigationOptions: ({navigation})=>options(navigation,'Transacciones'),
   },
   updateperfil: {
     screen: UpdatePerfil,

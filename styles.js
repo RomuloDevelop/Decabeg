@@ -1,12 +1,13 @@
 import {StyleSheet} from 'react-native';
 
 export default globalStyles = {
-    lightBlue: 'rgba(65, 197, 240,1.0)',
-    mediumLightBlue: 'rgba(58, 174, 229,1.0)',
-    mediumBlue: 'rgba(52, 152, 219,1.0)',
-    darkBlue:'rgba(41, 128, 185,1.0)',
+    lightBlue: '#FFCB0F',
+    mediumLightBlue: '#FFBB1A',
+    mediumBlue: '#FFA01D',
+    darkBlue:'#E86D0E',
+    fontBrown:'#FFA812',
     fontGrey:'rgb(235,235,235)',
-    navbarColor:'rgba(22, 122, 199, 1.0)' 
+    navbarColor:'#805509' 
 };
 
 export const buttonForm = StyleSheet.create({

@@ -71,13 +71,22 @@ async function sendUserSignUp(user){
     }
 }
 
-async function sendForgotPassword(user) {
-    try{
-        const {token, id} = await getAppToken();        
-        const formBody = getUrlEncodedParams(user);
-        const response = executeRequest('put', `users/${id}/accounts/`, null, formBody, {'Content-Type': 'application/x-www-form-urlencoded'});
+async function sendEmail(email) {
+    try{ 
+        const formBody = getUrlEncodedParams(email);
+        const response = executeRequest('post', `accounts/recovery`, null, formBody, {'Content-Type': 'application/x-www-form-urlencoded'});
         const data = response.data;
-        console.log('Data SingUp:' + JSON.stringify(data));
+        console.log('Data Email:' + JSON.stringify(data));
+    } catch(ex){
+        throw ex;
+    }
+}
+
+async function sendForgotPassword(data) {
+    try{  
+        const formBody = getUrlEncodedParams(data);
+        const response = executeRequest('post', `accounts/recovery`, null, formBody, {'Content-Type': 'application/x-www-form-urlencoded'});
+        console.log('Data Forgot:' + JSON.stringify(response));
         return data;
     } catch(ex){
         throw ex;

@@ -4,6 +4,7 @@ const tokenAppKey = 'tokenApp';
 const userData = 'userData';
 const userPicture = 'userPicture';
 const showMessageFlag = 'showMessageFlag';
+const oneSignalId = 'oneSignalId'
 async function setAppToken(token,expiration, id){
     try{
         console.log('Saving data' + JSON.stringify({token,expiration, id}));
@@ -158,6 +159,25 @@ async function getShowResetTokenMessage(){
     }
 }
 
+async function getOneSignalId(){
+    try{
+        const data = await AsyncStorage.getItem(oneSignalId);
+        const id = JSON.parse(data);
+        return id;
+    } catch(ex) {
+        throw ex;
+    }
+}
+
+async function setOneSignalId(data){
+    try{
+        const id = JSON.stringify(data)
+        await AsyncStorage.setItem(oneSignalId, id);
+    } catch(ex) {
+        throw ex;
+    }
+}
+
 export {
     setAppToken,
     getAppToken,
@@ -170,5 +190,7 @@ export {
     getUserPicture,
     clearData,
     setShowResetTokenMessage,
-    getShowResetTokenMessage
+    getShowResetTokenMessage,
+    getOneSignalId,
+    setOneSignalId
 }

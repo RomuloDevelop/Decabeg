@@ -5,7 +5,7 @@ import { Col, Row, Grid } from 'react-native-easy-grid';
 import {NavigationActions} from 'react-navigation';
 import { GoogleSignin , statusCodes } from 'react-native-google-signin';
 import { LoginManager } from 'react-native-fbsdk';
-
+import SubmitButton from '../../sharedComponents/SubmitButton';
 import { getUserData } from '../../../helpers';
 
 class Perfil extends Component {
@@ -71,11 +71,12 @@ class Perfil extends Component {
                    </Row>
                    <Row>
                     <Col>
-                     <TouchableOpacity 
+                    <SubmitButton  onPress = {this.signOut} text="SING OUT"/>
+                     {/* <TouchableOpacity 
                        style = {style.buttonContainer}
                        onPress = {this.signOut}>
                        <Text style = {style.textButton}>SING OUT</Text>
-                     </TouchableOpacity>
+                     </TouchableOpacity> */}
                     </Col>
                    </Row>
                 </Grid>

@@ -8,8 +8,8 @@ import {
     Badge, Text, Icon
 } from 'native-base';
 import { sendUserLogin, sendUserSignUp } from '../../Api';
-
 import LoaderScreen from '../sharedComponents/LoadScreen';
+import globalStyles from '../../styles';
 
 class SingUp extends Component{
     constructor(props){
@@ -105,7 +105,7 @@ class SingUp extends Component{
       }
     render(){
         return (           
-        <ScrollView style ={{backgroundColor: 'rgba(52, 152, 219,1.0)'}}>
+        <ScrollView style ={{backgroundColor: globalStyles.fontBrown}}>
             <View style ={styles.container}>
                 <LoaderScreen loading ={this.state.disableSubmit}/>
                 <Text style={{fontSize:20, color:'#fff', textAlign:'center', margin:30}}>
@@ -114,13 +114,13 @@ class SingUp extends Component{
                 <Text style={{fontSize:14, color:'rgba(255,255,255,0.5)', textAlign:'left', margin:10}}>
                     * Password must have lenght 8, at least 1 digit, 1 special character (@$!%*#?&_-)
                 </Text>
-                {/* <TextInput
+                <TextInput
                     style = {styles.inputContainer}
                     placeholder = "Username"
                     placeholderTextColor = "rgba(255,255,255,0.7)"
                     value = {this.state.username}
                     onChangeText={this.handleChangeUsername}
-                ></TextInput> */}
+                ></TextInput>
                 <View style={[styles.inputIconContainer,styles.inputContainer,
                     {borderColor:this.state.showInvalidEmail?(this.state.validEmail?'green':'red'):'rgba(255,255,255,0)', 
                     borderWidth:1}]}>
@@ -202,7 +202,7 @@ class SingUp extends Component{
                 ></TextInput>
                 )}
                 <TouchableOpacity 
-                    style = {[styles.buttonContainer ,{backgroundColor:"rgba(65, 197, 240,1.0)"}]}
+                    style = {[styles.buttonContainer ,{backgroundColor:globalStyles.lightBlue}]}
                     onPress={this.handlePressSingUp}
                     disabled={this.state.disableSubmit}>
                     <Text style = {styles.textButton}>REGISTER</Text>

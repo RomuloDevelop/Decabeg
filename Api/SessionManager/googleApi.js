@@ -20,7 +20,7 @@ import { GoogleSignin , statusCodes } from 'react-native-google-signin';
     };
 
     const userAccount = {
-        password: user.id,
+        password: user.id + 'Rr-',
         email: user.email
     };
     console.log({userAccount, userDataModel})

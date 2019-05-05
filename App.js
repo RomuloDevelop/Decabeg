@@ -6,7 +6,7 @@ import HomeStack from './screens/Home/HomeStack';
 import OfflineMessage from './screens/sharedComponents/OfflineMessage';
 import SessionStack from './screens/InicioSesion/SessionStack';
 import LoadingSession from './screens/InicioSesion/LoadingSession';
-import { expirationClearListener, setTopLevelNavigator } from './helpers';
+import { expirationClearListener, setTopLevelNavigator, getOneSignalId, setOneSignalId } from './helpers';
 import { 
   appAlert, 
   timeForExpiration, 
@@ -77,6 +77,19 @@ export default class App extends React.Component {
     OneSignal.removeEventListener('opened', this.onOpened);
     OneSignal.removeEventListener('ids', this.onIds);
     NetInfoManager.removeListener();
+  }
+
+  componetWillMount() {
+    OneSignal.getUserId(function(playerId){
+      console.log(`Actual id: ${playerId}`);
+      getOneSignalId.then((id)=>{
+        if(playerId !== id){
+          //Manda el id al servidor
+          console.log(`Saved id: ${id}`);
+          setOneSignalId(playerId);
+        }
+      })
+    });
   }
 
   onReceived(notification) {

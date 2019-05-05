@@ -27,7 +27,7 @@ async function executeRequest(type: RequestType, uri: string, token: string, dat
             case 'post':
                 return await axiosInstance.post(uri,data,config);
             case 'put':
-                return await axiosInstance.post(uri,data,config);
+                return await axiosInstance.put(uri,data,config);
             case 'patch':
                 return await axiosInstance.patch(uri,data,config);
         }

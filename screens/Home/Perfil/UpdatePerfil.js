@@ -1,18 +1,25 @@
 import React, {Component} from 'react';
-import { 
-    View,
-    StyleSheet, Image, TouchableOpacity } from 'react-native';
-import { Container, Header, Content, Form, Item, Input, Label, Left, Button, Icon, Body, Right, Text } from 'native-base';
+import { View, StyleSheet, Image, TouchableOpacity, Dimensions } from 'react-native';
+import { Container, Header, Content, Form, Item, Input, Label, Left, Button, Icon, Body, Right, Text,
+        Card, CardItem, ListItem, CheckBox } from 'native-base';
 import { Col, Row, Grid } from 'react-native-easy-grid';
 import ImagePicker from 'react-native-image-picker';
-import { getUserData } from '../../../helpers';
+import SubmitButton from '../../sharedComponents/SubmitButton';
+import { getUserData, validateEmail, validatePassword } from '../../../helpers';
 import { sendUpdateUserData } from '../../../Api';
-
+import FadeIn from '../../../Animations/FadeIn';
+import globalStyles from '../../../styles';
 class UpdatePerfil extends Component {
-    state ={
+    state = {
       username: '',
+      user:'',
+      password: '',
+      changepassword:'',
+      repeatpassword: '',
       phone: '',
-      image: require('../../../assets/reactIcon.png')
+      image: require('../../../assets/reactIcon.png'),
+      showPasswordForm: false,
+      error:2
     }
 
     componentWillMount(){
@@ -58,12 +65,39 @@ class UpdatePerfil extends Component {
       this.setState({username:value});
     }
 
+    handleUser = (value) => {
+      this.setState({user:value});
+    }
+
+    handlePassword = (value) => {
+      this.setState({password:value});
+    }
+    
+    handleChangePassword = (value) => {
+      this.setState({changepassword:value});
+    }
+
+    handleRepeatPassword = (value) => {
+      this.setState({repeatpassword:value});
+    }
+
     handlePhone = (value) => {
       this.setState({phone:value});
       
     }
     
     handleLoginPress = () => {
+      if(this.state.showPasswordForm) {
+        const {password, changepassword, repeatpassword} = this.state;
+        if(!validatePassword(changepassword)) {
+          this.setState({error:2})
+          return;
+        }
+        if(changepassword !== repeatpassword){
+          this.setState({error:3})
+          return;
+        }
+      }
       sendUpdateUserData(this.state).then(()=>this.props.navigation.goBack())
       .catch((ex)=>{console.log(`error enviando data:${JSON.stringify(ex)}`)});
     }
@@ -72,38 +106,79 @@ class UpdatePerfil extends Component {
         return (
             <Container>
               <Content>
-                <Grid>
+                <Grid style = {{paddingTop:20}}>
                   <Row style={{alignItems:'flex-start', justifyContent: 'center'}}>
-                    <Col style={styles.formImage}>
-                      <TouchableOpacity
-                       onPress={this.handleImgPress}>
-                        <Label>Choose Image</Label>
-                      </TouchableOpacity>
-                      <Image style={styles.image}
-                       source={this.state.image}/>
-                    </Col>
+                    <TouchableOpacity onPress={this.handleImgPress} style={{marginBottom:15}}>
+                      <Image style={styles.image} source={this.state.image}/>
+                      <Label style={{textAlign:'center'}}>Choose Image</Label>
+                    </TouchableOpacity>
                   </Row>
-                  <Row>
+                  <Row style={{marginBottom:20}}>
                   <Col>
-                    <Form style={{marginHorizontal:15}}>
+                    <Form style={{marginLeft:5, padding:0}}>
                         <Item floatingLabel>
-                          <Label>Username</Label>
+                          <Label>Nombre de Usuario</Label>
                           <Input onChangeText={this.handleUsername} value={this.state.username}/>
                         </Item>
+                        {/* <Item floatingLabel>
+                          <Label>Email</Label>
+                          <Input onChangeText={this.handleUser} value={this.state.user}/>
+                        </Item> */}
                         <Item floatingLabel>
-                          <Label>Number</Label>
+                          <Label>Numero</Label>
                           <Input onChangeText={this.handlePhone} value={this.state.phone}/>
                         </Item>
                     </Form>
                   </Col>
                   </Row>
+                  <Row style={{ marginVertical: 15}}>
+                    <Col>
+                    <View style={{ flex:1,flexDirection:'row', marginLeft:10}}>
+                      <CheckBox checked={this.state.showPasswordForm} 
+                        style={{marginRight:15}}
+                        color={globalStyles.darkBlue}
+                        onPress={()=>this.setState({showPasswordForm:!this.state.showPasswordForm})}/>
+                      <Text>Cambiar Contraseña</Text>
+                    </View>
+                    </Col>
+                  </Row>
+                  {this.state.showPasswordForm && (
                   <Row>
                     <Col>
-                      <TouchableOpacity 
+                    <FadeIn>
+                    <View style={{marginLeft:15}}>
+                      <Text style={{fontSize:14, color:this.state.error===2?'rgba(255,0,0.7)':'rgba(0,0,0,0.7)', textAlign:'left'}}>
+                      * Password must have lenght 8, at least 1 digit, 1 special character (@$!%*#?&_-)
+                      </Text>
+                    </View>
+                    <Form style={{marginLeft:5}}>
+                        <Item floatingLabel>
+                          <Label>Contraseña anterior</Label>
+                          <Input onChangeText={this.handlePassword} value={this.state.password}/>
+                          <Icon name='checkmark-circle' />
+                        </Item>
+                        <Item floatingLabel>
+                          <Label>Nueva contraseña</Label>
+                          <Input onChangeText={this.handleChangePassword} value={this.state.changepassword}/>
+                          <Icon name='checkmark-circle' />
+                        </Item>
+                        <Item floatingLabel>
+                          <Label>Confirmar nueva contraseña</Label>
+                          <Input onChangeText={this.handleRepeatPassword} value={this.state.repeatpassword}/>
+                          <Icon name='checkmark-circle' />
+                        </Item>
+                    </Form>
+                    </FadeIn>
+                    </Col>
+                  </Row>)}
+                  <Row>
+                    <Col>
+                    <SubmitButton onPress = {this.handleLoginPress} text="Update" style={{marginHorizontal:15, marginVertical:25}}/>
+                      {/* <TouchableOpacity 
                             style = {[styles.buttonContainer,{marginHorizontal:15}]}
                             onPress = {this.handleLoginPress}>
                             <Text style = {styles.textButton}>Update</Text>
-                      </TouchableOpacity>
+                      </TouchableOpacity> */}
                     </Col>
                   </Row>
                 </Grid>
@@ -118,8 +193,8 @@ export default UpdatePerfil;
  
 var styles = StyleSheet.create({
   image: {
-      width: 100,
-      height: 100,
+      width: Dimensions.get('window').height / 5,
+      height: Dimensions.get('window').height / 5,
       borderRadius: 100
   },
   formImage: {

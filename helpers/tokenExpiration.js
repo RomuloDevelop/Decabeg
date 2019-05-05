@@ -43,8 +43,8 @@ function expirationAddListener() {
       }
         
     }).catch(ex=>{
-        if(ex === "No data was found")_navigator.dispatch(navigateAction);
         console.log(ex);
+        if(ex === "No data was found")_navigator.dispatch(navigateAction);
     });
   }, 25000);   
 }

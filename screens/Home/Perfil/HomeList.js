@@ -7,7 +7,7 @@ import { signOut as googleSingOut } from '../../../Api/SessionManager/googleApi'
 import { signOut as facebookSingOut } from '../../../Api/SessionManager/facebookApi'
 import {sendUserLogOut} from '../../../Api';
 
-import globalStyles, {buttonForm} from '../../../styles';
+import globalStyles, { buttonForm } from '../../../styles';
 
 export default class HomeList extends Component {    
   constructor(props){
@@ -80,7 +80,7 @@ export default class HomeList extends Component {
                         borderRadius: 100}}
                     source={this.state.userData.image?
                             this.state.userData.image:
-                            require('../../../assets/user.png')} />
+                            require('../../../assets/no_image.png')} />
                 <View style={{justifyContent:'center'}}>
                     <Text style={{fontSize:20, textAlign:'center', color:'white'}}>
                       {this.state.userData.username}
@@ -98,7 +98,7 @@ export default class HomeList extends Component {
               <Left>
                 <Button transparent>
                   <IconNB  type="FontAwesome" name='pencil'
-                  style = {{color: 'rgba(41, 128, 185,1.0)', marginRight:10, fontSize:24}}/>
+                  style = {{color: globalStyles.darkBlue, marginRight:10, fontSize:24}}/>
                 </Button>
                 <Text style={{fontSize:18}}>Editar</Text>
               </Left>
@@ -111,9 +111,22 @@ export default class HomeList extends Component {
               <Left>
                 <Button transparent>
                   <Icon name='history' type="FontAwesome"
-                  style={{color: 'rgba(41, 128, 185,1.0)', marginRight:10}}/>
+                  style={{color: globalStyles.darkBlue, marginRight:10}}/>
                 </Button>
                 <Text style={{fontSize:18}}>History</Text>
+              </Left>
+              <Right>
+                <Icon name="arrow-forward" />
+              </Right>
+            </ListItem>
+            <ListItem noIndent
+                onPress={() => this.props.navigation.navigate('transacciones')}>
+              <Left>
+                <Button transparent>
+                  <Icon name='search' type="FontAwesome"
+                  style={{color: globalStyles.darkBlue, marginRight:10}}/>
+                </Button>
+                <Text style={{fontSize:18}}>Transacciones</Text>
               </Left>
               <Right>
                 <Icon name="arrow-forward" />
@@ -124,7 +137,7 @@ export default class HomeList extends Component {
               <Left>
                 <Button transparent>
                   <Icon name='address-book' type="FontAwesome"
-                  style={{color: 'rgba(41, 128, 185,1.0)', marginRight:10}}/>
+                  style={{color: globalStyles.darkBlue, marginRight:10}}/>
                 </Button>
                 <Text style={{fontSize:18}}>Referrals</Text>
               </Left>
@@ -137,7 +150,7 @@ export default class HomeList extends Component {
               <Left>
                 <Button transparent>
                   <Icon name='connectdevelop' type="FontAwesome"
-                  style={{color: 'rgba(41, 128, 185,1.0)', marginRight:10}}/>
+                  style={{color: globalStyles.darkBlue, marginRight:10}}/>
                 </Button>
                 <Text style={{fontSize:18}}>Generate Code</Text>
               </Left>

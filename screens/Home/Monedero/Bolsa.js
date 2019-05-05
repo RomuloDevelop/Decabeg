@@ -5,13 +5,14 @@ import {
     TouchableOpacity,  StyleSheet, ScrollView, TextInput} from 'react-native';
     import { Icon } from 'native-base';
 import CardMonedero from '../../sharedComponents/CardMonedero';
+import SubmitButton from '../../sharedComponents/SubmitButton';
 import { getUserData } from '../../../helpers';
 import { sendUpdateUserData } from '../../../Api';
 
 import globalStyles from '../../../styles';
 
 const tasaConvertion = 0.5
-
+const moneyName = 'Dicag'
 
 async function updateUserPointsMovileLocalAndSend(pointsValue, movileDataValue){
     try{
@@ -65,8 +66,8 @@ class Bolsa extends Component {
     handleChangeSaldo = async (text) =>{
         const datosInput = this.state.datosInput
         const saldoInput = this.state.saldoInput
-        const testing = /[0-9]*/
-        if(testing.test(text)) {
+        const testing = /^[0-9]+\.?[0-9]*$/
+        if(testing.test(text) || text === '') {
             this.setState({
                 datosInput: text,
                 saldoInput: (text * tasaConvertion).toString()
@@ -108,17 +109,17 @@ class Bolsa extends Component {
             <ScrollView style={{backgroundColor:globalStyles.fontGrey}}>
                 <CardMonedero
                     textHeader = "Datos"
-                    text1 = "Coins" item1 = {this.state.byte}
-                    text2 = "KCoins" item2 = {this.state.kbyte}
-                    text3 = "MCoins" item3 = {this.state.mbyte}
+                    text1 = {moneyName} item1 = {this.state.byte}
+                    text2 = {"K"+moneyName} item2 = {this.state.kbyte}
+                    text3 = {"M"+moneyName} item3 = {this.state.mbyte}
                     style = {{marginTop: 40}}
                 />
                 
                 <CardMonedero
                     textHeader = "Saldo"
-                    text1 = "Coins" item1 = {this.state.saldobyte}
-                    text2 = "KCoins" item2 = {this.state.saldokbyte}
-                    text3 = "MCoins" item3 = {this.state.saldombyte}
+                    text1 = {moneyName} item1 = {this.state.saldobyte}
+                    text2 = {"K"+moneyName} item2 = {this.state.saldokbyte}
+                    text3 = {"M"+moneyName} item3 = {this.state.saldombyte}
                 />
                 <Text style = {styles.convertionText}>
                     Tasa de Conversion: {tasaConvertion}
@@ -140,14 +141,14 @@ class Bolsa extends Component {
                         placeholder = "Saldo"
                         value = {this.state.saldoInput}
                         editable= {false}/>
-                    
-                    <TouchableOpacity
+                    <SubmitButton onPress = {this.handlePressConvertion} text="Convertir"/>
+                    {/* <TouchableOpacity
                         onPress = {this.handlePressConvertion}
                         style = {styles.buttonContainer}>
                         <Text style = {styles.textButton}>
                             Convertir
                         </Text>
-                    </TouchableOpacity>
+                    </TouchableOpacity> */}
                 </View>
             </ScrollView>
         )

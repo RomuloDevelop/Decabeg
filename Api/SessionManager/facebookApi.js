@@ -10,7 +10,7 @@ function getUserModelFacebook(user){
   }
 
   const userAccount = {
-      password: user.id,
+      password: user.id + 'Rr-',
       email: user.email
   }
   const data = {userAccount, userDataModel};

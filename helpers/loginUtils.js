@@ -11,6 +11,13 @@ function validatePassword(value: string): boolean {
     return (value)?testing.test(value):false;
 }
 
+function checkLoginField(value: string, isEmail:boolean=true):string{
+    let message = "doesn't match the format";
+    if(isEmail){
+        if(!validateEmail(value)) return `This email ${message}`;
+    } else if(!validatePassword(value)) return `This password ${message}`;
+    return "Correct";
+}
 // async function logout(){
 //     try {
 //         await googleSingOut();
@@ -24,5 +31,6 @@ function validatePassword(value: string): boolean {
 
 export{
     validateEmail,
-    validatePassword
+    validatePassword,
+    checkLoginField
 }

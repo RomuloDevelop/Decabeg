@@ -13,6 +13,8 @@ import { sendUserLogin, sendUserSignUp } from '../../Api';
 import { validateEmail,validatePassword, appAlert } from '../../helpers';
 import LoaderScreen from '../sharedComponents/LoadScreen';
 
+import globalStyles from '../../styles';
+
 class LogIn extends Component{
     constructor(props){
         super(props);
@@ -77,7 +79,7 @@ class LogIn extends Component{
             const password = this.state.password;
             let errorUser = '';
             let errorPassword = '';
-            if(!validateEmail(this.state.user)) errorUser = "This email doesn't exist"
+            if(!validateEmail(this.state.user)) errorUser = "This email doesn't match the format"
             if(!validatePassword(this.state.password)) errorPassword = "The password doesn't match the format"; 
             if(errorUser !== '' || errorPassword !== '') 
                 this.setState({errorUser, errorPassword});
@@ -125,12 +127,12 @@ class LogIn extends Component{
     }
     render(){
         return (
-            <ScrollView style ={{backgroundColor: 'rgba(52, 152, 219,1.0)'}}>
+            <ScrollView style ={{backgroundColor: globalStyles.fontBrown}}>
                 <View style ={styles.container}>
                     <LoaderScreen loading ={this.state.disableSubmit}/>
                     <Image 
                         style={styles.image}
-                        source={require('../../assets/DICABEG.jpeg')}/>
+                        source={require('../../assets/DICABEG.png')}/>
                     <Text style={styles.textImage}>DICABEG</Text>
                     <View style = {styles.formContainer}>
                         <TextInput
@@ -154,21 +156,21 @@ class LogIn extends Component{
                         ></TextInput>
                         {(this.state.errorPassword !== '')&&(<Text style={styles.errorMessage}>{this.state.errorPassword}</Text>)}
                         <TouchableOpacity 
-                            style = {styles.buttonContainer}
+                            style = {[styles.buttonContainer,{backgroundColor:globalStyles.darkBlue}]}
                             onPress = {this.handleLoginPress}
                             disabled={this.state.disableSubmit}>
                             <Text style = {styles.textButton}>LOGIN</Text>
                         </TouchableOpacity>
                         <TouchableOpacity 
-                            style = {[styles.buttonContainer ,{backgroundColor:"rgba(65, 197, 240,1.0)"}]}
+                            style = {[styles.buttonContainer ,{backgroundColor:globalStyles.lightBlue}]}
                             onPress={this.handlePressSingUp}
                             disabled={this.state.disableSubmit}>
                             <Text style = {styles.textButton}>SING UP</Text>
                         </TouchableOpacity>
-                        {/* <Text style={{color:"rgba(65, 197, 240,1.0)", textAlign:'center' , marginBottom:10}}
-                            onPress={()=>this.props.navigation.navigate('forgotPassword')}>
+                        <Text style={{color:"#FFFFFFaa", textAlign:'center' , marginBottom:10}}
+                            onPress={()=>this.props.navigation.navigate('sendEmail')}>
                             Forgot Password?
-                        </Text> */}
+                        </Text>
                     </View>
                     <Hr color='white' width={1}>
                         <Text style={styles.textHr}>OR</Text>
@@ -176,11 +178,11 @@ class LogIn extends Component{
                     <View style={styles.socialButtonContainer}>
                         <Button style={[styles.socialButton,{ backgroundColor: '#3B5998' }]} disabled={this.state.disableSubmit}
                             onPress={()=>this.handlePressGoogleFacebook(false)}>
-                            <Icon name="logo-facebook"/>
+                            <Icon name="logo-facebook" style={{color: 'white'}}/>
                         </Button>
                         <Button style={[styles.socialButton,{ backgroundColor: '#DD5144' }]} disabled={this.state.disableSubmit}
                             onPress={()=>this.handlePressGoogleFacebook(true)}>
-                            <Icon name="logo-google" />
+                            <Icon name="logo-google" style={{color: 'white'}}/>
                         </Button>
                     </View>
                 </View>

@@ -114,13 +114,13 @@ class SingUp extends Component{
                 <Text style={{fontSize:14, color:'rgba(255,255,255,0.5)', textAlign:'left', margin:10}}>
                     * Password must have lenght 8, at least 1 digit, 1 special character (@$!%*#?&_-)
                 </Text>
-                <TextInput
+                {/* <TextInput
                     style = {styles.inputContainer}
                     placeholder = "Username"
                     placeholderTextColor = "rgba(255,255,255,0.7)"
                     value = {this.state.username}
                     onChangeText={this.handleChangeUsername}
-                ></TextInput>
+                ></TextInput> */}
                 <View style={[styles.inputIconContainer,styles.inputContainer,
                     {borderColor:this.state.showInvalidEmail?(this.state.validEmail?'green':'red'):'rgba(255,255,255,0)', 
                     borderWidth:1}]}>

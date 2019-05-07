@@ -80,7 +80,7 @@ export default class HomeList extends Component {
                         borderRadius: 100}}
                     source={this.state.userData.image?
                             this.state.userData.image:
-                            require('../../../assets/no_image.png')} />
+                            require('../../../assets/DICABEG.png')} />
                 <View style={{justifyContent:'center'}}>
                     <Text style={{fontSize:20, textAlign:'center', color:'white'}}>
                       {this.state.userData.username}

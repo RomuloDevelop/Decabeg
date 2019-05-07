@@ -167,10 +167,10 @@ class LogIn extends Component{
                             disabled={this.state.disableSubmit}>
                             <Text style = {styles.textButton}>SING UP</Text>
                         </TouchableOpacity>
-                        <Text style={{color:"#FFFFFFaa", textAlign:'center' , marginBottom:10}}
+                        {/* <Text style={{color:"#FFFFFFaa", textAlign:'center' , marginBottom:10}}
                             onPress={()=>this.props.navigation.navigate('sendEmail')}>
                             Forgot Password?
-                        </Text>
+                        </Text> */}
                     </View>
                     <Hr color='white' width={1}>
                         <Text style={styles.textHr}>OR</Text>

@@ -49,6 +49,6 @@ const styles = StyleSheet.create({
 });
 
 export {
-    InputDicabeg,
+    InputLogin,
     InputFormApp
 };

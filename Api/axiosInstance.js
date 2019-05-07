@@ -2,22 +2,28 @@
 import NetInfo from "@react-native-community/netinfo"
 import type {RequestType} from 'api-module';
 import axios from 'axios';
-import { responseError, getFunctionName } from '../helpers';
+import { responseError, getFunctionName, getAppToken } from '../helpers';
 
-const baseURL = 'https://api-dicabeg.herokuapp.com/v1/';
+const baseURL = 'https://api-dicabeg.herokuapp.com/v2/';
 const axiosInstance = axios.create({
     baseURL
 });
 
-async function executeRequest(type: RequestType, uri: string, token: string, data: any, setHeaders: any){
+async function executeRequest(type: RequestType, uri: string, data: any, setHeaders: any){
     try{
         const isConnected = await NetInfo.isConnected.fetch();
         if(!isConnected) throw "No connected";
-
-        const headers = (setHeaders)?setHeaders:{
-            'Api-Token': `${token}`,
-            'Content-Type': 'application/x-www-form-urlencoded'
-        };
+        let headers;
+        if(setHeaders)
+            headers = setHeaders;
+        else {
+            const {token} = await getAppToken();
+            console.log(`${token}`);
+            headers = {
+                'Api-Token': `${token}`,
+                'Content-Type': 'application/x-www-form-urlencoded'
+            }
+        }
         const config = {headers};
         switch (type){
             case 'get':

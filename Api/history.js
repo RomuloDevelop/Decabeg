@@ -1,11 +1,8 @@
 import { executeRequest } from './axiosInstance';
-import {getAppToken} from '../helpers';
 
 async function sendGetHistory(){
     try{
-        const {token, id} = await getAppToken();
-        console.log(`Token: ${token} ${id}`);
-        const response = await executeRequest('get', `users/${id}/history/`, token);
+        const response = await executeRequest('get', `users/history/`);
         const data = response.data.resource.history;
         console.log(data);
         return data;
@@ -16,9 +13,7 @@ async function sendGetHistory(){
 
 async function sendPostHistory(videoId){
     try{
-        const {token, id} = await getAppToken();
-        console.log(`Token: ${token} ${id}`);
-        const response = await executeRequest('post', `users/${id}/history/${videoId}/`, token);
+        const response = await executeRequest('post', `users/history/${videoId}/`, token);
         const data = response.data.resource.history;
         return data;
     } catch(ex){
@@ -28,9 +23,7 @@ async function sendPostHistory(videoId){
 
 async function sendDeleteHistory(deleteAll, historyId){
     try {
-        const {token, id} = await getAppToken();
-        console.log(`Token: ${token} ${id}`);
-        const uriData = deleteAll? `users/${id}/history/`:`users/${id}/history/${historyId}/`;
+        const uriData = deleteAll? `users/history/`:`users/history/${historyId}/`;
         const response = await executeRequest('delete', uriData, token);
         return response;
     } catch(ex){

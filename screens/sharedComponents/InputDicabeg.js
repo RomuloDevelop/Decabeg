@@ -7,7 +7,7 @@ function InputLogin(props){
         <View>                
             <TextInput
                 ref={props.inputRef}
-                style = {[styles.inputContainer,{borderColor:props.error?'red':'rgba(255,255,255,0)',borderWidth:1}]}
+                style = {[styles.inputContainer,{borderColor:props.error?'red':'#FFFFFF00',borderWidth:1}]}
                 placeholder = {props.placeholder}
                 placeholderTextColor = "rgba(255,255,255,0.7)"
                 onChangeText={props.onChangeText}
@@ -16,7 +16,7 @@ function InputLogin(props){
                 blurOnSubmit={false}
                 secureTextEntry = {props.secureTextEntry}
                 value = {props.value}></TextInput>
-            {(props.error !== '' && props.error !== null)&&(<Text style={styles.errorMessage}>{props.error}</Text>)}
+            {(props.error !== '' && props.error)&&(<Text style={styles.errorMessage}>{props.error}</Text>)}
         </View>
     );
 }
@@ -49,6 +49,6 @@ const styles = StyleSheet.create({
 });
 
 export {
-    InputDicabeg,
+    InputLogin,
     InputFormApp
 };

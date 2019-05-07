@@ -4,8 +4,9 @@ import { Button, Icon } from 'native-base';
 import { GoogleSignin , statusCodes } from 'react-native-google-signin';
 import { sendForgotPassword } from '../../Api';
 import { checkLoginField } from '../../helpers';
-import {InputLogin} from '../sharedComponents/InputDicabeg';
+import { InputLogin } from '../sharedComponents/InputDicabeg';
 import SubmitButton from '../sharedComponents/SubmitButton';
+import LoaderScreen from '../sharedComponents/LoadScreen';
 import globalStyles from '../../styles';
     
 // ...
@@ -19,25 +20,35 @@ class ForgotPassword extends Component{
             temporal_code: '',
             password: '',
             repeatpassword: '',
-            errorPassword:''
+            errorPassword:'',
+            errorRepeatPassword:'',
+            errorCode:'',
+            loading: false
         }
     }
 
     handleSendPress = async () => {
         try{
-            const {repeatpassword, password} = this.state;
-            if(repeatpassword !== password){
-                this.setState({errorPassword: 'Las contaseñas son diferentes'});
-                return;
-            }
+            const {repeatpassword, password, temporal_code} = this.state;
             const message = checkLoginField(password, isEmail=false);
-            if(message === 'Correct'){
-                const data = { temporal_code:this.state.temporal_code, password: this.state.password };
-                await sendForgotPassword(data);
-                this.props.navigation.navigate('login');
-            } else this.setState({errorPassword: message});
+            if(temporal_code === '') this.setState({errorCode: 'El codigo es requerido'});
+            else if(message !== 'Correct') 
+                this.setState({errorPassword: message});
+            else if(repeatpassword !== password){
+                this.setState({errorRepeatPassword: 'Las contaseñas son diferentes', errorPassword: ''});
+            } else {
+                this.setState(()=>({loading:true}),()=>{
+                    const data = { temporal_code:this.state.temporal_code, password: this.state.password };
+                    sendForgotPassword(data).then(()=>this.props.navigation.navigate('login'))
+                    .catch(()=>{
+                        this.setState({loading:false});
+                        console.log(ex);
+                    });
+                })
+            }
         } catch(ex) {
-            console.log(`${ex.method}: ${ex.message}`);
+            this.setState({loading:false});
+            console.log(ex);
         }
     }
 
@@ -50,6 +61,7 @@ class ForgotPassword extends Component{
     render(){
         return (
             <ScrollView style ={{backgroundColor: globalStyles.fontBrown}}>
+                <LoaderScreen loading ={this.state.loading}/>
                 <View style ={styles.container}>
                     <Image 
                         style={styles.image}
@@ -57,27 +69,14 @@ class ForgotPassword extends Component{
                     />
                     <Text style={styles.textImage}>DICABEG</Text>
                     <View style = {styles.formContainer}>
-                        {/* <TextInput
-                            style = {styles.inputContainer}
-                            placeholder = "Code"
-                            placeholderTextColor = "rgba(255,255,255,0.7)"
-                            onChangeText={this.handleChangeCode}
-                            value = {this.state.temporal_code}>
-                        </TextInput> */}
                         <InputLogin 
                             inputRef={(input) =>this.codeTextInput = input}
                             placeholder = "Codigo"
                             onSubmitEditing = {(value)=>this.passwordTextInput.focus()}
                             onChangeText={this.handleChangeCode}
+                            error = {this.state.errorCode}
                             value = {this.state.temporal_code}>
                         </InputLogin>
-                        {/*<TextInput
-                            style = {styles.inputContainer}
-                            placeholder = "Password"
-                            placeholderTextColor = "rgba(255,255,255,0.7)"
-                            onChangeText={this.handleChangePassword}
-                            value = {this.state.password}>
-                        </TextInput> */}
                         <InputLogin 
                             inputRef={(input) =>this.passwordTextInput = input}
                             placeholder = "Contraseña"
@@ -92,17 +91,10 @@ class ForgotPassword extends Component{
                             placeholder = "Repite Contraseña"
                             onSubmitEditing = {(value)=>this.codeTextInput.focus()}
                             onChangeText={this.handleChangeRepeatPassword}
-                            error = {this.state.errorPassword}
+                            error = {this.state.errorRepeatPassword}
                             value = {this.state.repeatpassword}>
                         </InputLogin>
-                        {/* <TextInput
-                            style = {styles.inputContainer}
-                            placeholder = "Repeat Password"
-                            placeholderTextColor = "rgba(255,255,255,0.7)"
-                            onChangeText={this.handleChangeRepeatPassword}
-                            value = {this.state.repeatpassword}>
-                        </TextInput> */}
-                        <SubmitButton text='LOGIN' onPress = {this.handleSendPress}/>
+                        <SubmitButton text='LOGIN' onPress = {this.handleSendPress} style={{ marginHorizontal: 0}}/>
                     </View>
                 </View>
             </ScrollView>
@@ -131,45 +123,6 @@ const styles = StyleSheet.create({
     formContainer: {
         marginBottom: 10
     },
-    inputContainer: {
-        height: 40,
-        paddingHorizontal: 10,
-        backgroundColor: 'rgba(255,255,255,0.2)',
-        marginBottom: 10,
-        color: '#FFF',
-        borderRadius: 10,
-        elevation: 1,
-        shadowOpacity: 2,
-        shadowRadius: 2,
-        shadowColor: '#000'
-    },
-    buttonContainer: {
-        paddingVertical: 10,
-        marginBottom: 15,
-        backgroundColor: 'rgba(41, 128, 185,1.0)',
-        borderRadius: 10,
-        elevation: 1,
-        shadowOpacity: 2,
-        shadowRadius: 2,
-        shadowColor: '#000'
-    },
-    textButton: {
-        color: '#FFF',
-        textAlign: 'center'
-    },
-    textHr: {
-        color: 'rgba(255,255,255,0.3)',
-        marginBottom: 15,
-        paddingHorizontal: 10
-    },
-    socialButtonContainer: {
-        flexDirection:'row',
-        justifyContent: 'center'
-    },
-    socialButton: {
-        margin: 10,
-        borderRadius: 20
-    }
 });
 
 export default ForgotPassword;

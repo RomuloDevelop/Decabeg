@@ -1,13 +1,11 @@
 import {executeRequest} from './axiosInstance';
 import {
-    getAppToken,
     getFunctionName
 } from '../helpers';
 
 async function sendGetUserReferrals(){
     try{
-        const {token, id} = await getAppToken();
-        const response = await executeRequest('get', `users/${id}/referrals/`, token);
+        const response = await executeRequest('get', `users/referrals/`);
         const data = response.data.resource.referrals;
         return data
     } catch(ex){
@@ -17,8 +15,7 @@ async function sendGetUserReferrals(){
 
 async function sendDeleteUserReferrals(referralId){
     try{
-        const {token, id} = await getAppToken();
-        const response = await executeRequest('delete',`users/${id}/referrals/${referralId}/`,token);
+        const response = await executeRequest('delete',`users/referrals/${referralId}/`);
         const data = response.data;
         return data;
     } catch(ex){

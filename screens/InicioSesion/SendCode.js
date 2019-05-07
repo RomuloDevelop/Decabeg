@@ -5,9 +5,8 @@ import {
     TouchableOpacity,
     TextInput, StyleSheet, Image, ScrollView} from 'react-native';
 import {Button, Icon} from 'native-base';
-import { GoogleSignin , statusCodes } from 'react-native-google-signin';
 import { sendForgotPassword } from '../../Api';
-import { checkLoginField } from '../../helpers';
+import {appAlert} from '../../helpers'; 
 import SubmitButton from '../sharedComponents/SubmitButton';
 import {InputLogin} from '../sharedComponents/InputDicabeg';
 import LoaderScreen from '../sharedComponents/LoadScreen';
@@ -17,32 +16,29 @@ import globalStyles from '../../styles';
 
 // Attempt a login using the Facebook login dialog,
 // asking for default permissions.
-class SendEmail extends Component {
+class SendCode extends Component {
     constructor(props){
         super(props);
         this.state = {
-            email:'',
-            loading: false,
-            error: ''
+            temporal_code:'',
+            loading: false
         }
     }
 
     handleSubmit = ()=>{
         async () => {
             try{
-                const email = this.state.email;
-                const message = checkLoginField(email);
-                if(message !== "Correct")
-                    this.setState({error:message});
-                else{
-                    this.setState(()=>({loading:true}),()=>{
-                        sendForgotPassword(email).then(()=> this.props.navigation.navigate('forgotPassword'))
-                            .catch(()=>{
-                                this.setState({loading:false});
-                                console.log(ex);
-                            });
+                const temporal_code = this.state.temporal_code;
+                this.setState(()=>({loading:true}),()=>{
+                    sendForgotPassword(temporal_code).then(()=> {
+                        appAlert('Codigo recibido', 'Ya puedes iniciar sesion en la app!');
+                        this.props.navigation.navigate('login');
+                    })
+                    .catch(()=>{
+                        this.setState({loading:false});
+                        console.log(ex);
                     });
-                }
+                });
             } catch(ex) {
                 this.setState({loading:false});
                 console.log(ex);
@@ -61,24 +57,19 @@ class SendEmail extends Component {
                 <Text style={styles.textImage}>DICABEG</Text>
                 <View style = {styles.formContainer}>
                     <Text style={{color:"#FFFFFFaa", textAlign:'left' , marginBottom:10}}>
-                        Te enviaremos un codigo a tu correo con el que podras cambiar tu contraseña luego 
+                        Te enviamos un codigo a tu correo para la veficacion de tu cuenta. Ingresalo aqui y ya podras disfrutar de la app de dicabeg
                     </Text>
                     <InputLogin
-                        placeholder = "Email"
-                        onChangeText={(email)=>{this.setState({email})}}
-                        value = {this.state.email}
-                        error={this.state.error}>
+                        placeholder = "Codigo"
+                        onChangeText={(temporal_code)=>{this.setState({temporal_code})}}
+                        value = {this.state.temporal_code}>
                     </InputLogin>
-                    <Text style={{color:"#FFFFFFaa", textAlign:'center' , marginBottom:10}} onPress={()=>this.props.navigation.navigate('forgotPassword')}>
-                        Ya tengo un codigo
-                    </Text>
                     <SubmitButton text = 'Enviar' onPress = {this.handleSubmit} style={{ marginHorizontal: 0}}/>
                 </View>
             </View>
         </ScrollView>
     );}
 }
-export default SendEmail;
 
 const styles = StyleSheet.create({
     container: {
@@ -100,5 +91,7 @@ const styles = StyleSheet.create({
     },
     formContainer: {
         marginBottom: 10
-    }
+    },
 });
+
+export default SendCode;

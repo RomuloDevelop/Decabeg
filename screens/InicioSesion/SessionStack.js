@@ -4,6 +4,7 @@ import { StyleSheet, Text, Button, Easing, Animated } from 'react-native';
  import LogIn from './LogIn';
  import SingUp from './SingUp';
  import SendEmail from './SendEmail';
+ import SendCode from './SendCode';
  import ForgotPassword from './ForgotPassword';
 
  import globalStyles from '../../styles';
@@ -74,33 +75,33 @@ export default SessionStack = createStackNavigator({
   singup: {
     screen: SingUp,
     navigationOptions: ()=> ({
-      title: 'Sing Up',
-      headerStyle: {
-        backgroundColor: globalStyles.navbarColor,
-      },
-      headerTintColor: '#fff'
+      title: 'Registrarse'
     }),
   },
   sendEmail: {
     screen: SendEmail,
     navigationOptions: ()=> ({
-      title: 'Send Email',
-      headerStyle: {
-        backgroundColor: globalStyles.navbarColor,
-      },
-      headerTintColor: '#fff'
+      title: 'Enviar email'
+    })
+  },
+  sendCode: {
+    screen: SendCode,
+    navigationOptions: ()=> ({
+      title: 'Enviar codigo'
     })
   },
   forgotPassword: {
     screen: ForgotPassword,
     navigationOptions: ()=> ({
-      title: 'Forgot Password',
-      headerStyle: {
-        backgroundColor: globalStyles.navbarColor,
-      },
-      headerTintColor: '#fff'
+      title: 'Recuperar contraseña'
     })
   }
 },{
-  transitionConfig:TransitionConfiguration
+  transitionConfig:TransitionConfiguration,
+  defaultNavigationOptions:{
+    headerStyle: {
+      backgroundColor: globalStyles.navbarColor,
+    },
+    headerTintColor: '#fff'
+  }
 })

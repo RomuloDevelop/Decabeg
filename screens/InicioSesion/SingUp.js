@@ -8,6 +8,7 @@ import {
     Badge, Text, Icon
 } from 'native-base';
 import { sendUserLogin, sendUserSignUp } from '../../Api';
+import { appAlert } from '../../helpers';
 import LoaderScreen from '../sharedComponents/LoadScreen';
 import globalStyles from '../../styles';
 
@@ -40,6 +41,23 @@ class SingUp extends Component{
         this.setState({invite_code, showCode});
     }
 
+    errorForDuplicatedKey(ex){
+        try {
+        //const description = ex.message.description;
+        appAlert('Error', JSON.stringify(ex));
+        // if(description.contains('duplicate key value'))
+        //     if(description.contains('username'))
+        //         appAlert('Error', 'El nombre de usuario ya existe');
+        //     else if(description.contains('email'))
+        //         appAlert('Error','El correo ya existe');
+        } catch(ex) {
+            throw ex;
+        }
+    }
+
+    goToGetCode=()=>{
+        this.props.navigation.navigate('sendCode');
+    }
     handleChangeUsername = (value) => {
         this.setState({username:value});
     }
@@ -88,10 +106,10 @@ class SingUp extends Component{
                 this.setState(()=>({disableSubmit:true}),()=>{
                     sendUserSignUp(userAccount).then((data)=>{
                         this.setState(()=>({disableSubmit:false}),()=>{
-                            this.props.navigation.goBack();
+                            this.goToGetCode();
                         });
                     }).catch((ex)=>{
-                        alert(JSON.stringify(ex));
+                        this.errorForDuplicatedKey(ex);
                         this.setState({disableSubmit:false});
                     });
                 });
@@ -99,6 +117,7 @@ class SingUp extends Component{
                 this.setState({showInvalidPassword:!this.validPassword, showInvalidRepeatPassword:!this.validRepassword});
             }
         } catch(ex){
+            this.setState({disableSubmit:false});
             //Inactive load page
             console.log(ex);
         }
@@ -109,10 +128,10 @@ class SingUp extends Component{
             <View style ={styles.container}>
                 <LoaderScreen loading ={this.state.disableSubmit}/>
                 <Text style={{fontSize:20, color:'#fff', textAlign:'center', margin:30}}>
-                    CREATE ACCOUNT
+                    CREAR CUENTA
                 </Text>
                 <Text style={{fontSize:14, color:'rgba(255,255,255,0.5)', textAlign:'left', margin:10}}>
-                    * Password must have lenght 8, at least 1 digit, 1 special character (@$!%*#?&_-)
+                    * Contraseña debe tener al menos longitud 8, al menos 1 digito, 1 caracter especial (@$!%*#?&_-)
                 </Text>
                 <TextInput
                     style = {styles.inputContainer}
@@ -135,7 +154,7 @@ class SingUp extends Component{
                         this.state.showInvalidEmail&&
                     <Icon 
                         style={[styles.inputIcon, {
-                            color:(this.state.validEmail?'green':'red')
+                            color:(this.state.validEmail?'#00FF00':'red')
                         }]}
                         name={this.state.validEmail?'checkmark-circle':'close-circle'}
                         size={20} />
@@ -205,8 +224,11 @@ class SingUp extends Component{
                     style = {[styles.buttonContainer ,{backgroundColor:globalStyles.lightBlue}]}
                     onPress={this.handlePressSingUp}
                     disabled={this.state.disableSubmit}>
-                    <Text style = {styles.textButton}>REGISTER</Text>
+                    <Text style = {styles.textButton}>REGISTRASE</Text>
                 </TouchableOpacity>
+                <Text style={{color:"#FFFFFFaa", textAlign:'center' , marginTop:15}} onPress={this.goToGetCode}>
+                    Ya tengo un codigo
+                </Text>
             </View>
         </ScrollView>
         );

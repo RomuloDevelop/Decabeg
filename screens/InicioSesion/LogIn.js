@@ -93,6 +93,7 @@ class LogIn extends Component{
                 });
             }
         } catch(ex) {
+            this.setState({disableSubmit:false});
             console.log(ex);
         }
     }
@@ -148,7 +149,7 @@ class LogIn extends Component{
                         {(this.state.errorUser !== '')&&(<Text style={styles.errorMessage}>{this.state.errorUser}</Text>)}
                         <TextInput ref={(input) => { this.secondTextInput = input; }}
                             style = {[styles.inputContainer,{borderColor:this.state.errorPassword?'red':'rgba(255,255,255,0)', borderWidth:1}]}
-                            placeholder = "Password"
+                            placeholder = "Contraseña"
                             placeholderTextColor = "rgba(255,255,255,0.7)"
                             secureTextEntry = {true}
                             onChangeText={this.handleChangePassword}
@@ -159,21 +160,21 @@ class LogIn extends Component{
                             style = {[styles.buttonContainer,{backgroundColor:globalStyles.darkBlue}]}
                             onPress = {this.handleLoginPress}
                             disabled={this.state.disableSubmit}>
-                            <Text style = {styles.textButton}>LOGIN</Text>
+                            <Text style = {styles.textButton}>INICIA SESION</Text>
                         </TouchableOpacity>
                         <TouchableOpacity 
                             style = {[styles.buttonContainer ,{backgroundColor:globalStyles.lightBlue}]}
                             onPress={this.handlePressSingUp}
                             disabled={this.state.disableSubmit}>
-                            <Text style = {styles.textButton}>SING UP</Text>
+                            <Text style = {styles.textButton}>REGISTRATE</Text>
                         </TouchableOpacity>
                         <Text style={{color:"#FFFFFFaa", textAlign:'center' , marginBottom:10}}
                             onPress={()=>this.props.navigation.navigate('sendEmail')}>
-                            Forgot Password?
+                            ¿Olvidaste tu contraseña?
                         </Text>
                     </View>
                     <Hr color='white' width={1}>
-                        <Text style={styles.textHr}>OR</Text>
+                        <Text style={styles.textHr}>O</Text>
                     </Hr>
                     <View style={styles.socialButtonContainer}>
                         <Button style={[styles.socialButton,{ backgroundColor: '#3B5998' }]} disabled={this.state.disableSubmit}

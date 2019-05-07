@@ -12,10 +12,10 @@ function validatePassword(value: string): boolean {
 }
 
 function checkLoginField(value: string, isEmail:boolean=true):string{
-    let message = "doesn't match the format";
+    let message = "no corresponde al formato";
     if(isEmail){
-        if(!validateEmail(value)) return `This email ${message}`;
-    } else if(!validatePassword(value)) return `This password ${message}`;
+        if(!validateEmail(value)) return `El email ${message}`;
+    } else if(!validatePassword(value)) return `La contrseña ${message}`;
     return "Correct";
 }
 // async function logout(){

@@ -5,10 +5,10 @@ const userData = 'userData';
 const userPicture = 'userPicture';
 const showMessageFlag = 'showMessageFlag';
 const oneSignalId = 'oneSignalId'
-async function setAppToken(token,expiration, id){
+async function setAppToken(token,expiration){
     try{
-        console.log('Saving data' + JSON.stringify({token,expiration, id}));
-        const data = JSON.stringify({token,expiration, id})
+        console.log('Saving data' + JSON.stringify({token,expiration}));
+        const data = JSON.stringify({token,expiration})
         await AsyncStorage.setItem(tokenAppKey,data);
     } catch(ex){
         throw ex;

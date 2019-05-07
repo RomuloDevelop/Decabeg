@@ -5,7 +5,7 @@ import {
     TouchableOpacity,
     TextInput, StyleSheet, Image, ScrollView} from 'react-native';
 import {Button, Icon} from 'native-base';
-import { sendForgotPassword } from '../../Api';
+import { sendUserActivation } from '../../Api';
 import {appAlert} from '../../helpers'; 
 import SubmitButton from '../sharedComponents/SubmitButton';
 import {InputLogin} from '../sharedComponents/InputDicabeg';
@@ -25,24 +25,26 @@ class SendCode extends Component {
         }
     }
 
-    handleSubmit = ()=>{
-        async () => {
-            try{
-                const temporal_code = this.state.temporal_code;
-                this.setState(()=>({loading:true}),()=>{
-                    sendForgotPassword(temporal_code).then(()=> {
-                        appAlert('Codigo recibido', 'Ya puedes iniciar sesion en la app!');
-                        this.props.navigation.navigate('login');
-                    })
-                    .catch(()=>{
-                        this.setState({loading:false});
-                        console.log(ex);
-                    });
+    handleSubmit = async () => {
+        try{
+            const temporal_code = this.state.temporal_code;
+            console.log(temporal_code);
+            this.setState(()=>({loading:true}),()=>{
+                sendUserActivation(temporal_code).then(()=> {
+                    appAlert('Codigo recibido', 'Ya puedes iniciar sesion en la app!');
+                    this.props.navigation.navigate('login');
+                })
+                .catch((ex)=>{
+                    if(ex.message.description)
+                        if(ex.message.description === 'code is not set')
+                            appAlert('Codigo invalido', 'Este Codigo caduco o es invalido');
+                    this.setState({loading:false});
+                    console.log(ex);
                 });
-            } catch(ex) {
-                this.setState({loading:false});
-                console.log(ex);
-            }
+            });
+        } catch(ex) {
+            this.setState({loading:false});
+            console.log(ex);
         }
     };
     render(){

@@ -23,12 +23,11 @@ async function sendUserLogin(user, userData){
         const {email, password} = user;
         const formBody = getUrlEncodedParams({email, password});
         console.log(formBody);
-        const response = await executeRequest('post', `sessions/`, formBody, {});
+        const response = await executeRequest('post', `accounts/login`, formBody, {'Content-Type': 'application/x-www-form-urlencoded'});
         const data = response.data;
-        const token = data.resource["api_token"];
-        //const expiration = data.information["expiration_time_unix"];
-        //await setAppToken(token, expiration);
-        await setAppToken(token);
+        const token = data.resource.token["api_token"];
+        const expiration = data.resource.token["expiration_time"];
+        await setAppToken(token, expiration);
         console.log('Login:' + JSON.stringify(data));
         if(userData){ //Inicia sesion por primera ves en google, facebook
             console.log('primera ves');
@@ -45,10 +44,10 @@ async function sendUserLogin(user, userData){
 
 async function sendUserResetToken(){
     try{
-        const response = await executeRequest('patch', `sessions/`);
+        const response = await executeRequest('post', `accounts/login/refresh`);
         const data = response.data;
-        const newtoken = data.resource.session['api_token'];
-        const expiration = data.information['expiration_time_unix'];
+        const newtoken = data.description['api_token'];
+        const expiration = data.description['expiration_time'];
         mergeAppToken({token:newtoken, expiration});
         return data;
     } catch(ex){
@@ -61,6 +60,18 @@ async function sendUserSignUp(user){
         user.player_id = await getOneSignalId();
         const formBody = getUrlEncodedParams(user);
         const response = await executeRequest('post', `users`, formBody,{'Content-Type': 'application/x-www-form-urlencoded'});
+        const data = response.data;
+        console.log('SingUp:' + JSON.stringify(data));
+        return data;
+    } catch(ex){
+        throw ex;
+    }
+}
+
+async function sendUserActivation(temporal_code){
+    try{
+        const formBody = getUrlEncodedParams(temporal_code);
+        const response = await executeRequest('post', `accounts/activation`, formBody,{'Content-Type': 'application/x-www-form-urlencoded'});
         const data = response.data;
         console.log('SingUp:' + JSON.stringify(data));
         return data;
@@ -85,5 +96,6 @@ export{
     sendUserLogin,
     sendUserResetToken,
     sendUserSignUp,
+    sendUserActivation,
     sendForgotPassword
 }

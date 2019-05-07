@@ -60,9 +60,11 @@ export default class App extends React.Component {
       connected: true
     }
     OneSignal.init("2c4010d0-c7b2-458d-923a-eda58dfbd643");
+    OneSignal.configure();
     OneSignal.addEventListener('received', this.onReceived);
     OneSignal.addEventListener('opened', this.onOpened);
     OneSignal.addEventListener('ids', this.onIds);
+    OneSignal.enableSound(true);
     NetInfoManager.addListener((connectionInfo)=>{
       if(connectionInfo.type === 'none'){
         //ToastAndroid.showWithGravity('Device is offline',ToastAndroid.SHORT,ToastAndroid.BOTTOM);
@@ -79,19 +81,6 @@ export default class App extends React.Component {
     NetInfoManager.removeListener();
   }
 
-  componetWillMount() {
-    OneSignal.getUserId(function(playerId){
-      console.log(`Actual id: ${playerId}`);
-      getOneSignalId.then((id)=>{
-        if(playerId !== id){
-          //Manda el id al servidor
-          console.log(`Saved id: ${id}`);
-          setOneSignalId(playerId);
-        }
-      })
-    });
-  }
-
   onReceived(notification) {
     console.log("Notification received: ", notification);
   }
@@ -105,6 +94,13 @@ export default class App extends React.Component {
 
   onIds(device) {
     console.log('Device info: ', device);
+    getOneSignalId().then((id)=>{
+      if(device.userId !== id){
+        //Manda el id al servidor
+        console.log(`Saved id: ${device.userId}`);
+        setOneSignalId(device.userId);
+      }
+    });
   }
   render() {
     return( 

@@ -8,7 +8,7 @@ import {
 async function sendGetUserData() {
     try{
         console.log('GetUser');
-        const response = await executeRequest('get', `users/`);
+        const response = await executeRequest('get', `users`);
         const data = response.data.resource.user;
         await setUserData(data);
         return data;
@@ -22,7 +22,7 @@ async function sendUpdateUserData(userData){
         console.log('update');
         const formBody = getUrlEncodedParams(userData);
         console.log(formBody);
-        const response = await executeRequest('patch', `users/`, formBody);
+        const response = await executeRequest('patch', `users`, formBody);
         console.log(`Update: ${JSON.stringify(response.data)}`);
         await mergeUserData(userData);
         return response.data;

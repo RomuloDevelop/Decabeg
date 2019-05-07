@@ -31,7 +31,9 @@ class SingUp extends Component{
             iconName: 'eye',
             security: true,
             showCode:false,
-            disableSubmit: false
+            disableSubmit: false,
+            errorDuplicatedUser:'',
+            errorDuplicatedEmail:''
         }
     }
     componentDidMount(){
@@ -43,15 +45,17 @@ class SingUp extends Component{
 
     errorForDuplicatedKey(ex){
         try {
-        //const description = ex.message.description;
-        appAlert('Error', JSON.stringify(ex));
-        // if(description.contains('duplicate key value'))
-        //     if(description.contains('username'))
-        //         appAlert('Error', 'El nombre de usuario ya existe');
-        //     else if(description.contains('email'))
-        //         appAlert('Error','El correo ya existe');
+            const description = ex.message.description;
+            if(description.message === "username exist"){
+                this.setState({errorDuplicatedUser:`Se sugiere ${description.suggested_username}`});
+            } else if(typeof description === 'string'){
+                if(description.includes('duplicate key value')){
+                    if(description.includes('email'))
+                        this.setState({errorDuplicatedEmail:'El correo ya existe'});
+                }
+            }
         } catch(ex) {
-            throw ex;
+            console.log(ex);
         }
     }
 
@@ -103,13 +107,14 @@ class SingUp extends Component{
                 };
                 if(this.state.showCode) userAccount.invite_code = this.state.invite_code;
                 //active page
-                this.setState(()=>({disableSubmit:true}),()=>{
+                this.setState(()=>({disableSubmit:true, errorDuplicatedEmail: '', errorDuplicatedUser:''}),()=>{
                     sendUserSignUp(userAccount).then((data)=>{
                         this.setState(()=>({disableSubmit:false}),()=>{
                             this.goToGetCode();
                         });
                     }).catch((ex)=>{
                         this.errorForDuplicatedKey(ex);
+                        console.log(ex);
                         this.setState({disableSubmit:false});
                     });
                 });
@@ -140,6 +145,15 @@ class SingUp extends Component{
                     value = {this.state.username}
                     onChangeText={this.handleChangeUsername}
                 ></TextInput>
+                {this.state.errorDuplicatedUser !== '' && (
+                    <Badge danger style={{marginBottom: 20}}>
+                        <View style={{flexDirection:'row', justifyContent:'center', alignItems: 'center'}}>
+                            <Icon name="times-circle" type='FontAwesome' style={styles.badgeIcon}/>
+                            <Text>{this.state.errorDuplicatedUser}</Text> 
+                        </View>
+                    </Badge>
+                )
+                }
                 <View style={[styles.inputIconContainer,styles.inputContainer,
                     {borderColor:this.state.showInvalidEmail?(this.state.validEmail?'green':'red'):'rgba(255,255,255,0)', 
                     borderWidth:1}]}>
@@ -160,6 +174,15 @@ class SingUp extends Component{
                         size={20} />
                     }
                 </View>
+                {this.state.errorDuplicatedEmail !== '' && (
+                    <Badge danger style={{marginBottom: 20}}>
+                        <View style={{flexDirection:'row', justifyContent:'center', alignItems: 'center'}}>
+                            <Icon name="times-circle" type='FontAwesome' style={styles.badgeIcon}/>
+                            <Text>{this.state.errorDuplicatedEmail}</Text> 
+                        </View>
+                    </Badge>
+                )
+                }
                 <View style={[styles.inputIconContainer,styles.inputContainer]}>
                     <TextInput
                         style={styles.innerInput}

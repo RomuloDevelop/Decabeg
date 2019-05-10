@@ -26,7 +26,7 @@ async function sendUserLogin(user, userData){
         const response = await executeRequest('post', `accounts/login`, formBody, {'Content-Type': 'application/x-www-form-urlencoded'});
         const data = response.data;
         const token = data.resource.token["api_token"];
-        const expiration = data.resource.token["expiration_time"];
+        const expiration = parseFloat(moment().add(1800,'s').format('x'));//data.resource.token["expiration_time"];
         await setAppToken(token, expiration);
         console.log('Login:' + JSON.stringify(data));
         if(userData){ //Inicia sesion por primera ves en google, facebook
@@ -47,7 +47,7 @@ async function sendUserResetToken(){
         const response = await executeRequest('post', `accounts/login/refresh`);
         const data = response.data;
         const newtoken = data.description['api_token'];
-        const expiration = data.description['expiration_time'];
+        const expiration = parseFloat(moment().add(1800,'s').format('x'));//data.description['expiration_time'];
         mergeAppToken({token:newtoken, expiration});
         return data;
     } catch(ex){

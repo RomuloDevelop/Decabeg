@@ -1,4 +1,5 @@
-import { AsyncStorage } from "react-native"
+import { AsyncStorage } from "react-native";
+import moment from 'moment';
 const notFoundError = 'No data was found';
 const tokenAppKey = 'tokenApp';
 const userData = 'userData';
@@ -178,6 +179,18 @@ async function setOneSignalId(data){
     }
 }
 
+// async function getExpirationDate(){
+//    const dateJson = await AsyncStorage.getItem('date');
+//    const date = JSON.parse(dateJson)
+//    console.log(`Tiempo en bd: ${date}`);
+//    return date;
+// }
+
+// async function setExpirationDate(segs){
+//     const date = parseFloat(moment().add(segs,'s').format('x'));
+//     await AsyncStorage.setItem('date', JSON.stringify(date));
+// }
+
 export {
     setAppToken,
     getAppToken,
@@ -192,5 +205,5 @@ export {
     setShowResetTokenMessage,
     getShowResetTokenMessage,
     getOneSignalId,
-    setOneSignalId
+    setOneSignalId,
 }

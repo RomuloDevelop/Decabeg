@@ -2,14 +2,14 @@ import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import { createStackNavigator, createBottomTabNavigator, NavigationActions } from 'react-navigation';
 import { IconNB, Icon, Button, Text } from 'native-base';
-import UpdatePerfil from './UpdatePerfil';
-import History from './History';
-import Transacciones from './Transacciones'
-import Contacts from './Contacts';
-import HomeList from './HomeList';
-import CreateReferralsCode from './CreateReferralsCode';
+import UpdatePerfil from '../screens/Home/Perfil/UpdatePerfil';
+import History from '../screens/Home/Perfil/History';
+import Transacciones from '../screens/Home/Perfil/Transacciones'
+import Contacts from '../screens/Home/Perfil/Contacts';
+import HomeList from '../screens/Home/Perfil/HomeList';
+import CreateReferralsCode from '../screens/Home/Perfil/CreateReferralsCode';
 
-import globalStyles from '../../../styles';
+import globalStyles from '../styles';
 
 function BackButton(text, navigation){            
   return (

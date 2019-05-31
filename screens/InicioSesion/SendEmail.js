@@ -27,58 +27,57 @@ class SendEmail extends Component {
         }
     }
 
-    handleSubmit = ()=>{
-        async () => {
-            try{
-                const email = this.state.email;
-                const message = checkLoginField(email);
-                if(message !== "Correct")
-                    this.setState({error:message});
-                else{
-                    this.setState(()=>({loading:true}),()=>{
-                        sendForgotPassword(email).then(()=> this.props.navigation.navigate('forgotPassword'))
-                            .catch(()=>{
-                                this.setState({loading:false});
-                                console.log(ex);
-                            });
-                    });
-                }
-            } catch(ex) {
-                this.setState({loading:false});
-                console.log(ex);
+    handleSubmit = async ()=>{
+        try{
+            const email = this.state.email;
+            const message = checkLoginField(email);
+            if(message !== "Correct")
+                this.setState({error:message});
+            else{
+                this.setState(()=>({loading:true}),()=>{
+                    sendForgotPassword({email})
+                        .then(()=> this.props.navigation.navigate('forgotPassword'))
+                        .catch((ex)=>{
+                            this.setState({loading:false});
+                            console.log(ex);
+                        });
+                });
             }
+        } catch(ex) {
+            this.setState({loading:false});
+            console.log(ex);
         }
     };
     render(){
-    return (
-        <ScrollView style ={{backgroundColor: globalStyles.fontBrown}}>
-        <LoaderScreen loading ={this.state.loading}/>
-            <View style ={styles.container}>
-                <Image 
-                    style={styles.image}
-                    source={require('../../assets/DICABEG.png')}
-                />
-                <Text style={styles.textImage}>DICABEG</Text>
-                <View style = {styles.formContainer}>
-                    <Text style={{color:"#FFFFFFaa", textAlign:'left' , marginBottom:10}}>
-                        Te enviaremos un codigo a tu correo con el que podras cambiar tu contraseña luego 
-                    </Text>
-                    <InputLogin
-                        placeholder = "Email"
-                        onChangeText={(email)=>{this.setState({email})}}
-                        value = {this.state.email}
-                        error={this.state.error}>
-                    </InputLogin>
-                    <Text style={{color:"#FFFFFFaa", textAlign:'center' , marginBottom:10}} onPress={()=>this.props.navigation.navigate('forgotPassword')}>
-                        Ya tengo un codigo
-                    </Text>
-                    <SubmitButton text = 'Enviar' onPress = {this.handleSubmit} style={{ marginHorizontal: 0}}/>
+        return (
+            <ScrollView style ={{backgroundColor: globalStyles.fontBrown}}>
+            <LoaderScreen loading ={this.state.loading}/>
+                <View style ={styles.container}>
+                    <Image 
+                        style={styles.image}
+                        source={require('../../assets/DICABEG.png')}
+                    />
+                    <Text style={styles.textImage}>DICABEG</Text>
+                    <View style = {styles.formContainer}>
+                        <Text style={{color:"#FFFFFFaa", textAlign:'left' , marginBottom:10}}>
+                            Te enviaremos un codigo a tu correo con el que podras cambiar tu contraseña luego 
+                        </Text>
+                        <InputLogin
+                            placeholder = "Email"
+                            onChangeText={(email)=>{this.setState({email})}}
+                            value = {this.state.email}
+                            error={this.state.error}>
+                        </InputLogin>
+                        <Text style={{color:"#FFFFFFaa", textAlign:'center' , marginBottom:10}} onPress={()=>this.props.navigation.navigate('forgotPassword')}>
+                            Ya tengo un codigo
+                        </Text>
+                        <SubmitButton text = 'Enviar' onPress = {this.handleSubmit} style={{ marginHorizontal: 0}}/>
+                    </View>
                 </View>
-            </View>
-        </ScrollView>
-    );}
+            </ScrollView>
+        );
+    }
 }
-export default SendEmail;
 
 const styles = StyleSheet.create({
     container: {
@@ -102,3 +101,5 @@ const styles = StyleSheet.create({
         marginBottom: 10
     }
 });
+
+export default SendEmail;

@@ -29,6 +29,8 @@ class SendCode extends Component {
         try{
             const temporal_code = this.state.temporal_code;
             console.log(temporal_code);
+            if(!temporal_code)
+                return appAlert('Codigo', 'Ingrese un codigo de verificacion valido');
             this.setState(()=>({loading:true}),()=>{
                 sendUserActivation(temporal_code).then(()=> {
                     appAlert('Codigo recibido', 'Ya puedes iniciar sesion en la app!');
@@ -36,7 +38,7 @@ class SendCode extends Component {
                 })
                 .catch((ex)=>{
                     if(ex.message.description)
-                        if(ex.message.description === 'code is not set')
+                        if(ex.message.description === 'code invalid or used')
                             appAlert('Codigo invalido', 'Este Codigo caduco o es invalido');
                     this.setState({loading:false});
                     console.log(ex);

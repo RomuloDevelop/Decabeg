@@ -7,6 +7,9 @@ import com.facebook.CallbackManager;
 import com.facebook.appevents.AppEventsLogger;
 //
 import com.facebook.react.ReactApplication;
+import com.bugsnag.BugsnagReactNative;
+import com.learnium.RNDeviceInfo.RNDeviceInfo;
+
 import com.geektime.rnonesignalandroid.ReactNativeOneSignalPackage;
 import com.reactnativecommunity.netinfo.NetInfoPackage;
 
@@ -24,11 +27,23 @@ import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
 import com.facebook.soloader.SoLoader;
-
+//#region Unimodules Packages
+import org.unimodules.core.interfaces.Package;
+import org.unimodules.adapters.react.ModuleRegistryAdapter;
+import org.unimodules.adapters.react.ReactModuleRegistryProvider;
+import org.unimodules.core.interfaces.SingletonModule;
+import expo.modules.ads.admob.AdMobPackage;
+import org.unimodules.adapters.react.ReactAdapterPackage;
+ //#endregion
 import java.util.Arrays;
 import java.util.List;
 
 public class MainApplication extends Application implements ReactApplication {
+  //Unimodules
+  private final ReactModuleRegistryProvider mModuleRegistryProvider = new ReactModuleRegistryProvider(Arrays.<Package>asList(
+    new ReactAdapterPackage(),
+    new AdMobPackage()), Arrays.<SingletonModule>asList());
+ 
   //#region Facebook SingIn
   private static CallbackManager mCallbackManager = CallbackManager.Factory.create();
 
@@ -36,6 +51,7 @@ public class MainApplication extends Application implements ReactApplication {
     return mCallbackManager;
   }
   //#endregion
+  
   private final ReactNativeHost mReactNativeHost = new ReactNativeHost(this) {
 
     @Override
@@ -47,6 +63,9 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            BugsnagReactNative.getPackage(),
+            new RNDeviceInfo(),
+            new ModuleRegistryAdapter(mModuleRegistryProvider),
             new ReactNativeOneSignalPackage(),
             new NetInfoPackage(),
             new RNGestureHandlerPackage(),

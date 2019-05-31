@@ -5,12 +5,15 @@ const tokenAppKey = 'tokenApp';
 const userData = 'userData';
 const userPicture = 'userPicture';
 const showMessageFlag = 'showMessageFlag';
-const oneSignalId = 'oneSignalId'
-async function setAppToken(token,expiration){
+const oneSignalId = 'oneSignalId';
+const firstTime = 'firstTime';
+const configurationVars = 'configurationVars';
+const agendaList = 'agendaList';
+async function setAppToken(token, refresh, expiration, timeZone){
     try{
-        console.log('Saving data' + JSON.stringify({token,expiration}));
-        const data = JSON.stringify({token,expiration})
-        await AsyncStorage.setItem(tokenAppKey,data);
+        const dataJson = JSON.stringify({token, refresh, expiration, timeZone});
+        console.log('Saving data'+ dataJson);
+        await AsyncStorage.setItem(tokenAppKey,dataJson);
     } catch(ex){
         throw ex;
     }
@@ -133,11 +136,12 @@ async function setReferrals(data){
 }
 
 async function clearData(){
-    try{
-        await AsyncStorage.clear();
-    } catch(ex){
-        throw ex;
-    }
+    return Promise.all([
+        AsyncStorage.removeItem(tokenAppKey),
+        AsyncStorage.removeItem(userData),
+        AsyncStorage.removeItem(userPicture),
+        AsyncStorage.removeItem(showMessageFlag)
+    ]);
 }
 
 async function setShowResetTokenMessage(data){
@@ -179,17 +183,62 @@ async function setOneSignalId(data){
     }
 }
 
-// async function getExpirationDate(){
-//    const dateJson = await AsyncStorage.getItem('date');
-//    const date = JSON.parse(dateJson)
-//    console.log(`Tiempo en bd: ${date}`);
-//    return date;
-// }
+async function getFirstTime(){
+    try{
+        const flag = await AsyncStorage.getItem(firstTime);
+        return JSON.parse(flag);
+    } catch(ex) {
+        throw ex;
+    }
+}
 
-// async function setExpirationDate(segs){
-//     const date = parseFloat(moment().add(segs,'s').format('x'));
-//     await AsyncStorage.setItem('date', JSON.stringify(date));
-// }
+async function setFirstTime(flag){
+    try{
+        await AsyncStorage.setItem(firstTime, JSON.stringify(flag));
+    } catch(ex) {
+        throw ex;
+    }
+}
+
+async function getConfiguration(){
+    try{
+        const data = await AsyncStorage.getItem(configurationVars);
+        return JSON.parse(data);
+    } catch(ex) {
+        throw ex;
+    }
+}
+
+async function setConfiguration(data){
+    try{
+        await AsyncStorage.setItem(configurationVars, JSON.stringify(data));
+    } catch(ex) {
+        throw ex;
+    }
+}
+
+async function setAgendaList(data){
+    try{
+        const dataJson = JSON.stringify(data);
+        console.log(dataJson + 'agenda')
+        await AsyncStorage.setItem(agendaList,dataJson);
+    } catch(ex){
+        throw ex;
+    }
+}
+async function getAgendaList(){
+    try{
+        const list = await AsyncStorage.getItem(agendaList);
+        if(list){
+            return JSON.parse(list);
+        } else {
+            throw notFoundError;
+        }
+    } catch(ex){
+        throw ex;
+    }
+}
+
 
 export {
     setAppToken,
@@ -206,4 +255,10 @@ export {
     getShowResetTokenMessage,
     getOneSignalId,
     setOneSignalId,
+    getFirstTime,
+    setFirstTime,
+    getConfiguration,
+    setConfiguration,
+    setAgendaList,
+    getAgendaList
 }

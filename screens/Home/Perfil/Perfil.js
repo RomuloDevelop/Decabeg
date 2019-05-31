@@ -1,11 +1,12 @@
 import React, {Component} from 'react';
 import { StyleSheet, Image, TouchableOpacity } from 'react-native';
-import { Container,Content, ListItem, Text, Separator, IconNB, Header, Right, Button } from 'native-base';
+import { Container,Content, ListItem, Text, Separator, IconNB, Right, Button } from 'native-base';
 import { Col, Row, Grid } from 'react-native-easy-grid';
 import {NavigationActions} from 'react-navigation';
 import { GoogleSignin , statusCodes } from 'react-native-google-signin';
 import { LoginManager } from 'react-native-fbsdk';
 import SubmitButton from '../../sharedComponents/SubmitButton';
+import Header from '../../sharedComponents/Header';
 import { getUserData } from '../../../helpers';
 
 class Perfil extends Component {
@@ -43,6 +44,7 @@ class Perfil extends Component {
 
         return (
           <Container>
+          <Header color={globalStyles.darkBlue} title="Perfil" onPress={()=>this.props.navigation.openDrawer()}/>
             <Content>
                 <Grid>
                   <Row size={5} style={{ backgroundColor: 'rgba(41, 128, 185,1.0)', alignItems: 'center', justifyContent: 'center'}}>

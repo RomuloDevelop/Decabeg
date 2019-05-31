@@ -1,5 +1,6 @@
 package com.decabeg_android;
 import android.content.Intent;
+import android.view.View;
 import android.content.res.Configuration;
 import com.facebook.react.ReactActivity;
 import com.facebook.react.ReactActivityDelegate;
@@ -43,5 +44,22 @@ public class MainActivity extends ReactActivity {
          }
        };
      }
+    //#endregion    
+    //#region Hide navigation bar
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        if (hasFocus) {
+            hideNavigationBar();
+        }
+    }
+
+    private void hideNavigationBar() {
+        getWindow().getDecorView().setSystemUiVisibility(
+            View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+            | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+            | View.SYSTEM_UI_FLAG_FULLSCREEN);
+
+    }
     //#endregion
 }

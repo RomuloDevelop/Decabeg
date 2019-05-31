@@ -5,26 +5,22 @@ import * as Progress from 'react-native-progress';
 import { Button, Text, Icon, ListItem, Radio, Right, Left, Badge, Card, CardItem, Col, Row, Grid } from 'native-base';
 import FadeIn from '../../../Animations/FadeIn';
 import { sendGetVideos, sendPostHistory, sendUpdateUserData } from '../../../Api';
-import { mergeUserData, getUserData } from '../../../helpers';
+import { mergeUserData, getUserData, expirationAddListener } from '../../../helpers';
 import LoaderScreen from '../../sharedComponents/LoadScreen';
 import globalStyles from '../../../styles';
 
-async function updateUserMoneyLocalAndSend(type, data){
-    try{
-        let {points, money} = await getUserData();
-        let value;
-        value = (type === "points")? points += data:money += data;
-        await sendUpdateUserData({[type]:value});
-        await mergeUserData({[type]:value});
-    } catch(ex) {
-        throw ex;
-    }
+async function updateUserMoneyLocalAndSend(data){
+  try {
+    const {balance} = await getUserData();
+    const value = balance + data;
+    await sendUpdateUserData({balance:value});
+  } catch(ex) {
+    throw ex;
+  }
 }
 
 function Answers({video, onPressRadioButton}){
   try{
-    console.log('Video List');
-    console.log(video);
     const CardItems = video.responses.map((item)=>{
       return(
         <CardItem
@@ -82,6 +78,7 @@ class Anuncios extends Component {
     }
 
     componentWillMount(){
+      expirationAddListener();
       sendGetVideos().then((data)=>{
         try{
           if(data){
@@ -153,8 +150,8 @@ class Anuncios extends Component {
     }
 
     onPressAnswer = async ()=>{
-      this.setState(()=>({disableButtonSend:true}), async()=>{
-        const responses =  this.state.videos[this.state.index].responses
+      try{
+        const responses =  this.state.videos[this.state.index].responses;
         for (let index = 0; index < responses.length; index ++){
             const item = responses[index];
             if(item.selected){
@@ -166,7 +163,7 @@ class Anuncios extends Component {
         console.log(`Result: ${this.result}`);
         console.log(this.state.videos[this.state.index].video_id);
         //Videos
-        if(this.result) await updateUserMoneyLocalAndSend("points", 5);
+        if(this.result) await updateUserMoneyLocalAndSend(parseFloat(5));
         await sendPostHistory(this.state.videos[this.state.index].video_id);
         this.setState(()=>({
                     pause: false,
@@ -176,7 +173,10 @@ class Anuncios extends Component {
                     showResult: true
                 }), () => this.resutViewHandle = setTimeout(()=>this.setState(()=>({showResult:false}),this.onSkip),3000)
         );
-      })
+      } catch(ex){
+        this.setState({disableButtonSend:false});
+        console.log(ex);
+      }
   }
 
     radioHandle = (itemID)=>{
@@ -274,8 +274,10 @@ class Anuncios extends Component {
                         <Answers 
                           video = {this.state.videos[this.state.index]}
                           onPressRadioButton = {this.radioHandle}/>
-                        <TouchableOpacity style={styles.buttonContainer} onPress = {this.onPressAnswer} disabled={this.state.disableButtonSend}>
-                            <Text style={styles.textButton}>Send</Text>
+                        <TouchableOpacity style={styles.buttonContainer} 
+                            onPress = {()=>this.setState(()=>({disableButtonSend:true}),this.onPressAnswer)} 
+                            disabled={this.state.disableButtonSend}>
+                            <Text style={styles.textButton}>Enviar</Text>
                         </TouchableOpacity>
                     </FadeIn>)}
                     {this.state.showResult && (
@@ -284,7 +286,7 @@ class Anuncios extends Component {
                           <Badge success style={{margin: 20}}>
                             <View style={{flexDirection:'row', justifyContent:'center', alignItems: 'center'}}>
                               <Icon name="check-circle" type='FontAwesome' style={styles.badgeIcon}/>
-                              <Text>Correct Answer</Text>
+                              <Text>Respuesta Correcta</Text>
                             </View>
                           </Badge>)
                           : (   
@@ -292,7 +294,7 @@ class Anuncios extends Component {
                           <Badge danger style={{margin: 20}}>
                             <View style={{flexDirection:'row', justifyContent:'center', alignItems: 'center'}}>
                               <Icon name="times-circle" type='FontAwesome' style={styles.badgeIcon}/>
-                              <Text>Incorrect Answer</Text>
+                              <Text>Respuesta Incorrecta</Text>
                             </View>
                           </Badge>)}
                         </FadeIn>)}

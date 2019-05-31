@@ -2,10 +2,10 @@
  import { StyleSheet, Text, View} from 'react-native';
  import {createBottomTabNavigator} from 'react-navigation';
  import { IconNB, Icon } from 'native-base';
- import ProfileStack from './Perfil/ProfileStack';
- import Actions from './Monedero/ActionStack';
+ import ProfileStack from '../screens/Home/Perfil/ProfileStack';
+ import Actions from '../screens/Home/Monedero/ActionStack';
 
- import globalStyles from '../../styles';
+ import globalStyles from '../styles';
 
 
  export default HomeStack = createBottomTabNavigator({

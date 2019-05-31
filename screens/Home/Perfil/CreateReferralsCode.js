@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {TouchableOpacity, Clipboard, Share} from 'react-native';
 import { Container, Content, Text, Icon, Form, Item, Input, Label, Row, Col, Grid } from 'native-base';
 import SubmitButton from '../../sharedComponents/SubmitButton';
+import Header from '../../sharedComponents/Header';
 import { sendEmail, getUserData } from '../../../helpers';
 
 import  globalStyles, { buttonForm } from '../../../styles';
@@ -76,6 +77,7 @@ export default class CreateReferralsCode extends Component {
         
         return(
             <Container>
+            <Header color={globalStyles.darkBlue} title="Crear Codigo" onPress={()=>this.props.navigation.openDrawer()}/>
                 <Content>
                     <Grid>
                     <Row>

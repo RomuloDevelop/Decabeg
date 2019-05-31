@@ -2,13 +2,13 @@ import React, { Component } from 'react';
 import {createMaterialTopTabNavigator, createStackNavigator, NavigationActions} from 'react-navigation';
 import {View} from 'react-native';
 import {Icon, Text, Button} from 'native-base';
-import Bolsa from './Bolsa';
-import Recarga from './Recarga';
-import Anuncios from './Anuncios';
-import Transferir from './Transferir';
+import Bolsa from '../screens/Home/Monedero/Bolsa';
+import VideoAds from '../screens/Home/Monedero/VideoAds';
+import Anuncios from '../screens/Home/Monedero/Anuncios';
+import Transferir from '../screens/Home/Monedero/Transferir';
 
 //styles
-import globalStyles from '../../../styles';
+import globalStyles from '../styles';
 
 const backButton = (text, navigation)=>(            
     <View style={{flex: 1, flexDirection: 'row'}}>
@@ -22,10 +22,11 @@ const backButton = (text, navigation)=>(
 
 export default Actions = createMaterialTopTabNavigator({
     //Recarga,
-    Bolsa,
     Anuncios,
+    Publicidad:{screen:VideoAds},
     Transferir
 },{
+    backBehavior: 'none',
     tabBarOptions: {
         optimizationsEnabled: false,
         scrollEnabled: true,

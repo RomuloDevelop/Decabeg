@@ -18,6 +18,7 @@ import globalStyles from '../../styles';
 class LogIn extends Component{
     constructor(props){
         super(props);
+        this.bugsnag = props.screenProps.bugsnag;
         this.notSignedUp = false;
         this.state = {
             user: '',
@@ -87,14 +88,18 @@ class LogIn extends Component{
                 this.setState(()=>({disableSubmit:true, errorUser: '', errorPassword:''}),()=>{
                     this.signInApp({email, password})
                     .catch((ex)=>{
-                        this.setState({disableSubmit:false});
+                        if(ex.description) {
+                            if(ex.description === 'email not found' || ex.description === "passsword incorrect")
+                                appAlert('Error de sesion', 'El email o la contraseña son incorrectos');
+                        }
                         console.log(ex);
+                        this.setState({disableSubmit:false});
                     });
                 });
             }
         } catch(ex) {
-            this.setState({disableSubmit:false});
             console.log(ex);
+            this.setState({disableSubmit:false});
         }
     }
 
@@ -173,7 +178,7 @@ class LogIn extends Component{
                             ¿Olvidaste tu contraseña?
                         </Text>
                     </View>
-                    <Hr color='white' width={1}>
+                    {/* <Hr color='white' width={1}>
                         <Text style={styles.textHr}>O</Text>
                     </Hr>
                     <View style={styles.socialButtonContainer}>
@@ -185,7 +190,7 @@ class LogIn extends Component{
                             onPress={()=>this.handlePressGoogleFacebook(true)}>
                             <Icon name="logo-google" style={{color: 'white'}}/>
                         </Button>
-                    </View>
+                    </View> */}
                 </View>
             </ScrollView>
         );

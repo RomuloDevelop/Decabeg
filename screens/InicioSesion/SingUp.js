@@ -10,11 +10,15 @@ import {
 import { sendUserLogin, sendUserSignUp } from '../../Api';
 import { appAlert } from '../../helpers';
 import LoaderScreen from '../sharedComponents/LoadScreen';
+import {PickerLogin} from '../sharedComponents/InputDicabeg';
 import globalStyles from '../../styles';
+import DeviceInfo from 'react-native-device-info';
+import moment from 'moment-timezone';
 
 class SingUp extends Component{
     constructor(props){
         super(props);
+        this.timezones=moment.tz.names().map((item)=>({label:item, value:item}))
         this.validEmail= false,
         this.validRepassword = false;
         this.validPassword = false;
@@ -24,6 +28,7 @@ class SingUp extends Component{
             password: '',
             invite_code:'',
             repeatpassword: '',
+            timezone: DeviceInfo.getTimezone(),
             validEmail: false,
             showInvalidEmail:false,
             showInvalidRepeatPassword: false,
@@ -45,27 +50,38 @@ class SingUp extends Component{
 
     errorForDuplicatedKey(ex){
         try {
+            // const description = ex.message.description;
+            // if(description.message === "username exist"){
+            //     this.setState({errorDuplicatedUser:`Se sugiere ${description.suggested_username}`});
+            // } else if(typeof description === 'string'){
+            //     if(description.includes('duplicate key value')){
+            //         if(description.includes('email'))
+            //             this.setState({errorDuplicatedEmail:'El correo ya existe'});
+            //     }
+            // }
+            if(!ex.message.description)
+                throw ex;
             const description = ex.message.description;
-            if(description.message === "username exist"){
-                this.setState({errorDuplicatedUser:`Se sugiere ${description.suggested_username}`});
-            } else if(typeof description === 'string'){
-                if(description.includes('duplicate key value')){
-                    if(description.includes('email'))
-                        this.setState({errorDuplicatedEmail:'El correo ya existe'});
-                }
-            }
+            if(typeof description === 'string'){
+                if(description.includes('email') && description.includes('exist'))
+                    this.setState({errorDuplicatedEmail:'El correo ya existe'});
+            } else if(description.message){
+                if(description.message === "username exist"){
+                    this.setState({errorDuplicatedUser:`Se sugiere ${description.suggested_username}`});
+                } else throw ex;
+            } else 
+                throw ex;
         } catch(ex) {
             console.log(ex);
         }
     }
 
-    goToGetCode=()=>{
-        this.props.navigation.navigate('sendCode');
-    }
-    handleChangeUsername = (value) => {
-        this.setState({username:value});
-    }
+    goToGetCode=()=>this.props.navigation.navigate('sendCode')
+    
+    handlePickerValueChange = (itemValue, itemIndex) =>this.setState({timezone: itemValue})
 
+    handleChangeUsername = (value) => this.setState({username:value})
+    
     handleChangeEmail = (value) => {
         const testing = /\S+@\S+\.\S+/;
         const validEmail = testing.test(value);
@@ -103,7 +119,9 @@ class SingUp extends Component{
                 const userAccount = {
                     username:this.state.username,
                     email:this.state.email,
-                    password:this.state.password
+                    password:this.state.password,
+                    send_email:true,
+                    time_zone:this.state.timezone
                 };
                 if(this.state.showCode) userAccount.invite_code = this.state.invite_code;
                 //active page
@@ -132,7 +150,7 @@ class SingUp extends Component{
         <ScrollView style ={{backgroundColor: globalStyles.fontBrown}}>
             <View style ={styles.container}>
                 <LoaderScreen loading ={this.state.disableSubmit}/>
-                <Text style={{fontSize:20, color:'#fff', textAlign:'center', margin:30}}>
+                <Text style={{fontSize:25, color:'#fff', textAlign:'center', margin:30}}>
                     CREAR CUENTA
                 </Text>
                 <Text style={{fontSize:14, color:'rgba(255,255,255,0.5)', textAlign:'left', margin:10}}>
@@ -188,7 +206,7 @@ class SingUp extends Component{
                         style={styles.innerInput}
                         placeholder="Password"
                         placeholderTextColor = "rgba(255,255,255,0.7)"
-                        maxLength={8}
+                        maxLength={10}
                         secureTextEntry={this.state.security}
                         onChangeText={this.handleChangePassword}
                         onBlur={this.handleBlurPassword}
@@ -234,6 +252,13 @@ class SingUp extends Component{
                     </Badge>
                 )
                 }
+                <Text style={{fontSize:14, color:'rgba(255,255,255,0.5)', textAlign:'left', margin:10}}>
+                    * Es necesario que especifiques tu zona horaria para registrar tus operaciones
+                </Text>
+                <PickerLogin 
+                    data={this.timezones} 
+                    value={this.state.timezone} 
+                    onValueChange={this.handlePickerValueChange}/>
                 {this.state.showCode&&(
                 <TextInput
                     style = {styles.inputContainer}
@@ -244,7 +269,7 @@ class SingUp extends Component{
                 ></TextInput>
                 )}
                 <TouchableOpacity 
-                    style = {[styles.buttonContainer ,{backgroundColor:globalStyles.lightBlue}]}
+                    style = {[styles.buttonContainer ,{backgroundColor:globalStyles.lightBlue, marginTop:10}]}
                     onPress={this.handlePressSingUp}
                     disabled={this.state.disableSubmit}>
                     <Text style = {styles.textButton}>REGISTRASE</Text>

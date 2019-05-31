@@ -1,13 +1,13 @@
 import React from 'react';
 import { StyleSheet, Text, Button, Easing, Animated } from 'react-native';
  import {createStackNavigator} from 'react-navigation';
- import LogIn from './LogIn';
- import SingUp from './SingUp';
- import SendEmail from './SendEmail';
- import SendCode from './SendCode';
- import ForgotPassword from './ForgotPassword';
+ import LogIn from '../screens/InicioSesion/LogIn';
+ import SingUp from '../screens/InicioSesion/SingUp';
+ import SendEmail from '../screens/InicioSesion/SendEmail';
+ import SendCode from '../screens/InicioSesion/SendCode';
+ import ForgotPassword from '../screens/InicioSesion/ForgotPassword';
 
- import globalStyles from '../../styles';
+ import globalStyles from '../styles';
 
 let CollapseExpand = (index, position) => {
   const inputRange = [index - 1, index, index + 1];

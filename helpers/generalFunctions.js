@@ -13,27 +13,6 @@ function checkResponse(response, method, message){
     }
 }
 
-function responseError(error, method){
-  if (error.response) {
-    console.log('response error');
-    console.log(error.response.headers);
-    console.log(error.response.data);
-    throw {message:error.response.data, method};
-  } else if (error.request){
-    console.log('request error'); 
-    throw {message:error.request, method};}
-  else if(error.message) {
-    console.log('message error');
-    throw {message: error.message, method};
-  }
-  else if(error==="No connected"){
-    console.log('No conectado');
-    ToastAndroid.showWithGravity(error,ToastAndroid.LONG,ToastAndroid.BOTTOM);
-    throw error;
-  }
-  else throw error;
-}
-
 function getFunctionName(arg){
   let myName = arg.callee.toString();
   myName = myName.substr('function '.length);
@@ -52,7 +31,7 @@ function appAlert(title,answer,onPressOK, onPressCancel){
     const buttons = (!onPressOK)?[{text:'OK'}]:
       [
         {
-          text: 'Cancel',
+          text: 'Cancelar',
           onPress: async () => {
               if(onPressCancel)
                 await onPressCancel();
@@ -101,7 +80,6 @@ async function sendEmail(to, subject, body, options = {}) {
 
 export {
     checkResponse,
-    responseError,
     getFunctionName,
     getUrlEncodedParams,
     appAlert,

@@ -14,7 +14,7 @@ function setTopLevelNavigator(navigatorRef) {
 }
 
 function expirationAddListener() {
-    console.log('did focus home');
+    console.log('did focus anuncios');
     const navigateAction = NavigationActions.navigate({routeName: 'login'})
     tokenExpiration = BackgroundTimer.setInterval(() => {  
     getAppToken().then(async (data)=>{
@@ -53,11 +53,6 @@ function expirationClearListener(){
   BackgroundTimer.clearInterval(tokenExpiration);
   console.log('did blur');
 }
-// navigation.addListener('didFocus',()=>{
-
-// })
-// navigation.addListener('didBlur',()=>{
-// });
 
 export{
     setTopLevelNavigator,

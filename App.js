@@ -1,11 +1,11 @@
 import React from 'react';
 import { StyleSheet, Text, Button, ToastAndroid, View } from 'react-native';
 import { createSwitchNavigator, createAppContainer} from 'react-navigation';
-import HomeStack from './screens/Home/HomeStack';
-//import HomeDrawerStack from './screens/Home/HomeDrawerStack';
-import OfflineMessage from './screens/sharedComponents/OfflineMessage';
-import SessionStack from './screens/InicioSesion/SessionStack';
+import HomeStack from './navigation/HomeStack2';
+//import HomeDrawerStack from './navigation/HomeDrawerStack';
+import SessionStack from './navigation/SessionStack';
 import LoadingSession from './screens/InicioSesion/LoadingSession';
+import OfflineMessage from './screens/sharedComponents/OfflineMessage';
 import { expirationClearListener, setTopLevelNavigator, getOneSignalId, setOneSignalId } from './helpers';
 import { 
   appAlert, 
@@ -13,10 +13,14 @@ import {
   getAppToken, clearData, 
   getShowResetTokenMessage, 
   setShowResetTokenMessage, 
-  NetInfoManager } from './helpers';
+  NetInfoManager,
+  getFirstTime, setFirstTime,
+  setConfiguration } from './helpers';
 import { sendUserResetToken } from './Api';
 import BackgroundTimer from 'react-native-background-timer';
 import OneSignal from 'react-native-onesignal';
+import { Client } from 'bugsnag-react-native';
+const bugsnag = new Client('f6fda3b0e6194d20aeb884cd8fee9e9d');
 
 const AppStack = createSwitchNavigator({
   loading: {
@@ -43,10 +47,10 @@ const AppStack = createSwitchNavigator({
   },
   home: {
     screen: HomeStack,
-    navigationOptions: ({navigation})=> {
-      navigation.addListener('didBlur', expirationClearListener)
-      return { title: '', header: null }
-    },
+      navigationOptions: ({navigation})=> {
+        navigation.addListener('didBlur', expirationClearListener)
+        return { title: '', header: null }
+      },
   },
 });
 
@@ -74,6 +78,18 @@ export default class App extends React.Component {
     });
   }
 
+  componentWillMount() {
+    getFirstTime()
+    .then(async (bool)=>{
+      const ms = bool?'yano':'first';
+      if(!bool){
+        await setConfiguration({notify:false});
+        await setFirstTime(true);
+      }
+      console.log(ms);
+    })
+  }
+
   componentWillUnmount() {
     OneSignal.removeEventListener('received', this.onReceived);
     OneSignal.removeEventListener('opened', this.onOpened);
@@ -96,7 +112,6 @@ export default class App extends React.Component {
     console.log('Device info: ', device);
     getOneSignalId().then((id)=>{
       if(device.userId !== id){
-        //Manda el id al servidor
         console.log(`Saved id: ${device.userId}`);
         setOneSignalId(device.userId);
       }
@@ -107,8 +122,8 @@ export default class App extends React.Component {
       <View style={{flex:1}}>
       <AppContainer 
         ref={navigatorRef => {
-          setTopLevelNavigator(navigatorRef);
-      }}/>
+          setTopLevelNavigator(navigatorRef);  
+      }} screenProps={{bugsnag:bugsnag}}/>
       {(!this.state.connected)&&(<OfflineMessage/>)}
       </View>
     );

@@ -1,8 +1,9 @@
 //@flow
+import { ToastAndroid } from 'react-native';
 import NetInfo from "@react-native-community/netinfo"
 import type {RequestType} from 'api-module';
 import axios from 'axios';
-import { responseError, getFunctionName, getAppToken } from '../helpers';
+import { getFunctionName, getAppToken } from '../helpers';
 
 const baseURL = 'https://api-dicabeg.herokuapp.com/v2/';
 const axiosInstance = axios.create({
@@ -18,9 +19,9 @@ async function executeRequest(type: RequestType, uri: string, data: any, setHead
             headers = setHeaders;
         else {
             const {token} = await getAppToken();
-            console.log(`${token}`);
+            console.log(`token: ${token}`);
             headers = {
-                'Api-Token': `${token}`,
+                'access-token': `${token}`,
                 'Content-Type': 'application/x-www-form-urlencoded'
             }
         }
@@ -41,5 +42,27 @@ async function executeRequest(type: RequestType, uri: string, data: any, setHead
         return responseError(ex, getFunctionName(arguments));
     }
 }
+
+function responseError(error, method){
+  if (error.response) {
+    console.log('response error');
+    console.log(error.response.headers);
+    console.log(error.response.data);
+    throw {message:error.response.data, method};
+  } else if (error.request){
+    console.log('request error'); 
+    throw {message:error.request, method};
+  } else if(error.message) {
+    console.log('message error');
+    throw {message: error.message, method};
+  }
+  else if(error==="No connected"){
+    console.log('No conectado');
+    ToastAndroid.showWithGravity(error,ToastAndroid.LONG,ToastAndroid.BOTTOM);
+    throw error;
+  }
+  else throw error;
+}
+
 export { executeRequest }
 export default axiosInstance;

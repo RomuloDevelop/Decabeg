@@ -2,12 +2,13 @@ import { executeRequest } from './axiosInstance';
 import { sendGetUserData, sendUpdateUserData } from './userdata';
 import {
     setAppToken,
-    getOneSignalId,
     mergeAppToken,
     setUserData,
-    mergeUserData,
-    getUrlEncodedParams
+    getUrlEncodedParams,
+    getOneSignalId
 } from '../helpers';
+
+import moment from 'moment';
 
 async function sendUserLogOut(){
     try{
@@ -24,11 +25,15 @@ async function sendUserLogin(user, userData){
         const formBody = getUrlEncodedParams({email, password});
         console.log(formBody);
         const response = await executeRequest('post', `accounts/login`, formBody, {'Content-Type': 'application/x-www-form-urlencoded'});
-        const data = response.data;
-        const token = data.resource.token["api_token"];
-        const expiration = parseFloat(moment().add(1800,'s').format('x'));//data.resource.token["expiration_time"];
-        await setAppToken(token, expiration);
+        const data = response.data.resource.accounts;
+        const token = data.access_token;
+        const refresh = data.refresh_token;
+        const expiration = data.expiration_date;//parseFloat(moment().add(30,'minutes').format('X'));
+        const timeZone = data.time_zone;
+        await setAppToken(token, refresh, expiration, timeZone);
         console.log('Login:' + JSON.stringify(data));
+        //const player_id = await getOneSignalId();
+        //await sendUpdateUserData({player_id});
         if(userData){ //Inicia sesion por primera ves en google, facebook
             console.log('primera ves');
             await sendGetUserData();
@@ -46,9 +51,11 @@ async function sendUserResetToken(){
     try{
         const response = await executeRequest('post', `accounts/login/refresh`);
         const data = response.data;
-        const newtoken = data.description['api_token'];
-        const expiration = parseFloat(moment().add(1800,'s').format('x'));//data.description['expiration_time'];
-        mergeAppToken({token:newtoken, expiration});
+        const token = data.description.access_token;
+        const refresh = data.description.refresh_token;
+        const expiration = data.description.expiration_date;//parseFloat(moment().add(30,'minutes').format('X'));
+        const timeZone = data.description.time_zone;
+        await setAppToken(token, refresh, expiration, timeZone);
         return data;
     } catch(ex){
         throw ex;
@@ -57,7 +64,6 @@ async function sendUserResetToken(){
 
 async function sendUserSignUp(user){
     try{
-        user.player_id = await getOneSignalId();
         const formBody = getUrlEncodedParams(user);
         const response = await executeRequest('post', `users`, formBody,{'Content-Type': 'application/x-www-form-urlencoded'});
         const data = response.data;
@@ -70,7 +76,7 @@ async function sendUserSignUp(user){
 
 async function sendUserActivation(temporal_code){
     try{
-        const formBody = getUrlEncodedParams(temporal_code);
+        const formBody = getUrlEncodedParams({temporal_code});
         const response = await executeRequest('post', `accounts/activation`, formBody,{'Content-Type': 'application/x-www-form-urlencoded'});
         const data = response.data;
         console.log('SingUp:' + JSON.stringify(data));
@@ -80,10 +86,10 @@ async function sendUserActivation(temporal_code){
     }
 }
 
-async function sendForgotPassword(email) {
-    try{ 
-        const formBody = getUrlEncodedParams(email);
-        const response = executeRequest('post', `accounts/recovery`, formBody, {'Content-Type': 'application/x-www-form-urlencoded'});
+async function sendForgotPassword(password) {
+    try{
+        const formBody = getUrlEncodedParams(password);
+        const response = await executeRequest('post', `accounts/recovery`, formBody, {'Content-Type': 'application/x-www-form-urlencoded'});
         const data = response.data;
         console.log('Data Email:' + JSON.stringify(data));
     } catch(ex){

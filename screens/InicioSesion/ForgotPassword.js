@@ -30,7 +30,7 @@ class ForgotPassword extends Component{
     handleSendPress = async () => {
         try{
             const {repeatpassword, password, temporal_code} = this.state;
-            const message = checkLoginField(password, isEmail=false);
+            const message = checkLoginField(password, 'password');
             if(temporal_code === '') this.setState({errorCode: 'El codigo es requerido'});
             else if(message !== 'Correct') 
                 this.setState({errorPassword: message});
@@ -38,9 +38,14 @@ class ForgotPassword extends Component{
                 this.setState({errorRepeatPassword: 'Las contaseñas son diferentes', errorPassword: ''});
             } else {
                 this.setState(()=>({loading:true}),()=>{
-                    const data = { temporal_code:this.state.temporal_code, password: this.state.password };
-                    sendForgotPassword(data).then(()=>this.props.navigation.navigate('login'))
-                    .catch(()=>{
+                    const data = { 
+                        temporal_code:this.state.temporal_code, 
+                        password:this.state.password 
+                    };
+                    console.log(data);
+                    sendForgotPassword(data)
+                    .then(()=>this.props.navigation.navigate('login'))
+                    .catch((ex)=>{
                         this.setState({loading:false});
                         console.log(ex);
                     });

@@ -91,8 +91,8 @@ class Transferir extends Component {
           }
           const {balance} = await sendGetUserData();
           if(value > balance){
-              alert('No posee tantos dicag');
-              return;
+            appAlert('No posee tantos dicag');
+            return;
           }
           const transferResponse = await sendTransferToUser(this.state.username, this.state.amount, this.state.concept);
           const byte = parseFloat(transferResponse.current_balance).toFixed(4);

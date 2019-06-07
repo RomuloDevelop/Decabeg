@@ -1,5 +1,5 @@
 import { executeRequest } from './axiosInstance';
-import { sendGetUserData, sendUpdateUserData } from './userdata';
+import { sendGetUserData } from './userdata';
 import {
     setAppToken,
     mergeAppToken,

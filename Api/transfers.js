@@ -11,7 +11,7 @@ async function sendTransferToUser(username, amount, concept='Sin concepto'){
         console.log(formBody);
         const response = await executeRequest('post', `transfers`, formBody);
         const data = response.data.resource.transfers;
-        mergeUserData({balance:transferResponse.current_balance});
+        mergeUserData({balance:data.current_balance});
         return data;
     } catch(ex){
         throw ex;

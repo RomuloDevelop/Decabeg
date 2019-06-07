@@ -11,9 +11,7 @@ import globalStyles from '../../../styles';
 
 async function updateUserMoneyLocalAndSend(data){
   try {
-    const {balance=0} = await sendGetUserData();
-    const value = balance + data;
-    await sendUpdateUserData({balance:value});
+    await sendUpdateUserData({balance:data});
   } catch(ex) {
     throw ex;
   }

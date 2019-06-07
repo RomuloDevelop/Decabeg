@@ -21,9 +21,9 @@ export default class VideoAds extends React.Component{
        RNAdColony.configure(appIdAdColony,zoneIdAdColony);
        RNAdColony.setUser("Romulo");
        RNAdColony.loadAds(zoneIdAdColony);
-       AdMobRewarded.setAdUnitID('ca-app-pub-3940256099942544/5224354917'); // Test ID, Replace with your-admob-unit-id
-       AdMobRewarded.setTestDeviceID('EMULATOR'); //[AdMobRewarded.simulatorId]
-       //AdMobRewarded.setAdUnitID('ca-app-pub-6095454139379493/6183407113');
+       //AdMobRewarded.setAdUnitID('ca-app-pub-3940256099942544/5224354917'); // Test ID, Replace with your-admob-unit-id
+       //AdMobRewarded.setTestDeviceID('EMULATOR'); //[AdMobRewarded.simulatorId]
+       AdMobRewarded.setAdUnitID('ca-app-pub-6095454139379493/6183407113');
       this.state = {
         byte: 0,
         kbyte: 0,
@@ -65,11 +65,13 @@ export default class VideoAds extends React.Component{
     adColonyAds = ()=>{
       RNAdColony.isReady(zoneIdAdColony,(isReady)=>{
         if(isReady){
+          console.log('adcolony ready');
           this.adColonyReady = true;
           RNAdColony.showAdReward(zoneIdAdColony,(RewardName, RewardAmount)=>{
             this.getSaldoConvertion(RewardAmount);
           });
         } else {
+          console.log('adcolony no ready');
           this.countAdConolonyFails += 1
           if(this.countAdConolonyFails === 2) {
             RNAdColony.loadAds(zoneIdAdColony);
@@ -110,7 +112,7 @@ export default class VideoAds extends React.Component{
           this.setState({loader:false});
         } catch(ex) {
           this.adColonyAds();
-          setTimeout(()=>this.manageErrorAds(ex.message), 500);
+          setTimeout(()=>this.manageErrorAds(ex.message), 1000);
           this.setState({loader:false});
         }
       });
@@ -119,13 +121,13 @@ export default class VideoAds extends React.Component{
 
     getSaldoConvertion = async(reward) => {
       try{
-        const addBalance = parseFloat(reward.amount).toFixed(4);
-        await sendUpdateUserData({balance:addBalance});
-        const {balance} = await sendGetUserData();
+        await sendUpdateUserData({balance:reward.amount});
+        const {balance} = await getUserData();
+        const newBalance = parseFloat(balance).toFixed(4);
         this.setState({
-            balance,
-            kbyte: balance/1000,
-            mbyte: balance/1000000,
+            byte: newBalance,
+            kbyte: newBalance/1000,
+            mbyte: newBalance/1000000,
         });
       } catch(ex) {
           console.log(ex);
@@ -146,7 +148,6 @@ export default class VideoAds extends React.Component{
                   text3 = {"M"+moneyName} item3 = {this.state.mbyte}
                   style = {{margin: 40}}/>
               <SubmitButton onPress={this.showRewarded} text="Videos bonificados"/>
-              <SubmitButton onPress={this.adColonyAds} text="Videos AdColony"/>
             </Content>
           </Container>
       );

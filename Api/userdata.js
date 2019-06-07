@@ -26,7 +26,8 @@ async function sendUpdateUserData(userData){
         console.log(formBody);
         const response = await executeRequest('patch', `users`, formBody);
         console.log(`Update: ${JSON.stringify(response.data)}`);
-        await mergeUserData(userData);
+        const user = response.data.resource.users;
+        await mergeUserData(user);
         return response.data;
     } catch(ex){
         throw ex;

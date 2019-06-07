@@ -6,24 +6,24 @@ import {sendGetUserData, sendUpdateUserData} from '../../../Api';
 import SubmitButton from '../../sharedComponents/SubmitButton';
 import CardMonedero from '../../sharedComponents/CardMonedero';
 import LoaderScreen from '../../sharedComponents/LoadScreen';
-import {
-  AdMobBanner,
-  AdMobInterstitial,
-  PublisherBanner,
-  AdMobRewarded,
-} from 'expo-ads-admob';
-//import RNAdColony from 'react-native-ad-colony';
+import { AdMobRewarded } from 'expo-ads-admob';
+import RNAdColony from 'react-native-ad-colony';
 const moneyName = 'Dicag';
+const mopubId = '233b35beadd84c998c625fec6200e24c';
+const zoneIdAdColony = 'vzdb56a8b971bc4dd8a8';
+const appIdAdColony = 'appc82f7b3e52fb4395a3'
 export default class VideoAds extends React.Component{
      constructor(props){
        super(props);
-    //   this.count = 0;
-    //   RNAdColony.configure('app080089e21b6e4c1097','vz197109a30f1948d399');
-    //   RNAdColony.setUser("Romulo");
-    //   RNAdColony.loadAds("vz197109a30f1948d399");
-      //AdMobRewarded.setAdUnitID('ca-app-pub-3940256099942544/5224354917'); // Test ID, Replace with your-admob-unit-id
-      AdMobRewarded.setAdUnitID('ca-app-pub-6095454139379493/6183407113');
-      //AdMobRewarded.setTestDeviceID('EMULATOR'); //[AdMobRewarded.simulatorId]
+       this.bugsnag = props.screenProps.bugsnag;
+       this.countAdConolonyFails = 0;
+       this.adColonyReady = false;
+       RNAdColony.configure(appIdAdColony,zoneIdAdColony);
+       RNAdColony.setUser("Romulo");
+       RNAdColony.loadAds(zoneIdAdColony);
+       AdMobRewarded.setAdUnitID('ca-app-pub-3940256099942544/5224354917'); // Test ID, Replace with your-admob-unit-id
+       AdMobRewarded.setTestDeviceID('EMULATOR'); //[AdMobRewarded.simulatorId]
+       //AdMobRewarded.setAdUnitID('ca-app-pub-6095454139379493/6183407113');
       this.state = {
         byte: 0,
         kbyte: 0,
@@ -33,9 +33,11 @@ export default class VideoAds extends React.Component{
     }
 
     componentDidMount() {
+      AdMobRewarded.addEventListener('rewardedVideoDidRewardUser',(reward) => this.getSaldoConvertion(reward));
+      AdMobRewarded.addEventListener('rewardedVideoDidOpen',() => this.setState({loader:false}));
       const {navigation} = this.props;
       navigation.addListener('didFocus',()=>{
-          sendGetUserData().then((data)=>{
+          getUserData().then((data)=>{
               const {balance=0} = data;
               const byte = parseFloat(balance).toFixed(4);
               this.setState({
@@ -45,43 +47,71 @@ export default class VideoAds extends React.Component{
               });
           });
       });
-      AdMobRewarded.addEventListener('rewardedVideoDidRewardUser',(reward) => this.getSaldoConvertion(reward));
-      AdMobRewarded.addEventListener('rewardedVideoDidOpen',() => this.setState({loader:false}));
-      AdMobRewarded.addEventListener('rewardedVideoDidFailToLoad',(errCode) =>{
-        switch (errCode) {
-          case 'ERROR_CODE_NO_FILL':
-            appAlert('Sin anuncios', 'No se encontraron anuncios disponibles, intentelo en unos momentos');
-            break;
-          default:
-            break;
-        }
-        this.setState({loader:false});
-      })
     }
 
     componentWillUnmount() {
       AdMobRewarded.removeAllListeners();
     }
 
-    showRewarded = async ()=>{
-      // RNAdColony.isReady('vz197109a30f1948d399',(isReady)=>{
-      //   if(isReady){
-      //     RNAdColony.showAdReward("vz197109a30f1948d399",(RewardName, RewardAmount)=>{
-      //       this.count += RewardAmount;
-      //       console.log(`${RewardName} ${this.count}`);
-      //     });
-      //   } else {
-      //     alert('Cargando publicidades');
-      //   }
-      // })
+    adMobAds = async ()=>{
+      try{
+        await AdMobRewarded.requestAdAsync();
+        await AdMobRewarded.showAdAsync();
+      } catch(ex){
+        throw ex;
+      }
+    }
+
+    adColonyAds = ()=>{
+      RNAdColony.isReady(zoneIdAdColony,(isReady)=>{
+        if(isReady){
+          this.adColonyReady = true;
+          RNAdColony.showAdReward(zoneIdAdColony,(RewardName, RewardAmount)=>{
+            this.getSaldoConvertion(RewardAmount);
+          });
+        } else {
+          this.countAdConolonyFails += 1
+          if(this.countAdConolonyFails === 2) {
+            RNAdColony.loadAds(zoneIdAdColony);
+            this.countAdConolonyFails = 0;
+          }
+        }
+      });
+    }
+
+    manageErrorAds = (message)=>{
+      if(this.adColonyReady){
+        this.adColonyReady = false;
+        return;
+      }
+      switch(message){
+        case 'ERROR_CODE_NO_FILL':
+          appAlert('Sin anuncios', 'No se encontraron anuncios disponibles, intentelo en unos momentos');
+          break;
+        case 'ERROR_CODE_NETWORK_ERROR':
+          appAlert('Conexión de red', 'Revise su conexión de red e intentelo de nuevo');
+          break;
+        case 'ERROR_CODE_INTERNAL_ERROR':
+          appAlert('Servidor de anuncios', 'El servidor de anuncios presenta problemas intentelo mas tarde');
+          break;
+        case 'ERROR_CODE_INVALID_REQUEST':
+          this.bugsnag.notify(ex);
+          break;
+        default:
+          console.log(message);
+          this.bugsnag.notify(ex);
+      }
+    }
+
+    showRewarded = ()=>{
       this.setState(()=>({loader:true}),async()=>{
         try{
-          await AdMobRewarded.requestAdAsync();
-          await AdMobRewarded.showAdAsync();
-        } catch(ex){
-          if(ex.message==='ERROR_CODE_NO_FILL')
-            appAlert('Sin anuncios', 'No se encontraron anuncios disponibles, intentelo en unos momentos');
-          console.log(ex);
+          await this.adMobAds();
+          this.setState({loader:false});
+        } catch(ex) {
+          this.adColonyAds();
+          setTimeout(()=>this.manageErrorAds(ex.message), 500);
+          this.setState({loader:false});
         }
       });
 
@@ -89,13 +119,14 @@ export default class VideoAds extends React.Component{
 
     getSaldoConvertion = async(reward) => {
       try{
-        const byte = parseFloat(parseFloat(this.state.byte) + reward.amount).toFixed(4);
-        await sendUpdateUserData({balance:byte});
+        const addBalance = parseFloat(reward.amount).toFixed(4);
+        await sendUpdateUserData({balance:addBalance});
+        const {balance} = await sendGetUserData();
         this.setState({
-            byte,
-            kbyte: byte/1000,
-            mbyte: byte/1000000,
-        })
+            balance,
+            kbyte: balance/1000,
+            mbyte: balance/1000000,
+        });
       } catch(ex) {
           console.log(ex);
       }
@@ -115,6 +146,7 @@ export default class VideoAds extends React.Component{
                   text3 = {"M"+moneyName} item3 = {this.state.mbyte}
                   style = {{margin: 40}}/>
               <SubmitButton onPress={this.showRewarded} text="Videos bonificados"/>
+              <SubmitButton onPress={this.adColonyAds} text="Videos AdColony"/>
             </Content>
           </Container>
       );

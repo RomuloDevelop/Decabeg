@@ -74,6 +74,7 @@
 		5919B79334FD43008E2115DA /* libRNDeviceInfo-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 87E174B3A34048ECBD0A1590 /* libRNDeviceInfo-tvOS.a */; };
 		16AC672CCB734EA097B5306E /* libBugsnagReactNative.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 103234F7008E474DB2F31D13 /* libBugsnagReactNative.a */; };
 		1EF246202F894846AC005E92 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = D89F39C7FEC142AB8230EE30 /* libz.tbd */; };
+		6D9A1A644DD043DE879FA5B7 /* libRNAdColony.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 17593F30CEE9405C89FBE780 /* libRNAdColony.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -428,6 +429,8 @@
 		2EEF7E23C75C49ECAA366E77 /* BugsnagReactNative.xcodeproj */ = {isa = PBXFileReference; name = "BugsnagReactNative.xcodeproj"; path = "../node_modules/bugsnag-react-native/cocoa/BugsnagReactNative.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
 		103234F7008E474DB2F31D13 /* libBugsnagReactNative.a */ = {isa = PBXFileReference; name = "libBugsnagReactNative.a"; path = "libBugsnagReactNative.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 		D89F39C7FEC142AB8230EE30 /* libz.tbd */ = {isa = PBXFileReference; name = "libz.tbd"; path = "usr/lib/libz.tbd"; sourceTree = SDKROOT; fileEncoding = undefined; lastKnownFileType = sourcecode.text-based-dylib-definition; explicitFileType = undefined; includeInIndex = 0; };
+		262D5BE4AD564DDC97CBBB73 /* RNAdColony.xcodeproj */ = {isa = PBXFileReference; name = "RNAdColony.xcodeproj"; path = "../node_modules/react-native-ad-colony/ios/RNAdColony.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
+		17593F30CEE9405C89FBE780 /* libRNAdColony.a */ = {isa = PBXFileReference; name = "libRNAdColony.a"; path = "libRNAdColony.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -469,6 +472,7 @@
 				2C85714D53704277B931E65F /* libRNDeviceInfo.a in Frameworks */,
 				16AC672CCB734EA097B5306E /* libBugsnagReactNative.a in Frameworks */,
 				1EF246202F894846AC005E92 /* libz.tbd in Frameworks */,
+				6D9A1A644DD043DE879FA5B7 /* libRNAdColony.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -676,6 +680,7 @@
 				6ACEF43D84914BAFAB34C7D7 /* RNAdMobManager.xcodeproj */,
 				4D5355D4E62540FAAC94D0E5 /* RNDeviceInfo.xcodeproj */,
 				2EEF7E23C75C49ECAA366E77 /* BugsnagReactNative.xcodeproj */,
+				262D5BE4AD564DDC97CBBB73 /* RNAdColony.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -1348,7 +1353,6 @@
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/DECABEG_ANDROID.app/DECABEG_ANDROID";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1364,6 +1368,7 @@
 					"$(SRCROOT)\..\node_modules\react-native-admob\ios",
 					"$(SRCROOT)\..\node_modules\react-native-device-info\ios\RNDeviceInfo",
 					"$(SRCROOT)\..\node_modules\bugsnag-react-native\cocoa/**",
+					"$(SRCROOT)\..\node_modules\react-native-ad-colony\ios",
 				);
 			};
 			name = Debug;
@@ -1385,7 +1390,6 @@
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/DECABEG_ANDROID.app/DECABEG_ANDROID";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1401,6 +1405,7 @@
 					"$(SRCROOT)\..\node_modules\react-native-admob\ios",
 					"$(SRCROOT)\..\node_modules\react-native-device-info\ios\RNDeviceInfo",
 					"$(SRCROOT)\..\node_modules\bugsnag-react-native\cocoa/**",
+					"$(SRCROOT)\..\node_modules\react-native-ad-colony\ios",
 				);
 			};
 			name = Release;
@@ -1435,6 +1440,7 @@
 					"$(SRCROOT)\..\node_modules\react-native-admob\ios",
 					"$(SRCROOT)\..\node_modules\react-native-device-info\ios\RNDeviceInfo",
 					"$(SRCROOT)\..\node_modules\bugsnag-react-native\cocoa/**",
+					"$(SRCROOT)\..\node_modules\react-native-ad-colony\ios",
 				);
 			};
 			name = Debug;
@@ -1468,6 +1474,7 @@
 					"$(SRCROOT)\..\node_modules\react-native-admob\ios",
 					"$(SRCROOT)\..\node_modules\react-native-device-info\ios\RNDeviceInfo",
 					"$(SRCROOT)\..\node_modules\bugsnag-react-native\cocoa/**",
+					"$(SRCROOT)\..\node_modules\react-native-ad-colony\ios",
 				);
 			};
 			name = Release;
@@ -1497,7 +1504,6 @@
 				TVOS_DEPLOYMENT_TARGET = 9.2;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1513,6 +1519,7 @@
 					"$(SRCROOT)\..\node_modules\react-native-admob\ios",
 					"$(SRCROOT)\..\node_modules\react-native-device-info\ios\RNDeviceInfo",
 					"$(SRCROOT)\..\node_modules\bugsnag-react-native\cocoa/**",
+					"$(SRCROOT)\..\node_modules\react-native-ad-colony\ios",
 				);
 			};
 			name = Debug;
@@ -1542,7 +1549,6 @@
 				TVOS_DEPLOYMENT_TARGET = 9.2;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1558,6 +1564,7 @@
 					"$(SRCROOT)\..\node_modules\react-native-admob\ios",
 					"$(SRCROOT)\..\node_modules\react-native-device-info\ios\RNDeviceInfo",
 					"$(SRCROOT)\..\node_modules\bugsnag-react-native\cocoa/**",
+					"$(SRCROOT)\..\node_modules\react-native-ad-colony\ios",
 				);
 			};
 			name = Release;
@@ -1586,7 +1593,6 @@
 				TVOS_DEPLOYMENT_TARGET = 10.1;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1602,6 +1608,7 @@
 					"$(SRCROOT)\..\node_modules\react-native-admob\ios",
 					"$(SRCROOT)\..\node_modules\react-native-device-info\ios\RNDeviceInfo",
 					"$(SRCROOT)\..\node_modules\bugsnag-react-native\cocoa/**",
+					"$(SRCROOT)\..\node_modules\react-native-ad-colony\ios",
 				);
 			};
 			name = Debug;
@@ -1630,7 +1637,6 @@
 				TVOS_DEPLOYMENT_TARGET = 10.1;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1646,6 +1652,7 @@
 					"$(SRCROOT)\..\node_modules\react-native-admob\ios",
 					"$(SRCROOT)\..\node_modules\react-native-device-info\ios\RNDeviceInfo",
 					"$(SRCROOT)\..\node_modules\bugsnag-react-native\cocoa/**",
+					"$(SRCROOT)\..\node_modules\react-native-ad-colony\ios",
 				);
 			};
 			name = Release;

@@ -4,14 +4,14 @@ import { View, StyleSheet, TouchableOpacity, Dimensions, ProgressBarAndroid, Scr
 import * as Progress from 'react-native-progress';
 import { Button, Text, Icon, ListItem, Radio, Right, Left, Badge, Card, CardItem, Col, Row, Grid } from 'native-base';
 import FadeIn from '../../../Animations/FadeIn';
-import { sendGetVideos, sendPostHistory, sendUpdateUserData } from '../../../Api';
+import { sendGetVideos, sendPostHistory, sendUpdateUserData, sendGetUserData } from '../../../Api';
 import { mergeUserData, getUserData, expirationAddListener } from '../../../helpers';
 import LoaderScreen from '../../sharedComponents/LoadScreen';
 import globalStyles from '../../../styles';
 
 async function updateUserMoneyLocalAndSend(data){
   try {
-    const {balance} = await getUserData();
+    const {balance=0} = await sendGetUserData();
     const value = balance + data;
     await sendUpdateUserData({balance:value});
   } catch(ex) {

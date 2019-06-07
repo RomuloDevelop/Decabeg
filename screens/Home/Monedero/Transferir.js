@@ -31,7 +31,7 @@ class Transferir extends Component {
   componentDidMount() {
       const {navigation} = this.props;
       navigation.addListener('didFocus',()=>{
-          sendGetUserData().then((data)=>{
+          getUserData().then((data)=>{
               const {balance = 0} = data;
               const byte = parseFloat(balance).toFixed(4);
               this.setState({
@@ -89,7 +89,8 @@ class Transferir extends Component {
             alert('Especifique un monto superior a 0');
             return;
           }
-          if(value > this.state.byte){
+          const {balance} = await sendGetUserData();
+          if(value > balance){
               alert('No posee tantos dicag');
               return;
           }

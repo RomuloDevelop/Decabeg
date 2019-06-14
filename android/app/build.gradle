@@ -184,7 +184,7 @@ dependencies {
     implementation 'com.inmobi.monetization:inmobi-ads:7.2.7'
     implementation 'com.google.ads.mediation:inmobi:7.2.7.0'
     implementation 'com.squareup.picasso:picasso:2.5.2'
-    implementation 'com.google.android.gms:play-services-plus:xx.x.x'
+    implementation 'com.google.android.gms:play-services-plus:15.0.1'
     ///
     compile 'com.facebook.android:facebook-android-sdk:[4,5)'
     ///For Facebook Mediation 

@@ -69,6 +69,12 @@
 		AB5CE846AEF042BFB9BD3B55 /* libRNCNetInfo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 04A66B152EF14E62B127C6A9 /* libRNCNetInfo.a */; };
 		C1F09B79B48E4164B7D56505 /* libRNCNetInfo-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 36F13051F5174277B92B6413 /* libRNCNetInfo-tvOS.a */; };
 		8C9AEB093D5E4B1088CFE9A9 /* libRCTOneSignal.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1EF0F58B7BA84F70825792CF /* libRCTOneSignal.a */; };
+		FCE39DA54EC347BC91611F17 /* libRNAdMobManager.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 12326CC4BD1B4FD6A03CE5B6 /* libRNAdMobManager.a */; };
+		2C85714D53704277B931E65F /* libRNDeviceInfo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3B2D93F4CADF4BBCA2EFD01C /* libRNDeviceInfo.a */; };
+		5919B79334FD43008E2115DA /* libRNDeviceInfo-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 87E174B3A34048ECBD0A1590 /* libRNDeviceInfo-tvOS.a */; };
+		16AC672CCB734EA097B5306E /* libBugsnagReactNative.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 103234F7008E474DB2F31D13 /* libBugsnagReactNative.a */; };
+		1EF246202F894846AC005E92 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = D89F39C7FEC142AB8230EE30 /* libz.tbd */; };
+		6D9A1A644DD043DE879FA5B7 /* libRNAdColony.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 17593F30CEE9405C89FBE780 /* libRNAdColony.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -415,6 +421,16 @@
 		36F13051F5174277B92B6413 /* libRNCNetInfo-tvOS.a */ = {isa = PBXFileReference; name = "libRNCNetInfo-tvOS.a"; path = "libRNCNetInfo-tvOS.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 		24D45161E67344F18B37B3DC /* RCTOneSignal.xcodeproj */ = {isa = PBXFileReference; name = "RCTOneSignal.xcodeproj"; path = "../node_modules/react-native-onesignal/ios/RCTOneSignal.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
 		1EF0F58B7BA84F70825792CF /* libRCTOneSignal.a */ = {isa = PBXFileReference; name = "libRCTOneSignal.a"; path = "libRCTOneSignal.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
+		6ACEF43D84914BAFAB34C7D7 /* RNAdMobManager.xcodeproj */ = {isa = PBXFileReference; name = "RNAdMobManager.xcodeproj"; path = "../node_modules/react-native-admob/ios/RNAdMobManager.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
+		12326CC4BD1B4FD6A03CE5B6 /* libRNAdMobManager.a */ = {isa = PBXFileReference; name = "libRNAdMobManager.a"; path = "libRNAdMobManager.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
+		4D5355D4E62540FAAC94D0E5 /* RNDeviceInfo.xcodeproj */ = {isa = PBXFileReference; name = "RNDeviceInfo.xcodeproj"; path = "../node_modules/react-native-device-info/ios/RNDeviceInfo.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
+		3B2D93F4CADF4BBCA2EFD01C /* libRNDeviceInfo.a */ = {isa = PBXFileReference; name = "libRNDeviceInfo.a"; path = "libRNDeviceInfo.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
+		87E174B3A34048ECBD0A1590 /* libRNDeviceInfo-tvOS.a */ = {isa = PBXFileReference; name = "libRNDeviceInfo-tvOS.a"; path = "libRNDeviceInfo-tvOS.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
+		2EEF7E23C75C49ECAA366E77 /* BugsnagReactNative.xcodeproj */ = {isa = PBXFileReference; name = "BugsnagReactNative.xcodeproj"; path = "../node_modules/bugsnag-react-native/cocoa/BugsnagReactNative.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
+		103234F7008E474DB2F31D13 /* libBugsnagReactNative.a */ = {isa = PBXFileReference; name = "libBugsnagReactNative.a"; path = "libBugsnagReactNative.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
+		D89F39C7FEC142AB8230EE30 /* libz.tbd */ = {isa = PBXFileReference; name = "libz.tbd"; path = "usr/lib/libz.tbd"; sourceTree = SDKROOT; fileEncoding = undefined; lastKnownFileType = sourcecode.text-based-dylib-definition; explicitFileType = undefined; includeInIndex = 0; };
+		262D5BE4AD564DDC97CBBB73 /* RNAdColony.xcodeproj */ = {isa = PBXFileReference; name = "RNAdColony.xcodeproj"; path = "../node_modules/react-native-ad-colony/ios/RNAdColony.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
+		17593F30CEE9405C89FBE780 /* libRNAdColony.a */ = {isa = PBXFileReference; name = "libRNAdColony.a"; path = "libRNAdColony.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -452,6 +468,11 @@
 				F215D97339FF4087BF3D25E6 /* libRNGestureHandler.a in Frameworks */,
 				AB5CE846AEF042BFB9BD3B55 /* libRNCNetInfo.a in Frameworks */,
 				8C9AEB093D5E4B1088CFE9A9 /* libRCTOneSignal.a in Frameworks */,
+				FCE39DA54EC347BC91611F17 /* libRNAdMobManager.a in Frameworks */,
+				2C85714D53704277B931E65F /* libRNDeviceInfo.a in Frameworks */,
+				16AC672CCB734EA097B5306E /* libBugsnagReactNative.a in Frameworks */,
+				1EF246202F894846AC005E92 /* libz.tbd in Frameworks */,
+				6D9A1A644DD043DE879FA5B7 /* libRNAdColony.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -472,6 +493,7 @@
 				CF347BE946AC42FDBD17237F /* libRNGestureHandler-tvOS.a in Frameworks */,
 				B42ACB40C79244C28C3EEC38 /* libRNDeviceInfo-tvOS.a in Frameworks */,
 				C1F09B79B48E4164B7D56505 /* libRNCNetInfo-tvOS.a in Frameworks */,
+				5919B79334FD43008E2115DA /* libRNDeviceInfo-tvOS.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -608,6 +630,7 @@
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
 				ED2971642150620600B7C4FE /* JavaScriptCore.framework */,
 				2D16E6891FA4F8E400B85C8A /* libReact.a */,
+				D89F39C7FEC142AB8230EE30 /* libz.tbd */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -654,6 +677,10 @@
 				C0A9C8B96F8E4155BEE99F97 /* RNGestureHandler.xcodeproj */,
 				B5D53AAA90E84EBAB547CEF8 /* RNCNetInfo.xcodeproj */,
 				24D45161E67344F18B37B3DC /* RCTOneSignal.xcodeproj */,
+				6ACEF43D84914BAFAB34C7D7 /* RNAdMobManager.xcodeproj */,
+				4D5355D4E62540FAAC94D0E5 /* RNDeviceInfo.xcodeproj */,
+				2EEF7E23C75C49ECAA366E77 /* BugsnagReactNative.xcodeproj */,
+				262D5BE4AD564DDC97CBBB73 /* RNAdColony.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -1326,7 +1353,6 @@
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/DECABEG_ANDROID.app/DECABEG_ANDROID";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1339,6 +1365,10 @@
 					"$(SRCROOT)\..\node_modules\react-native-gesture-handler\ios/**",
 					"$(SRCROOT)\..\node_modules\@react-native-community\netinfo\ios",
 					"$(SRCROOT)\..\node_modules\react-native-onesignal\ios/**",
+					"$(SRCROOT)\..\node_modules\react-native-admob\ios",
+					"$(SRCROOT)\..\node_modules\react-native-device-info\ios\RNDeviceInfo",
+					"$(SRCROOT)\..\node_modules\bugsnag-react-native\cocoa/**",
+					"$(SRCROOT)\..\node_modules\react-native-ad-colony\ios",
 				);
 			};
 			name = Debug;
@@ -1360,7 +1390,6 @@
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/DECABEG_ANDROID.app/DECABEG_ANDROID";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1373,6 +1402,10 @@
 					"$(SRCROOT)\..\node_modules\react-native-gesture-handler\ios/**",
 					"$(SRCROOT)\..\node_modules\@react-native-community\netinfo\ios",
 					"$(SRCROOT)\..\node_modules\react-native-onesignal\ios/**",
+					"$(SRCROOT)\..\node_modules\react-native-admob\ios",
+					"$(SRCROOT)\..\node_modules\react-native-device-info\ios\RNDeviceInfo",
+					"$(SRCROOT)\..\node_modules\bugsnag-react-native\cocoa/**",
+					"$(SRCROOT)\..\node_modules\react-native-ad-colony\ios",
 				);
 			};
 			name = Release;
@@ -1404,6 +1437,10 @@
 					"$(SRCROOT)\..\node_modules\react-native-gesture-handler\ios/**",
 					"$(SRCROOT)\..\node_modules\@react-native-community\netinfo\ios",
 					"$(SRCROOT)\..\node_modules\react-native-onesignal\ios/**",
+					"$(SRCROOT)\..\node_modules\react-native-admob\ios",
+					"$(SRCROOT)\..\node_modules\react-native-device-info\ios\RNDeviceInfo",
+					"$(SRCROOT)\..\node_modules\bugsnag-react-native\cocoa/**",
+					"$(SRCROOT)\..\node_modules\react-native-ad-colony\ios",
 				);
 			};
 			name = Debug;
@@ -1434,6 +1471,10 @@
 					"$(SRCROOT)\..\node_modules\react-native-gesture-handler\ios/**",
 					"$(SRCROOT)\..\node_modules\@react-native-community\netinfo\ios",
 					"$(SRCROOT)\..\node_modules\react-native-onesignal\ios/**",
+					"$(SRCROOT)\..\node_modules\react-native-admob\ios",
+					"$(SRCROOT)\..\node_modules\react-native-device-info\ios\RNDeviceInfo",
+					"$(SRCROOT)\..\node_modules\bugsnag-react-native\cocoa/**",
+					"$(SRCROOT)\..\node_modules\react-native-ad-colony\ios",
 				);
 			};
 			name = Release;
@@ -1463,7 +1504,6 @@
 				TVOS_DEPLOYMENT_TARGET = 9.2;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1476,6 +1516,10 @@
 					"$(SRCROOT)\..\node_modules\react-native-gesture-handler\ios/**",
 					"$(SRCROOT)\..\node_modules\@react-native-community\netinfo\ios",
 					"$(SRCROOT)\..\node_modules\react-native-onesignal\ios/**",
+					"$(SRCROOT)\..\node_modules\react-native-admob\ios",
+					"$(SRCROOT)\..\node_modules\react-native-device-info\ios\RNDeviceInfo",
+					"$(SRCROOT)\..\node_modules\bugsnag-react-native\cocoa/**",
+					"$(SRCROOT)\..\node_modules\react-native-ad-colony\ios",
 				);
 			};
 			name = Debug;
@@ -1505,7 +1549,6 @@
 				TVOS_DEPLOYMENT_TARGET = 9.2;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1518,6 +1561,10 @@
 					"$(SRCROOT)\..\node_modules\react-native-gesture-handler\ios/**",
 					"$(SRCROOT)\..\node_modules\@react-native-community\netinfo\ios",
 					"$(SRCROOT)\..\node_modules\react-native-onesignal\ios/**",
+					"$(SRCROOT)\..\node_modules\react-native-admob\ios",
+					"$(SRCROOT)\..\node_modules\react-native-device-info\ios\RNDeviceInfo",
+					"$(SRCROOT)\..\node_modules\bugsnag-react-native\cocoa/**",
+					"$(SRCROOT)\..\node_modules\react-native-ad-colony\ios",
 				);
 			};
 			name = Release;
@@ -1546,7 +1593,6 @@
 				TVOS_DEPLOYMENT_TARGET = 10.1;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1559,6 +1605,10 @@
 					"$(SRCROOT)\..\node_modules\react-native-gesture-handler\ios/**",
 					"$(SRCROOT)\..\node_modules\@react-native-community\netinfo\ios",
 					"$(SRCROOT)\..\node_modules\react-native-onesignal\ios/**",
+					"$(SRCROOT)\..\node_modules\react-native-admob\ios",
+					"$(SRCROOT)\..\node_modules\react-native-device-info\ios\RNDeviceInfo",
+					"$(SRCROOT)\..\node_modules\bugsnag-react-native\cocoa/**",
+					"$(SRCROOT)\..\node_modules\react-native-ad-colony\ios",
 				);
 			};
 			name = Debug;
@@ -1587,7 +1637,6 @@
 				TVOS_DEPLOYMENT_TARGET = 10.1;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1600,6 +1649,10 @@
 					"$(SRCROOT)\..\node_modules\react-native-gesture-handler\ios/**",
 					"$(SRCROOT)\..\node_modules\@react-native-community\netinfo\ios",
 					"$(SRCROOT)\..\node_modules\react-native-onesignal\ios/**",
+					"$(SRCROOT)\..\node_modules\react-native-admob\ios",
+					"$(SRCROOT)\..\node_modules\react-native-device-info\ios\RNDeviceInfo",
+					"$(SRCROOT)\..\node_modules\bugsnag-react-native\cocoa/**",
+					"$(SRCROOT)\..\node_modules\react-native-ad-colony\ios",
 				);
 			};
 			name = Release;

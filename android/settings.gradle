@@ -1,4 +1,12 @@
+apply from: '../node_modules/react-native-unimodules/gradle.groovy'
+include ':bugsnag-react-native'
+project(':bugsnag-react-native').projectDir = new File(rootProject.projectDir, '../node_modules/bugsnag-react-native/android')
+includeUnimodulesProjects()
 rootProject.name = 'DECABEG_ANDROID'
+include ':react-native-ad-colony'
+project(':react-native-ad-colony').projectDir = new File(rootProject.projectDir, 	'../node_modules/react-native-ad-colony/android')
+include ':react-native-device-info'
+project(':react-native-device-info').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-device-info/android')
 include ':react-native-onesignal'
 project(':react-native-onesignal').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-onesignal/android')
 include ':@react-native-community_netinfo'

@@ -69,11 +69,6 @@ class CustomDrawerContentComponent extends React.Component{
     </View>
     <SafeAreaView style={styles.container} forceInset={{ top: 'always', horizontal: 'never' }}>
       <List>
-      {/* <DrawerItems {...props} getLabel = {(scene) => (
-                    <ListItem noIndent>
-                      <Text style={styles.buttonText}>{props.getLabel(scene)}</Text>
-                    </ListItem>
-                  )}/> */}
         <ListItem noIndent onPress={() => this.props.navigation.navigate('home')}>
           <Left>
             <Button transparent>

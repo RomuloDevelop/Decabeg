@@ -37,9 +37,10 @@ class SendCode extends Component {
                     this.props.navigation.navigate('login');
                 })
                 .catch((ex)=>{
-                    if(ex.message.description)
+                    if(ex.message.description) {
                         if(ex.message.description === 'code invalid or used')
                             appAlert('Codigo invalido', 'Este Codigo caduco o es invalido');
+                    }
                     this.setState({loading:false});
                     console.log(ex);
                 });

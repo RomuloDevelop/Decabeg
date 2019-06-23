@@ -7,7 +7,8 @@ export default globalStyles = {
     darkBlue:'#E86D0E',
     fontBrown:'#FFA01D',//'#404040',
     fontGrey:'rgb(235,235,235)',
-    navbarColor:'#85551C' 
+    navbarColor:'#85551C',
+    textGrey:'#BBB'
 };
 
 export const buttonForm = StyleSheet.create({

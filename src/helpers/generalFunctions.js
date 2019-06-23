@@ -51,6 +51,14 @@ function appAlert(title,answer,onPressOK, onPressCancel){
     );
   }
 
+async function getLink(url){
+  try{
+    await Linking.openURL(url);
+  } catch(err){
+    appAlert('Error','No es posible abrir el link');
+  }
+}
+
 async function sendEmail(to, subject, body, options = {}) {
     const { cc, bcc } = options;
 
@@ -75,7 +83,7 @@ async function sendEmail(to, subject, body, options = {}) {
         throw new Error('Provided URL can not be handled');
     }
 
-    return Linking.openURL(url);
+    await getLink(url);
 }
 
 export {
@@ -83,5 +91,6 @@ export {
     getFunctionName,
     getUrlEncodedParams,
     appAlert,
+    getLink,
     sendEmail
 }

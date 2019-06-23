@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
-import { View, TextInput, Text, Picker, StyleSheet} from 'react-native';
-import { Item, Icon, Input, Label, Badge } from 'native-base';
+import { View, TextInput, Text, Picker, StyleSheet, Modal} from 'react-native';
+import { Item, Icon, Input, Label,List, ListItem, Body, Left, Right, H3 } from 'native-base';
+import { CloseModalButton } from './CloseModalButton';
 import {checkLoginField} from '../helpers';
 
 function InputLogin(props){
@@ -34,6 +35,7 @@ function PickerLogin(props){
         </View>
     );
 }
+
 class InputFormApp extends Component{
     constructor(props){
         super(props);
@@ -105,7 +107,8 @@ class InputFormApp extends Component{
         }
         return(
         <View>
-            <Item floatingLabel success = {this.state.success}>
+            <Item floatingLabel={!this.props.stacked} 
+                stackedLabel={this.props.stacked} success = {this.state.success}>
                 <Label>{this.props.label}</Label>
                 <Input onChangeText={(value)=>{
                     try{

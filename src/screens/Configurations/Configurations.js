@@ -1,7 +1,8 @@
 import React, {useState, useEffect, useRef} from 'react';
-import { List, ListItem, Icon, Switch, Text, Left, Right, Button } from 'native-base';
+import {Linking} from 'react-native';
+import { List, ListItem, Icon, IconNB, Switch, Text, Left, Right, Button } from 'native-base';
 import { sendUpdatePlayerId } from '../../Api';
-import { getOneSignalId, getConfiguration, setConfiguration } from '../../helpers';
+import { getOneSignalId, getConfiguration, setConfiguration, sendEmail } from '../../helpers';
 import SubmitButton from '../../sharedComponents/SubmitButton';
 import globalStyles from '../../styles';
 
@@ -54,10 +55,21 @@ function Configurations(props){
           <Text style={{fontSize:18}}>Ayuda</Text>
         </Left>
       </ListItem>
-      <ListItem noIndent onPress={()=>props.navigation.navigate('privacypolicy')}>
+      <ListItem noIndent onPress={()=>props.navigation.navigate('information')}>
         <Left>
           <Icon name='exclamation-circle' type="FontAwesome" style={{color: globalStyles.darkBlue, marginRight:10}}/>
           <Text style={{fontSize:18}}>Informacion de la app</Text>
+        </Left>
+      </ListItem>
+      <ListItem itemDivider>
+        <Text>Soporte</Text>
+      </ListItem>
+      <ListItem noIndent onPress={()=>{
+        sendEmail('dicabeg2019@gmail.com', 'Reporte');
+        }}>
+        <Left>
+          <Icon name='headphones' type="FontAwesome" style={{color: globalStyles.darkBlue, marginRight:10}}/>
+          <Text style={{fontSize:18}}>Escribe a soporte</Text>
         </Left>
       </ListItem>
     </List>

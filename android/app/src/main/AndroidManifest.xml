@@ -1,6 +1,9 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+<manifest 
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:tools="http://schemas.android.com/tools"
   package="com.decabeg_android">
 
+  <!--  -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
@@ -27,6 +30,11 @@
       android:theme="@style/AppTheme"
       android:usesCleartextTraffic="true"
       android:hardwareAccelerated="true">
+      
+      <!-- tools:replace="android:appComponentFactory"
+      android:appComponentFactory="android.support.v4.app.CoreComponentFactory" -->
+      
+      <!--  -->
       <!-- <meta-data android:name="com.google.android.gms.version"
         android:value="15.0.90" /> -->
       <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebook_app_id"/>
@@ -49,7 +57,6 @@
               <action android:name="com.inmobi.share.id"/>
           </intent-filter>
       </receiver>
-      <!-- For InMobi -->
       <!-- For AdColony -->
       <activity android:name="com.adcolony.sdk.AdColonyInterstitialActivity"
         android:configChanges="keyboardHidden|orientation|screenSize"

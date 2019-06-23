@@ -5,7 +5,7 @@ import * as Progress from 'react-native-progress';
 import { Button, Text, Icon, ListItem, Radio, Right, Left, Badge, Card, CardItem, Col, Row, Grid } from 'native-base';
 import FadeIn from '../../../Animations/FadeIn';
 import { sendGetVideos, sendPostHistory, sendUpdateUserData, sendGetUserData } from '../../../Api';
-import { mergeUserData, getUserData, expirationAddListener } from '../../../helpers';
+import { mergeUserData, getUserData, expirationAddListener, appAlert } from '../../../helpers';
 import LoaderScreen from '../../../sharedComponents/LoadScreen';
 import globalStyles from '../../../styles';
 
@@ -117,7 +117,7 @@ class Anuncios extends Component {
     onSkip = ()=>{
         const actualIndex = this.state.index;
         if(actualIndex === this.state.videos.length -1){
-            alert('Last video is playing');
+            appAlert('Anuncios','Este es el ultimo video');
             return;
         }
         const index = actualIndex + 1;
@@ -126,7 +126,7 @@ class Anuncios extends Component {
     onBack = ()=>{
         const actualIndex = this.state.index;
         if(actualIndex === 0){
-            alert('First video is playing');
+            appAlert('Anuncios','Este es el primer video');
             return;
         }
         const index = actualIndex - 1;
@@ -134,9 +134,10 @@ class Anuncios extends Component {
     }
 
     onEnd = ()=>{
-        
+        console.log('end');
         //const index = (actualIndex === this.state.uriArray.length -1)?0:this.state.index +1;
-        this.setState({showQuestion:true, pause:true, disabledButton:true, progressValue:1});
+        this.setState({showQuestion:true, paused:true, disabledButton:true, progressValue:1});
+
     }
 
     onBuffer = ()=>{
@@ -161,10 +162,10 @@ class Anuncios extends Component {
         console.log(`Result: ${this.result}`);
         console.log(this.state.videos[this.state.index].video_id);
         //Videos
-        if(this.result) await updateUserMoneyLocalAndSend(parseFloat(5));
+        if(this.result) await updateUserMoneyLocalAndSend(parseFloat(0.005));
         await sendPostHistory(this.state.videos[this.state.index].video_id);
         this.setState(()=>({
-                    pause: false,
+                    paused: false,
                     showQuestion: false,
                     disabledButton: false,
                     disableButtonSend: false,

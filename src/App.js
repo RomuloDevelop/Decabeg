@@ -39,7 +39,7 @@ const AppStack = createSwitchNavigator({
           console.log(ex);
         }
       });
-      return{
+      return {
         title: '',
         header: null,
     }},
@@ -62,7 +62,7 @@ export default class App extends React.Component {
     this.state = {
       connected: true
     }
-    OneSignal.init("2c4010d0-c7b2-458d-923a-eda58dfbd643");
+    OneSignal.init("5edb9933-f820-4609-aff7-2a17e743eb25");
     OneSignal.configure();
     OneSignal.addEventListener('received', this.onReceived);
     OneSignal.addEventListener('opened', this.onOpened);

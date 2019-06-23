@@ -1,8 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import {Modal, ActivityIndicator, StyleSheet, View} from 'react-native';
-import {List, ListItem, Body, Left, Right, Text, Button, Icon, H3,
+import {List, ListItem, Body, Left, Text, Button, Icon, H3,
 Form, Item, Input, Label} from 'native-base';
-import NoDataIcon from './NoDataIcon';
 import SubmitButton from '../sharedComponents/SubmitButton';
 import globalStyles from '../styles';
 //import {} from 'prop-types';

@@ -1,7 +1,7 @@
 package com.decabeg_android;
 
 import android.app.Application;
-import android.support.multidex.MultiDexApplication;
+//import android.support.multidex.MultiDexApplication;
 // Facebook SingIn
 import com.facebook.FacebookSdk;
 import com.facebook.CallbackManager;
@@ -40,7 +40,7 @@ import org.unimodules.core.interfaces.SingletonModule;
 import java.util.Arrays;
 import java.util.List;
 
-public class MainApplication extends MultiDexApplication implements ReactApplication {
+public class MainApplication extends Application implements ReactApplication {
   //Unimodules
   private final ReactModuleRegistryProvider mModuleRegistryProvider = new ReactModuleRegistryProvider(new BasePackageList().getPackageList(), Arrays.<SingletonModule>asList());
  

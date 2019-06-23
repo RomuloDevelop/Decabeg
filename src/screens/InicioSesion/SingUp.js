@@ -18,8 +18,13 @@ import moment from 'moment-timezone';
 class SingUp extends Component{
     constructor(props){
         super(props);
-        this.timezones=moment.tz.names().map((item)=>({label:item, value:item}))
-        this.validEmail= false,
+        this.timezones=moment.tz.names().map((item)=>(
+            {
+                label:` (GMT+${moment.tz(item).format('z')}) ${item}`, 
+                value:item
+            }
+        ));
+        this.validEmail= false;
         this.validRepassword = false;
         this.validPassword = false;
         this.state = {
@@ -50,15 +55,6 @@ class SingUp extends Component{
 
     errorForDuplicatedKey(ex){
         try {
-            // const description = ex.message.description;
-            // if(description.message === "username exist"){
-            //     this.setState({errorDuplicatedUser:`Se sugiere ${description.suggested_username}`});
-            // } else if(typeof description === 'string'){
-            //     if(description.includes('duplicate key value')){
-            //         if(description.includes('email'))
-            //             this.setState({errorDuplicatedEmail:'El correo ya existe'});
-            //     }
-            // }
             if(!ex.message.description)
                 throw ex;
             const description = ex.message.description;
@@ -153,8 +149,8 @@ class SingUp extends Component{
                 <Text style={{fontSize:25, color:'#fff', textAlign:'center', margin:30}}>
                     CREAR CUENTA
                 </Text>
-                <Text style={{fontSize:14, color:'rgba(255,255,255,0.5)', textAlign:'left', margin:10}}>
-                    * Contraseña debe tener al menos longitud 8, al menos 1 digito, 1 caracter especial (@$!%*#?&_-)
+                <Text style={{fontSize:14, color:(this.state.showInvalidPassword)?'red':'rgba(255,255,255,0.5)', textAlign:'left', margin:10}}>
+                    * Contraseña debe tener longitud 8, al menos 1 digito, 1 caracter especial (@$!%*#?&_-)
                 </Text>
                 <TextInput
                     style = {styles.inputContainer}
@@ -206,7 +202,7 @@ class SingUp extends Component{
                         style={styles.innerInput}
                         placeholder="Password"
                         placeholderTextColor = "rgba(255,255,255,0.7)"
-                        maxLength={10}
+                        maxLength={8}
                         secureTextEntry={this.state.security}
                         onChangeText={this.handleChangePassword}
                         onBlur={this.handleBlurPassword}
@@ -227,7 +223,7 @@ class SingUp extends Component{
                     <Badge danger style={{marginBottom: 20}}>
                         <View style={{flexDirection:'row', justifyContent:'center', alignItems: 'center'}}>
                             <Icon name="times-circle" type='FontAwesome' style={styles.badgeIcon}/>
-                            <Text>Invalid Password</Text> 
+                            <Text>Contraseña Invalida</Text> 
                         </View>
                     </Badge>
                 )
@@ -247,7 +243,7 @@ class SingUp extends Component{
                     <Badge danger style={{marginBottom: 20}}>
                         <View style={{flexDirection:'row', justifyContent:'center', alignItems: 'center'}}>
                             <Icon name="times-circle" type='FontAwesome' style={styles.badgeIcon}/>
-                            <Text>Password its not the same</Text> 
+                            <Text>Contraseñas no coinciden</Text> 
                         </View>
                     </Badge>
                 )

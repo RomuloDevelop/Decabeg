@@ -32,7 +32,7 @@ export default class VideoAds extends React.Component{
     }
 
     componentDidMount() {
-      AdMobRewarded.addEventListener('rewardedVideoDidRewardUser',(reward) => this.getSaldoConvertion(reward.amount));
+      AdMobRewarded.addEventListener('rewardedVideoDidRewardUser',(reward) => this.getSaldoConvertion(reward.amount/200));
       AdMobRewarded.addEventListener('rewardedVideoDidOpen',() => this.setState({loader:false}));
       const {navigation} = this.props;
       navigation.addListener('didFocus',()=>{
@@ -68,7 +68,7 @@ export default class VideoAds extends React.Component{
           this.adColonyReady = true;
           RNAdColony.showAdReward(zoneIdAdColony,(RewardName, RewardAmount)=>{
             console.log(RewardAmount);
-            this.getSaldoConvertion(RewardAmount);
+            this.getSaldoConvertion(RewardAmount/200);
           });
         } else {
           console.log('adcolony no ready');

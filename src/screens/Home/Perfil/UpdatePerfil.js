@@ -1,13 +1,14 @@
 import React, {Component} from 'react';
-import { View, StyleSheet, Image, TouchableOpacity, Dimensions } from 'react-native';
-import { Container, Content, Form, Item, Input, Label, Left, Button, Icon, Body, Right, Text,
+import { View, StyleSheet, Image, TouchableOpacity, TextInput, Dimensions } from 'react-native';
+import { Container, Content, Form, Item, Input, Picker, Label, Left, Button, Icon, Body, Right, Text,
         Card, CardItem, ListItem, CheckBox } from 'native-base';
 import { Col, Row, Grid } from 'react-native-easy-grid';
 import ImagePicker from 'react-native-image-picker';
 import SubmitButton from '../../../sharedComponents/SubmitButton';
 import Header from '../../../sharedComponents/Header';
 import { InputFormApp } from '../../../sharedComponents/InputDicabeg';
-import { getUserData, validateEmail, validatePassword, checkLoginField } from '../../../helpers';
+import {InputPhoneNumber, PhoneNumberPerCountry} from '../../../sharedComponents/InputPhoneNumber';
+import { getUserData, validateEmail, validatePassword, checkLoginField, appAlert } from '../../../helpers';
 import { sendUpdateUserData } from '../../../Api';
 import FadeIn from '../../../Animations/FadeIn';
 import globalStyles from '../../../styles';
@@ -24,17 +25,26 @@ class UpdatePerfil extends Component {
       changepassword:'',
       repeatpassword: '',
       phone: '',
+      phoneNumberCode: '🇻🇪 +58',
       image: require('../../../assets/no_image.png'),
       showPasswordForm: false,
+      showNumberCode:false,
       userError:''
     }
   }
     componentWillMount(){
       getUserData().then((data)=>{
-        console.log(data)
+        //let phone='';
+        //let phoneNumberCode = '🇻🇪 +58';
+        //if(data.phone) {
+          //const phoneArray = data.phone.split('-');
+          //phone = phoneArray[0];
+          //phoneNumberCode = phoneArray[1];
+        //}
         this.setState({
           username: data.username,
-          phone: data.phone,
+          //phone,
+          //phoneNumberCode,
           image: data.image? data.image:require('../../../assets/no_image.png')
         });
       }).catch((ex)=>console.log(ex));
@@ -95,13 +105,18 @@ class UpdatePerfil extends Component {
       this.setState(obj);
     }
 
+    handleSelectNumberCode = ({flag, dial_code})=>this.setState({phoneNumberCode:`${flag} ${dial_code}`, showNumberCode:false});
+
     handleUpdatePress = () => {
+      const code = this.state.phoneNumberCode.split(' ');
+      const completePhoneNumber = `${code[1]}-${this.state.phone}`;
       const data = {
-        username:this.state.username
+        username:this.state.username,
+        //phone:completePhoneNumber
       }
       if(this.state.showPasswordForm) {
         if(!this.successPassword) {
-          alert('Revise los datos para el cambio de contraseñas')
+          appAlert('Error en Contraseñas','Revise los datos para el cambio de contraseñas')
           return;
         } else {
           data.password = this.state.changepassword;
@@ -130,6 +145,9 @@ class UpdatePerfil extends Component {
             <Container>
             <Header color={globalStyles.darkBlue} title="Actualizar" onPress={()=>this.props.navigation.openDrawer()}/>
               <Content>
+              <PhoneNumberPerCountry show={this.state.showNumberCode}
+                onClose={()=>this.setState({showNumberCode:false})}
+                onSelect={this.handleSelectNumberCode}/>
                 <Grid style = {{paddingTop:20}}>
                   <Row style={{alignItems:'flex-start', justifyContent: 'center'}}>
                     <TouchableOpacity onPress={this.handleImgPress} style={{marginBottom:15}}>
@@ -141,25 +159,29 @@ class UpdatePerfil extends Component {
                   <Col>
                     <Form style={{marginLeft:5, padding:0}}>
                       <InputFormApp label="Nombre de Usuario" type="other" value={this.state.username} onChangeText={this.handleUsername}
-                        errorMessage ={this.state.userError}/>
-                        {/* <Item floatingLabel>
-                          <Label>Nombre de Usuario</Label>
-                          <Input onChangeText={this.handleUsername} value={this.state.username}/>
-                        </Item> */}
+                        errorMessage ={this.state.userError} stacked={true}/>
+                      {/* <InputPhoneNumber 
+                        onPress={()=>this.setState({showNumberCode:true})} 
+                        value={{code:this.state.phoneNumberCode, number:this.state.phone}}
+                        onChangeText = {(value)=>{
+                          const testing = /^[0-9]*$/;
+                          if(testing.test(value))
+                            this.setState({phone:value});
+                        }}/> */}
                     </Form>
                   </Col>
                   </Row>
-                  <Row style={{ marginVertical: 15}}>
+                  {/* <Row style={{ marginVertical: 15}}>
                     <Col>
-                    {/* <View style={{ flex:1,flexDirection:'row', marginLeft:10}}>
+                    <View style={{ flex:1,flexDirection:'row', marginLeft:10}}>
                       <CheckBox checked={this.state.showPasswordForm} 
                         style={{marginRight:15}}
                         color={globalStyles.darkBlue}
                         onPress={()=>this.setState({showPasswordForm:!this.state.showPasswordForm})}/>
                       <Text>Cambiar Contraseña</Text>
-                    </View> */}
+                    </View>
                     </Col>
-                  </Row>
+                  </Row> */}
                   {this.state.showPasswordForm && (
                   <Row>
                     <Col>

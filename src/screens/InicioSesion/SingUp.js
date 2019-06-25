@@ -283,7 +283,7 @@ class SingUp extends Component{
                     style = {[styles.buttonContainer ,{backgroundColor:globalStyles.lightBlue, marginTop:10}]}
                     onPress={this.handlePressSingUp}
                     disabled={this.state.disableSubmit}>
-                    <Text style = {styles.textButton}>REGISTRASE</Text>
+                    <Text style = {styles.textButton}>REGISTRARSE</Text>
                 </TouchableOpacity>
                 <Text style={{color:"#FFFFFFaa", textAlign:'center' , marginTop:15}} onPress={this.goToGetCode}>
                     Ya tengo un codigo

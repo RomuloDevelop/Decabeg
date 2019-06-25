@@ -10,7 +10,7 @@ import WebViewComponent from '../sharedComponents/WebViewComponent';
 
 import globalStyles from '../styles';
 
-const PrivacyPolicy =()=><WebViewComponent uri="https://edixonalberto.github.io/doc-dicabeg/menu/politic.html"/>
+const PrivacyPolicy =()=><WebViewComponent uri="https://edixonalberto.github.io/doc-dicabeg/menu/policy.html"/>
 const TermsAndConditions =()=><WebViewComponent uri="https://edixonalberto.github.io/doc-dicabeg/menu/terms.html"/>
 
 function BackButton(text, navigation){            

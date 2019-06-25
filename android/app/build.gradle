@@ -105,7 +105,8 @@ def enableSeparateBuildPerCPUArchitecture = false
 /**
  * Run Proguard to shrink the Java bytecode in release builds.
  */
-def enableProguardInReleaseBuilds = true
+def enableProguardInReleaseBuilds = false
+
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
@@ -120,8 +121,8 @@ android {
         applicationId "com.decabeg_android"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 1
-        versionName "1.0"
+        versionCode versionMajor * 10000 + versionMinor * 100 + versionPatch //Toma la version configurada en package.json
+        versionName "${versionMajor}.${versionMinor}.${versionPatch}"
         multiDexEnabled false
     }
     signingConfigs {

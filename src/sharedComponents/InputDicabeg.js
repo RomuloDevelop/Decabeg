@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import { View, TextInput, Text, Picker, StyleSheet, Modal} from 'react-native';
-import { Item, Icon, Input, Label,List, ListItem, Body, Left, Right, H3 } from 'native-base';
+import { Item, Icon, Input, Label,List, ListItem, Body, Left, Right, H3, Badge, CheckBox } from 'native-base';
 import { CloseModalButton } from './CloseModalButton';
 import {checkLoginField} from '../helpers';
 
@@ -144,6 +144,17 @@ class InputFormApp extends Component{
     }
 }
 
+function CheckBoxFormApp(props){
+    return (
+        <View style={[{ flex:1,flexDirection:'row', marginLeft:10}, props.style]}>
+          <CheckBox checked={props.value} 
+            style={[{marginRight:15}, props.checkBoxStyle]}
+            color={props.color}
+            onPress={props.onPress}/>
+            {props.children}
+        </View>
+    );
+}
 const styles = StyleSheet.create({
     inputContainer: {
         height: 40,
@@ -172,5 +183,6 @@ const styles = StyleSheet.create({
 export {
     InputLogin,
     PickerLogin,
-    InputFormApp
+    InputFormApp,
+    CheckBoxFormApp
 };

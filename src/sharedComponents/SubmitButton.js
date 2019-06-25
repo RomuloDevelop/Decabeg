@@ -10,7 +10,7 @@ function SubmitButton(props: SubmitButtonProps){
         <TouchableOpacity 
             style = {[buttonForm.buttonContainer,props.style]}
             onPress = {props.onPress}>
-            <Text style = {buttonForm.textButton}>{props.text}</Text>
+            <Text style = {[buttonForm.textButton,props.textStyle]}>{props.text}</Text>
         </TouchableOpacity>
     );
 }

@@ -8,9 +8,10 @@ import {
     Badge, Text, Icon
 } from 'native-base';
 import { sendUserLogin, sendUserSignUp } from '../../Api';
-import { appAlert } from '../../helpers';
+import {appAlert} from '../../helpers';
 import LoaderScreen from '../../sharedComponents/LoadScreen';
-import {PickerLogin} from '../../sharedComponents/InputDicabeg';
+import {PickerLogin, CheckBoxFormApp} from '../../sharedComponents/InputDicabeg';
+import TermsAndConditions from '../../sharedComponents/TermsAndConditions';
 import globalStyles from '../../styles';
 import DeviceInfo from 'react-native-device-info';
 import moment from 'moment-timezone';
@@ -34,6 +35,7 @@ class SingUp extends Component{
             invite_code:'',
             repeatpassword: '',
             timezone: DeviceInfo.getTimezone(),
+            acceptTerms:false,
             validEmail: false,
             showInvalidEmail:false,
             showInvalidRepeatPassword: false,
@@ -121,6 +123,10 @@ class SingUp extends Component{
                 };
                 if(this.state.showCode) userAccount.invite_code = this.state.invite_code;
                 //active page
+                if(!this.state.acceptTerms){
+                    appAlert('Terminos y Condiciones', "Debe aceptar nuestros Terminos y Condiciones");
+                    return;
+                }
                 this.setState(()=>({disableSubmit:true, errorDuplicatedEmail: '', errorDuplicatedUser:''}),()=>{
                     sendUserSignUp(userAccount).then((data)=>{
                         this.setState(()=>({disableSubmit:false}),()=>{
@@ -145,6 +151,7 @@ class SingUp extends Component{
         return (           
         <ScrollView style ={{backgroundColor: globalStyles.fontBrown}}>
             <View style ={styles.container}>
+                <TermsAndConditions ref={ref=>this.modal = ref}/>
                 <LoaderScreen loading ={this.state.disableSubmit}/>
                 <Text style={{fontSize:25, color:'#fff', textAlign:'center', margin:30}}>
                     CREAR CUENTA
@@ -255,7 +262,7 @@ class SingUp extends Component{
                     data={this.timezones} 
                     value={this.state.timezone} 
                     onValueChange={this.handlePickerValueChange}/>
-                {this.state.showCode&&(
+                {/* {this.state.showCode&&(
                 <TextInput
                     style = {styles.inputContainer}
                     placeholder = "Code"
@@ -263,7 +270,15 @@ class SingUp extends Component{
                     value = {this.state.invite_code}
                     editable = {false}
                 ></TextInput>
-                )}
+                )} */}
+                <CheckBoxFormApp style ={{marginTop:15}} checkBoxStyle={{marginRight:15}} color="#FFFFFF77" 
+                    value={this.state.acceptTerms}
+                    onPress={()=>this.setState({acceptTerms:!this.state.acceptTerms})}>
+                    <Text style={globalStyles.infoText}>
+                        Lee y acepta nuestros 
+                        <Text style={{color: '#0000ff55'}} onPress={()=>this.modal.Open()}>Terminos y Condiciones</Text>
+                    </Text>
+                </CheckBoxFormApp>
                 <TouchableOpacity 
                     style = {[styles.buttonContainer ,{backgroundColor:globalStyles.lightBlue, marginTop:10}]}
                     onPress={this.handlePressSingUp}

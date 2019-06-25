@@ -5,7 +5,8 @@ import {
     mergeAppToken,
     setUserData,
     getUrlEncodedParams,
-    getOneSignalId
+    getOneSignalId,
+    removeUpperAndSpaces
 } from '../helpers';
 
 import moment from 'moment';
@@ -22,7 +23,8 @@ async function sendUserLogOut(){
 async function sendUserLogin(user, userData){
     try{
         const {email, password} = user;
-        const formBody = getUrlEncodedParams({email, password});
+        const fixedEmail = removeUpperAndSpaces(email);
+        const formBody = getUrlEncodedParams({email:fixedEmail, password});
         console.log(formBody);
         const response = await executeRequest('post', `accounts/login`, formBody, {'Content-Type': 'application/x-www-form-urlencoded'});
         const data = response.data.resource.accounts;
@@ -86,6 +88,19 @@ async function sendUserActivation(temporal_code){
     }
 }
 
+async function sendUserActivationAgain(email) {
+    try{
+        const fixedEmail = removeUpperAndSpaces(email);
+        const formBody = getUrlEncodedParams({email:fixedEmail});
+        const response = await executeRequest('post', `accounts/send_email`, formBody,{'Content-Type': 'application/x-www-form-urlencoded'});
+        const data = response.data;
+        console.log('SendingEmail:' + JSON.stringify(data));
+        return data;
+    } catch(ex){
+        throw ex;
+    }
+}
+
 async function sendForgotPassword(password) {
     try{
         const formBody = getUrlEncodedParams(password);
@@ -103,5 +118,6 @@ export{
     sendUserResetToken,
     sendUserSignUp,
     sendUserActivation,
+    sendUserActivationAgain,
     sendForgotPassword
 }

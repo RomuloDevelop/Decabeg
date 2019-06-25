@@ -4,6 +4,10 @@ import { signOut as googleSingOut } from '../Api/SessionManager/googleApi';
 import { signOut as facebookSingOut } from '../Api/SessionManager/facebookApi';
 import type {LoginFieldType} from 'helpers-module';
 
+function removeUpperAndSpaces(value){
+    return value.trim().toLowerCase();
+}
+
 function validateEmail(value: string):boolean {
     const testing = /\S+@\S+\.\S+/;
     return (value)?testing.test(value):false;
@@ -56,6 +60,7 @@ async function signOut(){
 }
 
 export{
+    removeUpperAndSpaces,
     validateEmail,
     validatePassword,
     checkLoginField,

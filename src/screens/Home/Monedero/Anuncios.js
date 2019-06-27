@@ -98,7 +98,16 @@ class Anuncios extends Component {
         }
       }).catch((ex)=>console.log('in catch willunmount' + JSON.stringify(ex)));
     }
+    componentDidMount(){
+      const {navigation} = this.props;
+      this.didBlurEvent = navigation.addListener('didBlur',()=>{
+        this.setState({paused:true});
+      });
+    }
 
+    componentWillUnmount(){
+      this.didBlurEvent.remove();
+    }
     realoadVideo(index){
         this.setState({index, start:false});
         setTimeout(()=>{

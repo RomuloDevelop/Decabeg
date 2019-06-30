@@ -108,21 +108,25 @@ class Anuncios extends Component {
     componentWillUnmount(){
       this.didBlurEvent.remove();
     }
+
     realoadVideo(index){
         this.setState({index, start:false});
         setTimeout(()=>{
             this.setState({start:true});
         }, 1000);
     }
+
     onLoad = (data)=>{
         const duration = data.duration;
         this.setState({duration});
     }
+
     onProgress = (data)=>{
         const currentTime = data.currentTime;
         const duration = this.state.duration;
         this.setState({progressValue:(currentTime/duration), isBuffering:false});
     }
+
     onSkip = ()=>{
         const actualIndex = this.state.index;
         if(actualIndex === this.state.videos.length -1){
@@ -132,6 +136,7 @@ class Anuncios extends Component {
         const index = actualIndex + 1;
         this.realoadVideo(index);
     }
+    
     onBack = ()=>{
         const actualIndex = this.state.index;
         if(actualIndex === 0){

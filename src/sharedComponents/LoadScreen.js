@@ -1,6 +1,7 @@
 import React from 'react';
 import {Modal, ActivityIndicator, StyleSheet, View} from 'react-native';
-//import {} from 'prop-types';
+import FadeIn from '../Animations/FadeIn';
+import globalStyles from '../styles';
 
 function LoaderScreen(props){
     const {
@@ -8,16 +9,19 @@ function LoaderScreen(props){
         ...attributes
       } = props;
     return(
-        <Modal
+      <Modal
         transparent={true}
         animationType={'none'}
         visible={loading}
         onRequestClose={() => {console.log('close modal')}}>
-        <View style={styles.modalBackground}>
+        <FadeIn style={styles.modalBackground} duration={400}>
+          <View style={styles.indicatorContainer}>
             <ActivityIndicator
+              color={globalStyles.lightBlue}
               size="large"
               animating={loading} />
-        </View>
+          </View>
+        </FadeIn>
       </Modal>
     )
 }
@@ -30,14 +34,19 @@ const styles = StyleSheet.create({
       justifyContent: 'space-around',
       backgroundColor: '#00000040'
     },
-    activityIndicatorWrapper: {
-      backgroundColor: '#FFFFFF',
-      height: 100,
-      width: 100,
-      borderRadius: 10,
-      display: 'flex',
+    indicatorContainer: {
       alignItems: 'center',
-      justifyContent: 'space-around'
+      justifyContent: 'center',
+      width:'auto',
+      padding:5,
+      backgroundColor:'white',
+      borderRadius:500,
+      borderWidth: 0.3,
+      borderColor: 'grey',
+      elevation: 4,
+      shadowOpacity: 2,
+      shadowRadius: 2,
+      shadowColor: '#000'
     }
   });
 

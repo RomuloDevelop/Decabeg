@@ -25,8 +25,6 @@ export default class VideoAds extends React.Component{
        AdMobRewarded.setAdUnitID('ca-app-pub-6095454139379493/6183407113');
       this.state = {
         byte: 0,
-        kbyte: 0,
-        mbyte: 0,
         loader: false
       };
     }
@@ -39,11 +37,7 @@ export default class VideoAds extends React.Component{
           getUserData().then((data)=>{
               const {balance=0} = data;
               const byte = parseFloat(balance).toFixed(4);
-              this.setState({
-                  byte,
-                  kbyte: (byte/1000).toFixed(4),
-                  mbyte: (byte/1000000).toFixed(4)
-              });
+              this.setState({byte});
           });
       });
     }
@@ -124,11 +118,7 @@ export default class VideoAds extends React.Component{
         await sendUpdateUserData({balance:reward});
         const {balance} = await getUserData();
         const newBalance = parseFloat(balance).toFixed(4);
-        this.setState({
-            byte: newBalance,
-            kbyte: newBalance/1000,
-            mbyte: newBalance/1000000,
-        });
+        this.setState({byte: newBalance});
       } catch(ex) {
           console.log(ex);
       }
@@ -141,12 +131,7 @@ export default class VideoAds extends React.Component{
               backgroundColor: globalStyles.fontGrey
             }}>
             <LoaderScreen loading={this.state.loader}/>
-              <CardMonedero
-                  textHeader = "Dicags"
-                  text1 = {moneyName} item1 = {this.state.byte}
-                  text2 = {"K"+moneyName} item2 = {this.state.kbyte}
-                  text3 = {"M"+moneyName} item3 = {this.state.mbyte}
-                  style = {{margin: 40}}/>
+              <CardMonedero textHeader = "Dicags" value = {this.state.byte} style = {{margin: 40}}/>
               <SubmitButton onPress={this.showRewarded} text="Videos bonificados"/>
             </Content>
           </Container>

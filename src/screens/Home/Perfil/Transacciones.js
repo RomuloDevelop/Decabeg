@@ -1,66 +1,76 @@
 import React, {Component} from 'react';
-import {StyleSheet, View, Modal} from 'react-native';
-import { Container, Content,List, ListItem, Left, Body, Right, Text, H3, H1, Grid, Col, Row, Button, Icon, Item, Form, Label, Input} from "native-base";
+import {StyleSheet, View, TouchableOpacity} from 'react-native';
+import { Container, Content,List, ListItem, Left, Body, Right,Card, Text, H3, H2, H1, Grid, Col, Row, Button, Icon, Item, Form, Label, Input} from "native-base";
 import { getUserData } from '../../../helpers';
 import { sendGetTransferInfo } from '../../../Api';
 import moment from 'moment';
 import NoDataIcon from '../../../sharedComponents/NoDataIcon';
 import SubmitButton from '../../../sharedComponents/SubmitButton';
 import Header from '../../../sharedComponents/Header';
+import CardMonedero from '../../../sharedComponents/CardMonedero';
+import {withModal} from '../../../containers';
 
 import globalStyles from '../../../styles';
 
-const degradado = '66';
-function CloseButton(props){
-    return(
-        <Button style={{alignSelf:'flex-end', margin:10}} bordered warning onPress={props.onClose}>
-          <Icon type="FontAwesome" name='times' />
-        </Button>
-    )
-}
+const degradado = '40';
 
-function ItemDetail(props){
-    return(
-        <Modal
-            animationType={'slide'}
-            visible={props.show}
-            onRequestClose={() => {console.log('close modal')}}>
-            <CloseButton onClose={props.onClose}/>
-            <Form>
-                <Item floatingLabel>
-                  <Label>Usuario</Label>
-                  <Input value={props.data.username}/>
-                </Item>
-                <Item floatingLabel>
-                  <Label>Concepto</Label>
-                  <Input value={props.data.concept}/>
-                </Item>
-            </Form>
-        </Modal>
-    );
-}
+const FormWithModal = (props) => (
+  <Form>
+      <Item disabled floatingLabel>
+        <Label>Referencia</Label>
+        <Input disabled value={props.data.transfer_code}/>
+      </Item>
+      <Item disabled floatingLabel>
+        <Label>Usuario</Label>
+        <Input disabled value={props.data.username}/>
+      </Item>
+      <Item disabled floatingLabel>
+        <Label>Pago</Label>
+        <Input disabled value={props.data.amount.toString()}/>
+      </Item>
+      <Item disabled floatingLabel>
+        <Label>Monto Actual</Label>
+        <Input disabled value={props.data.current_balance.toString()}/>
+      </Item>
+      <Item disabled floatingLabel>
+        <Label>Concepto</Label>
+        <Input disabled value={props.data.concept}/>
+      </Item>
+  </Form>
+);
+const ItemDetail = withModal(FormWithModal);
+
+
 
 function TransaccionList(props){
-    return props.data.map((item, index)=>{
+    const ItemRow = ({children})=>(
+      <Col>
+        {children}
+      </Col>
+    );
+    return props.data.map((item, index, array)=>{
         const date = moment(item.create_date).calendar().split('at');
         const color = (index%2)?globalStyles.mediumBlue:globalStyles.lightBlue;
         return(
-            <ListItem key={index} style={{backgroundColor:color+degradado, marginLeft:0}} onPress={()=>props.onItemPress(item)}>
-              <Left style={{marginLeft:20}}>
-                    <Text>{item.transfer_code}</Text>
-                    <View style={{marginLeft:8}}>
-                        <Text>{date[0]}</Text>
-                        {date.length>1&&<Text>{date[1]}</Text>}
-                    </View>
-              </Left>
-              <Body>
-                  <H3>{item.username}</H3>
-              </Body>
-              <Right style={{marginRight:20}}>
-                <H3 style={{textAlign:'center'}}>{item.current_balance}</H3>
-                <Text style={{textAlign:'center'}}>{item.amount}</Text>
-              </Right>
-            </ListItem>
+          <TouchableOpacity key={index} 
+            activeOpacity = {1}
+            style = {{borderBottomWidth:(index === array.length - 1 ?0:2), borderColor:'grey', backgroundColor:color + degradado}} 
+            onPress={()=>props.onItemPress(item)} >
+            <Row style={{paddingHorizontal:20, paddingVertical:10}}>
+              <Col style = {{justifyContent:'center'}}>
+                <View>
+                    <Text style={{color:globalStyles.darkBlue}}>{date[0]}</Text>
+                    {date.length>1&&<Text style={{color:globalStyles.darkBlue}}>{date[1]}</Text>}
+                </View>
+              </Col>
+              <Col style = {{justifyContent:'center'}}>
+                <Text style={{textAlign:'center',color:globalStyles.darkBlue, fontSize:18}}>{item.username}</Text>
+              </Col>
+              <Col style = {{justifyContent:'center'}}>
+                <H2 style={{textAlign:'right', color:(item.amount<0)?'red':'green'}}>{item.amount}</H2>
+              </Col>
+            </Row>
+          </TouchableOpacity>
         )
     });
 }
@@ -70,7 +80,6 @@ class Transacciones extends Component {
     this.state = {
         balance:0,
         data:[],
-        showDetail:false,
         itemToShow:{}
     }
   }
@@ -78,33 +87,31 @@ class Transacciones extends Component {
     sendGetTransferInfo().then((data)=>{
         const {current_balance} = data[data.length -1];
         this.setState({balance:current_balance, data:data.reverse()});
-        
-    })
-    .catch((e)=>console.log(e));
+    }).catch((e)=>console.log(e));
   }
 
-    onItemPress=(item)=>{
-        this.setState({showDetail:true, itemToShow:item})
-    }
+  onItemPress=(item)=>{
+      this.setState(()=>({itemToShow:item}),this.modal.Open)
+  }
 
   render(){
         return(
             <Container>
-            <Header color={globalStyles.navbarColor} title="Transacciones" onPress={()=>this.props.navigation.openDrawer()}/>
-                <Content contentContainerStyle={this.state.data.length <= 0?{flex: 1}:{}}>
+              <Header color={globalStyles.navbarColor} title="Transacciones" onPress={()=>this.props.navigation.openDrawer()}/>
+              <Content 
+                contentContainerStyle={this.state.data.length <= 0?{flex: 1}:{backgroundColor: globalStyles.fontGrey}}>
                 {(this.state.data.length <= 0)?(<NoDataIcon text="No se encontraron registros"/>):
-                    (<View><ItemDetail show={this.state.showDetail} data={this.state.itemToShow} onClose={()=>this.setState({showDetail:false})}/>
-                    <Grid style={{padding:15, marginVertical:10,marginHorizontal:5,borderRadius:20, backgroundColor:globalStyles.navbarColor+'aa'}}>
-                        <Row><H3 style={{color:'white'}}>Monto actual:</H3></Row>
-                        <Row><H1 style={{marginLeft:10, color:'white'}}>{this.state.balance}</H1></Row>
-                    </Grid>
-                    <List>
-                        <ListItem itemDevider style = {{backgroundColor:globalStyles.mediumBlue+degradado, marginLeft:0, borderRadiusTop:20}}>
-                            <H3 style={{marginLeft:8}}>Operaciones</H3>
-                        </ListItem>
-                        <TransaccionList data={this.state.data} onItemPress={this.onItemPress}/>
-                    </List></View>)}
-                </Content>
+                (<View>
+                  <ItemDetail ref = {ref => this.modal = ref} data={this.state.itemToShow}/>
+                  <CardMonedero textHeader = "Dicags" value = {this.state.balance} style = {{margin: 40}}/>
+                  <Grid>
+                    <Row style = {{backgroundColor:globalStyles.mediumBlue, padding:10, borderTopLeftRadius:20, borderTopRightRadius:20}}>
+                      <H3 style={{marginLeft:8, color:'white'}}>Operaciones</H3>
+                    </Row>
+                    <TransaccionList data={this.state.data} onItemPress={this.onItemPress}/>
+                  </Grid>
+                </View>)}
+              </Content>
             </Container>);
   }
 }

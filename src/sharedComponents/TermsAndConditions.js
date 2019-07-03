@@ -1,12 +1,17 @@
 import React from 'react';
+import {View} from 'react-native';
 import WebViewComponent from './WebViewComponent';
-import AppModal from "./AppModal";
+import withModal from "../containers/withModal";
 import globalStyles from '../styles';
-const TermsAndConditions = React.forwardRef((props, ref) => {
+
+const TermsAndConditionsWithModal = (props) => {
     return (
-        <AppModal ref={ref} style={{padding: 30}}>
+        <View style={{padding: 30}}>
             <WebViewComponent uri="https://edixonalberto.github.io/doc-dicabeg/menu/terms.html"/>
-        </AppModal>
+        </View>
     );
-});
+};
+
+const TermsAndConditions = withModal(TermsAndConditionsWithModal);
+
 export default TermsAndConditions;

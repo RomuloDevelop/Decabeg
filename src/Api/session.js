@@ -37,7 +37,6 @@ async function sendUserLogin(user, userData){
         //const player_id = await getOneSignalId();
         //await sendUpdateUserData({player_id});
         if(userData){ //Inicia sesion por primera ves en google, facebook
-            console.log('primera ves');
             await sendGetUserData();
             //await sendUpdateUserData(userData);
         } else {
@@ -66,12 +65,15 @@ async function sendUserResetToken(){
 
 async function sendUserSignUp(user){
     try{
+        const {email} = user;
+        user.email = removeUpperAndSpaces(email);
+        console.log(user);
         const formBody = getUrlEncodedParams(user);
         const response = await executeRequest('post', `users`, formBody,{'Content-Type': 'application/x-www-form-urlencoded'});
         const data = response.data;
         console.log('SingUp:' + JSON.stringify(data));
         return data;
-    } catch(ex){
+    } catch(ex) {
         throw ex;
     }
 }

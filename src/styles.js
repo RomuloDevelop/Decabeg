@@ -13,6 +13,12 @@ export default globalStyles = {
         color:"#FFFFFFaa", 
         textAlign:'left' , 
         marginBottom:10
+    },
+    image:{
+        width: 100,
+        height: 100,
+        borderRadius: 500,
+        alignSelf: 'center'
     }
 };
 

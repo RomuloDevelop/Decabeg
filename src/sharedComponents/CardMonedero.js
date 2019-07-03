@@ -2,87 +2,78 @@ import React, {Component} from 'react';
 import { 
     View, 
     Text, StyleSheet, Image } from 'react-native';
+import {H3, Icon, IconNB} from 'native-base';
+import Hr from '../sharedComponents/Hr';
 
 import globalStyles from '../styles';
 
-class CardMonedero extends Component {
+function CalcMessage({value}){
+    let message = "";
+    const num = parseFloat(value);
+    if(num >= 1) message = " videos para otro dicag";
+    else message = " videos para un dicag";
+    const decimal = num % 1;
+    const videos = (1/0.005)-(decimal/0.005);
+    message = Math.floor(videos) + message;
+    return <Text>{message}</Text>
+}
 
-    render() {
-        return (
-            <View style = {{flex:1}}>
-                <View style = {styles.moneyCard}>
-                    <View style={styles.cardHeader}>
-                      <Text style={styles.cardHeaderText}>{this.props.textHeader}</Text>
-                    </View>
-                    <View style = {styles.cardBody}>
-                        <View 
-                            style={[styles.cardColumn,{
-                                    borderRightColor: '#dddddd',
-                                    borderRightWidth: 1
-                                }
-                            ]}>
-                            <Text style={styles.cardTitle}>{this.props.text1}</Text>
-                            <Text style={styles.cardDetail}>{this.props.item1}</Text>
-                        </View>
-                        <View 
-                            style={[styles.cardColumn,{
-                                    borderRightColor: '#dddddd',
-                                    borderRightWidth: 1
-                                }
-                            ]}>
-                            <Text style={styles.cardTitle}>{this.props.text2}</Text>
-                            <Text style={styles.cardDetail}>{this.props.item2}</Text>
-                        </View>
-                        <View style={styles.cardColumn}>
-                            <Text style={styles.cardTitle}>{this.props.text3}</Text>
-                            <Text style={styles.cardDetail}>{this.props.item3}</Text>
-                        </View>
-                    </View>
+function CardMonedero(props){
+    return (
+            <View style = {styles.moneyCard}>
+                <View style={styles.cardTitleBox}>
+                    <Icon name="cash" type="Ionicons" style={styles.titleIcon}/>
+                    <H3 style={styles.cardHeaderText}>{props.textHeader}</H3>
                 </View>
-            </View>
-        )
-    }
-
+                <View style = {styles.cardBody}>
+                    <Text style={styles.cardAmount}>{props.value}</Text>
+                    <Hr color='#00000033' width={1.5}/>
+                    <CalcMessage value ={props.value}/>
+                </View>
+            </View>);
 }
  
 // Later on in your styles..
-var styles = StyleSheet.create({
+const styles = StyleSheet.create({
     moneyCard:{
         height: 120,
+        width:'90%',
+        borderRadius: 10,
+        overflow: 'hidden',
+        flex:1,
+        justifyContent: 'center',
+        flexDirection: 'row',
+        alignSelf:'center',
         margin: 10,
         marginTop: 20,
-        flexDirection: 'column',
-        justifyContent: 'center',
         backgroundColor: '#fff',
         elevation: 1,
         shadowOpacity: 2,
         shadowRadius: 2,
         shadowColor: '#000'
     },
-    cardHeader:{
+    cardTitleBox:{
         flex:1,
-        textAlign: "left",
+        justifyContent:'space-evenly',
+        alignItems:'center',
         padding: 5,
         paddingLeft: 10,    
-        borderBottomColor: '#dddddd',
-        borderBottomWidth: 2,
+        backgroundColor:globalStyles.mediumBlue,
+    },
+    titleIcon: {
+        fontSize:50,
+        color:'#FFF'
     },
     cardHeaderText:{
-        color:'#000', 
-        fontWeight:'300', 
-        fontSize: 18
+        color:'#FFF', 
+        fontWeight:'300',
     },
     cardBody: {
         flex: 3,
         margin: 10,
-        flexDirection: "row",
-        justifyContent: "center",
+        flexDirection: "column",
+        justifyContent: "space-evenly",
         alignItems: "center",
-        padding: 2,
-    },
-    cardColumn:{
-        flex: 1,
-        flexDirection:"column",
         padding: 2,
     },
     cardTitle:{
@@ -91,10 +82,8 @@ var styles = StyleSheet.create({
         fontSize: 20,
         fontWeight:'300',
     },
-    cardDetail:{
-        justifyContent:"flex-end",
-        alignSelf: "center",
-        fontSize: 15,
+    cardAmount:{
+        fontSize: 24,
     }
 });
 

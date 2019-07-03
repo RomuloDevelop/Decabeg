@@ -1,27 +1,18 @@
 import React from 'react';
 import { Animated } from 'react-native';
-const duration = 700;
 class FadeIn extends React.Component {
-    state = {
+  constructor(props){
+    super(props);
+    this.state = {
       fadeAnim: new Animated.Value(0),
     }
-
-    /*componentWillUnmount() {
-        Animated.timing(                  
-          this.state.fadeAnim,            
-          {
-            toValue: 0,                   
-            duration: duration,              
-          }
-        ).start();
-    }*/
-  
+  }
     componentDidMount() {
       Animated.timing(                  
         this.state.fadeAnim,            
         {
           toValue: 1,                   
-          duration: duration,              
+          duration: (this.props.duration)?this.props.duration:700,              
         }
       ).start();                        
     }

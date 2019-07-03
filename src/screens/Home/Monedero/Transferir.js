@@ -16,8 +16,6 @@ class Transferir extends Component {
     super(props);
     this.state = {
       byte: 0,
-      kbyte: 0,
-      mbyte: 0,
       username: '',
       amount: 0.00,
       concept:'',
@@ -34,11 +32,7 @@ class Transferir extends Component {
           getUserData().then((data)=>{
               const {balance = 0} = data;
               const byte = parseFloat(balance).toFixed(4);
-              this.setState({
-                  byte,
-                  kbyte: (byte/1000).toFixed(4),
-                  mbyte: (byte/1000000).toFixed(4)
-              });
+              this.setState({byte});
           });
       });
   }
@@ -96,11 +90,7 @@ class Transferir extends Component {
           }
           const transferResponse = await sendTransferToUser(this.state.username, this.state.amount, this.state.concept);
           const byte = parseFloat(transferResponse.current_balance).toFixed(4);
-          this.setState({
-              byte,
-              kbyte: (byte/1000).toFixed(4),
-              mbyte: (byte/1000000).toFixed(4),
-          });
+          this.setState({byte});
         this.addItemIfNotExist();
       } else {
           alert('Especifique un monto');
@@ -146,44 +136,39 @@ class Transferir extends Component {
             onClose={()=>this.setState({showModal:false})}
             onSelect={(item)=>this.setState({username:item.username, showModal:false})}
             data={this.state.agendaList}/>
-          <CardMonedero
-              textHeader = "Dicags"
-              text1 = {moneyName} item1 = {this.state.byte}
-              text2 = {"K"+moneyName} item2 = {this.state.kbyte}
-              text3 = {"M"+moneyName} item3 = {this.state.mbyte}
-              style = {{margin: 40}}/>
-              <Card style={{margin:100}}>
+          <CardMonedero textHeader = "Dicags" value = {this.state.byte} style = {{margin: 40}}/>
+          <Card style={{margin:100}}>
             <CardItem header bordered>
               <Text style={{color:globalStyles.darkBlue}}>Transferir</Text>
             </CardItem>
             <CardItem bordered>
               <Body>
-          <Form style={{marginHorizontal:15, marginBottom:30, alignSelf:'stretch'}}>
-              <Item floatingLabel>
-                <Label>Username</Label>
-                <Input value={this.state.username} onChangeText={(username)=>this.setState({username})}/>
-                <Icon name="address-book" type="FontAwesome" onPress={()=>{
-                  getAgendaList()
-                    .then((agendaList)=>{
-                      console.log(agendaList);
-                      this.setState({showModal:true, agendaList})})
-                    .catch((ex)=>{
-                      if(ex==='No data was found'){
-                        appAlert('Agenda', 'No tiene usuarios en su agenda');
-                      } else
-                        console.log(ex)
-                    });
-                  }} style={{color:globalStyles.darkBlue}}/>
-              </Item>
-              <Item floatingLabel>
-                <Label>Monto</Label>
-                <Input value={this.state.amount} onChangeText={this.handleChangeSaldo} spellCheck = {false} keyboardType = 'numeric'/>
-              </Item>
-              <Item floatingLabel>
-                <Label>Concepto</Label>
-                <Input value={this.state.concept} maxLength={20} onChangeText={(concept)=>{this.setState({concept})}}/>
-              </Item>
-          </Form>
+                <Form style={{marginHorizontal:15, marginBottom:30, alignSelf:'stretch'}}>
+                    <Item floatingLabel>
+                      <Label>Username</Label>
+                      <Input value={this.state.username} onChangeText={(username)=>this.setState({username})}/>
+                      <Icon name="address-book" type="FontAwesome" onPress={()=>{
+                        getAgendaList()
+                          .then((agendaList)=>{
+                            console.log(agendaList);
+                            this.setState({showModal:true, agendaList})})
+                          .catch((ex)=>{
+                            if(ex==='No data was found'){
+                              appAlert('Agenda', 'No tiene usuarios en su agenda');
+                            } else
+                              console.log(ex)
+                          });
+                        }} style={{color:globalStyles.darkBlue}}/>
+                    </Item>
+                    <Item floatingLabel>
+                      <Label>Monto</Label>
+                      <Input value={this.state.amount} onChangeText={this.handleChangeSaldo} spellCheck = {false} keyboardType = 'numeric'/>
+                    </Item>
+                    <Item floatingLabel>
+                      <Label>Concepto</Label>
+                      <Input value={this.state.concept} maxLength={20} onChangeText={(concept)=>{this.setState({concept})}}/>
+                    </Item>
+                </Form>
               </Body>
             </CardItem>
           </Card>

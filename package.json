@@ -13,7 +13,7 @@
     "project": "yarn run bundle && yarn run android",
     "clean": "cd android && gradlew clean && cd ../",
     "settime": "adb root shell \"date 'date +%m%d%H&M&Y.%S'\"",
-    "session": "adb shell \"input text 'alysha.keebler@ethereal.email'\" && adb shell input keyevent 66 && adb shell \"input text 'Romulo-0'\""
+    "session": "adb shell \"input text 'romulocg25@gmail.com'\" && adb shell input keyevent 66 && adb shell \"input text 'Romulo-1'\""
   },
   "dependencies": {
     "@react-native-community/netinfo": "^2.0.0",
@@ -26,10 +26,11 @@
     "native-base": "^2.12.1",
     "react": "16.8.3",
     "react-native": "0.59.0",
-    "react-native-ad-colony": "^1.0.13",
+    "react-native-adcolony": "https://github.com/RomuloDevelop/react-native-adcolony.git",
     "react-native-background-timer": "^2.1.1",
     "react-native-device-info": "^2.0.0",
     "react-native-fbsdk": "^0.8.0",
+    "react-native-firebase": "^5.5.5",
     "react-native-gesture-handler": "^1.1.0",
     "react-native-google-signin": "^1.2.2",
     "react-native-image-picker": "^0.27.2",

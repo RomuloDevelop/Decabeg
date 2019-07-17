@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import Video from 'react-native-video';
 import { View, StyleSheet, TouchableOpacity, Dimensions, ProgressBarAndroid, ScrollView } from 'react-native';
+//import * as firebase from 'react-native-firebase';
 import * as Progress from 'react-native-progress';
 import { Button, Text, Icon, ListItem, Radio, Right, Left, Badge, Card, CardItem, Col, Row, Grid } from 'native-base';
 import FadeIn from '../../../Animations/FadeIn';
@@ -8,6 +9,11 @@ import { sendGetVideos, sendPostHistory, sendUpdateUserData, sendGetUserData } f
 import { mergeUserData, getUserData, expirationAddListener, appAlert } from '../../../helpers';
 import LoaderScreen from '../../../sharedComponents/LoadScreen';
 import globalStyles from '../../../styles';
+// let video = '';
+// const defaultStorage = firebase.storage().refFromURL('gs://dicabeg-10e40.appspot.com/Visita distintos anuncios de servicios públicos en Neopicados - DESAFÍOS SEMANA 10 DE FORTNITE.mp4')
+// .getDownloadURL().then((url)=>{
+//   video = url;
+// });
 
 async function updateUserMoneyLocalAndSend(data){
   try {
@@ -230,7 +236,7 @@ class Anuncios extends Component {
                   </View> */}
                  {/* )} */}
                     {this.state.start && (
-                        <Video source={{uri: this.state.videos[this.state.index].link}}   // Can be a URL or a local file.
+                        <Video source={{ uri: this.state.videos[this.state.index].link }}   // Can be a URL or a local file.
                             ref={(ref) => {
                                 this.video = ref;
                             }}                                      // Store reference

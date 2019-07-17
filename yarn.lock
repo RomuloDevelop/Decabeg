@@ -4954,6 +4954,11 @@ onetime@^2.0.0:
   dependencies:
     mimic-fn "^1.0.0"
 
+opencollective-postinstall@^2.0.0:
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/opencollective-postinstall/-/opencollective-postinstall-2.0.2.tgz#5657f1bede69b6e33a45939b061eb53d3c6c3a89"
+  integrity sha512-pVOEP16TrAO2/fjej1IdOyupJY8KDUM1CvsaScRbw6oddvpQoOfGk4ywha0HKKVAD6RkW4x6Q+tNBwhf3Bgpuw==
+
 opn@^3.0.2:
   version "3.0.3"
   resolved "https://registry.yarnpkg.com/opn/-/opn-3.0.3.tgz#b6d99e7399f78d65c3baaffef1fb288e9b85243a"
@@ -5497,10 +5502,9 @@ react-lifecycles-compat@^3.0.4:
   resolved "https://registry.yarnpkg.com/react-lifecycles-compat/-/react-lifecycles-compat-3.0.4.tgz#4f1a273afdfc8f3488a8c516bfda78f872352362"
   integrity sha512-fBASbA6LnOU9dOU2eW7aQ8xmYBSXUIWr+UmF9b1efZBazGNO+rcXT/icdKnYm2pTwcRylVUYwW7H1PHfLekVzA==
 
-react-native-ad-colony@^1.0.13:
-  version "1.0.13"
-  resolved "https://registry.yarnpkg.com/react-native-ad-colony/-/react-native-ad-colony-1.0.13.tgz#20d5f559a1f891c40deb8533c4f19f49df020d88"
-  integrity sha1-INX1WaH4kcQN64UzxPGfSd8CDYg=
+"react-native-adcolony@https://github.com/RomuloDevelop/react-native-adcolony.git":
+  version "1.0.0"
+  resolved "https://github.com/RomuloDevelop/react-native-adcolony.git#dfb71a715f0c822672b8e393d02214f3a9ab81e8"
 
 react-native-background-timer@^2.1.1:
   version "2.1.1"
@@ -5539,6 +5543,14 @@ react-native-fbsdk@^0.8.0:
     progress "^2.0.0"
     pump "^1.0.2"
     xcode "^0.9.3"
+
+react-native-firebase@^5.5.5:
+  version "5.5.5"
+  resolved "https://registry.yarnpkg.com/react-native-firebase/-/react-native-firebase-5.5.5.tgz#d5c7e02eb6ea5650f9ebbb23c2cd796f83e7ca45"
+  integrity sha512-i3MBEQ2xPsEFLLp4NjK5PC4tGA4RgUdULxiTHvmi9qCM2FlVV0YhyFoO+dQIFfW2V9AzSE0v38EPCuhZDp3RdQ==
+  dependencies:
+    opencollective-postinstall "^2.0.0"
+    prop-types "^15.7.2"
 
 react-native-gesture-handler@^1.1.0:
   version "1.1.0"

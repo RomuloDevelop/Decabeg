@@ -8,7 +8,7 @@ import {
     Badge, Text, Icon
 } from 'native-base';
 import { sendUserLogin, sendUserSignUp } from '../../Api';
-import {appAlert} from '../../helpers';
+import {appAlert, validateEmail, validatePassword, validateChangePassword} from '../../helpers';
 import LoaderScreen from '../../sharedComponents/LoadScreen';
 import {PickerLogin, CheckBoxFormApp} from '../../sharedComponents/InputDicabeg';
 import TermsAndConditions from '../../sharedComponents/TermsAndConditions';
@@ -81,8 +81,7 @@ class SingUp extends Component{
     handleChangeUsername = (value) => this.setState({username:value})
     
     handleChangeEmail = (value) => {
-        const testing = /\S+@\S+\.\S+/;
-        const validEmail = testing.test(value);
+        const validEmail = validEmail(value);
         this.setState({email:value, validEmail});
     }
     
@@ -91,9 +90,8 @@ class SingUp extends Component{
     }
 
     handleChangePassword = (value) => {
-        const testing = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&_\-])[A-Za-z\d@$!%*#?&_\-]{8,}$/
-        this.validPassword = testing.test(value);
-        this.validRepassword = this.state.repeatpassword === value;
+        this.validPassword = validPassword(value);
+        this.validRepassword = validateChangePassword(this.state.repeatpassword, value);
         this.setState({password:value});
     }
     
@@ -103,7 +101,7 @@ class SingUp extends Component{
 
     handleChangeRepeatpassword = (value) => {
         let {password} = this.state;
-        this.validRepassword = (password === value);
+        this.validRepassword = validateChangePassword(value,password);
         this.setState({repeatpassword: value});
     }
 
@@ -209,7 +207,7 @@ class SingUp extends Component{
                         style={styles.innerInput}
                         placeholder="Password"
                         placeholderTextColor = "rgba(255,255,255,0.7)"
-                        maxLength={8}
+                        maxLength={15}
                         secureTextEntry={this.state.security}
                         onChangeText={this.handleChangePassword}
                         onBlur={this.handleBlurPassword}
@@ -242,7 +240,7 @@ class SingUp extends Component{
                     secureTextEntry = {true}
                     value = {this.state.repeatpassword}
                     secureTextEntry={true}
-                    maxLength={8}
+                    maxLength={15}
                     onChangeText={this.handleChangeRepeatpassword}
                     onBlur={this.handleBlurRepeatpassword}
                 ></TextInput>

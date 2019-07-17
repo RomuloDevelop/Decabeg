@@ -29,7 +29,6 @@ class SendCode extends Component {
     handleSubmit = async () => {
         try{
             const temporal_code = this.state.temporal_code;
-            console.log(temporal_code);
             if(!temporal_code)
                 return appAlert('Codigo', 'Ingrese un codigo de verificacion valido');
             this.setState(()=>({loading:true}),()=>{

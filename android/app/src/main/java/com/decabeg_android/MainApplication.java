@@ -8,8 +8,11 @@ import com.facebook.CallbackManager;
 import com.facebook.appevents.AppEventsLogger;
 //
 import com.facebook.react.ReactApplication;
-
-import com.reactlibrary.RNAdColonyPackage;
+import com.reactlibrary.RNAdcolonyPackage;
+//#region Firebase storage
+import io.invertase.firebase.RNFirebasePackage;
+import io.invertase.firebase.storage.RNFirebaseStoragePackage;
+//#endregion
 import com.bugsnag.BugsnagReactNative;
 import com.learnium.RNDeviceInfo.RNDeviceInfo;
 
@@ -63,7 +66,9 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
-            new RNAdColonyPackage(),
+            new RNAdcolonyPackage(),
+            new RNFirebasePackage(),
+            new RNFirebaseStoragePackage(),
             BugsnagReactNative.getPackage(),
             new RNDeviceInfo(),
             new ModuleRegistryAdapter(mModuleRegistryProvider),

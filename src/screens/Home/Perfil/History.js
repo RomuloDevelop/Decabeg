@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import {StyleSheet, View} from "react-native";
+import {StyleSheet, View, ScrollView} from "react-native";
 import { Container, Content, Card, CardItem, Text, Body,
     Icon, IconNB, List, ListItem, Left, Right} from "native-base";
 import LoaderScreen from '../../../sharedComponents/LoadScreen';
@@ -119,8 +119,11 @@ class History extends Component {
         <Content contentContainerStyle={this.state.history.length <= 0?{flex: 1}:{}}>
           <LoaderScreen loading = {this.state.loading}/>
           {(this.state.history.length <= 0)?
-          (<NoDataIcon text="Sin datos de historial"/>):
-          (<HistoryCards history={this.state.history} onPress={this.onPress}/>)}
+          (<NoDataIcon text="Sin datos de historial"/>):(
+            <ScrollView>
+              <HistoryCards history={this.state.history} onPress={this.onPress}/>
+            </ScrollView>
+          )}
         </Content>
       </Container>
     );

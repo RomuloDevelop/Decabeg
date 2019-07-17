@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {StyleSheet, View, TouchableOpacity} from 'react-native';
+import {StyleSheet, View, ScrollView, TouchableOpacity} from 'react-native';
 import { Container, Content,List, ListItem, Left, Body, Right,Card, Text, H3, H2, H1, Grid, Col, Row, Button, Icon, Item, Form, Label, Input} from "native-base";
 import { getUserData } from '../../../helpers';
 import { sendGetTransferInfo } from '../../../Api';
@@ -100,8 +100,8 @@ class Transacciones extends Component {
               <Header color={globalStyles.navbarColor} title="Transacciones" onPress={()=>this.props.navigation.openDrawer()}/>
               <Content 
                 contentContainerStyle={this.state.data.length <= 0?{flex: 1}:{backgroundColor: globalStyles.fontGrey}}>
-                {(this.state.data.length <= 0)?(<NoDataIcon text="No se encontraron registros"/>):
-                (<View>
+                {(this.state.data.length <= 0)?(<NoDataIcon text="No se encontraron registros"/>):(
+                <ScrollView>
                   <ItemDetail ref = {ref => this.modal = ref} data={this.state.itemToShow}/>
                   <CardMonedero textHeader = "Dicags" value = {this.state.balance} style = {{margin: 40}}/>
                   <Grid>
@@ -110,7 +110,7 @@ class Transacciones extends Component {
                     </Row>
                     <TransaccionList data={this.state.data} onItemPress={this.onItemPress}/>
                   </Grid>
-                </View>)}
+                </ScrollView>)}
               </Content>
             </Container>);
   }

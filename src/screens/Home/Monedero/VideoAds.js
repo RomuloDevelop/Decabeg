@@ -7,7 +7,7 @@ import SubmitButton from '../../../sharedComponents/SubmitButton';
 import CardMonedero from '../../../sharedComponents/CardMonedero';
 import LoaderScreen from '../../../sharedComponents/LoadScreen';
 import { AdMobRewarded } from 'expo-ads-admob';
-import RNAdColony from 'react-native-ad-colony';
+import RNAdcolony from 'react-native-adcolony';
 const moneyName = 'Dicag';
 const mopubId = '233b35beadd84c998c625fec6200e24c';
 const zoneIdAdColony = 'vzdb56a8b971bc4dd8a8';
@@ -18,8 +18,8 @@ export default class VideoAds extends React.Component{
        this.bugsnag = props.screenProps.bugsnag;
        this.countAdConolonyFails = 0;
        this.adColonyReady = false;
-       RNAdColony.configure(appIdAdColony,zoneIdAdColony);
-       RNAdColony.loadAds(zoneIdAdColony);
+       RNAdcolony.configure(appIdAdColony,zoneIdAdColony);
+       RNAdcolony.loadAds(zoneIdAdColony);
        //AdMobRewarded.setAdUnitID('ca-app-pub-3940256099942544/5224354917'); // Test ID, Replace with your-admob-unit-id
        //AdMobRewarded.setTestDeviceID('EMULATOR'); //[AdMobRewarded.simulatorId]
        AdMobRewarded.setAdUnitID('ca-app-pub-6095454139379493/6183407113');
@@ -56,11 +56,11 @@ export default class VideoAds extends React.Component{
     }
 
     adColonyAds = ()=>{
-      RNAdColony.isReady(zoneIdAdColony,(isReady)=>{
+      RNAdcolony.isReady(zoneIdAdColony,(isReady)=>{
         if(isReady){
           console.log('adcolony ready');
           this.adColonyReady = true;
-          RNAdColony.showAdReward(zoneIdAdColony,(RewardName, RewardAmount)=>{
+          RNAdcolony.showAdReward(zoneIdAdColony,(RewardName, RewardAmount)=>{
             console.log(RewardAmount);
             this.getSaldoConvertion(RewardAmount/200);
           });
@@ -68,7 +68,7 @@ export default class VideoAds extends React.Component{
           console.log('adcolony no ready');
           this.countAdConolonyFails += 1
           if(this.countAdConolonyFails === 2) {
-            RNAdColony.loadAds(zoneIdAdColony);
+            RNAdcolony.loadAds(zoneIdAdColony);
             this.countAdConolonyFails = 0;
           }
         }

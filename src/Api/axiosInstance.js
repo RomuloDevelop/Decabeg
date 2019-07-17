@@ -12,8 +12,8 @@ const axiosInstance = axios.create({
 
 async function executeRequest(type: RequestType, uri: string, data: any, setHeaders: any){
     try{
-        const isConnected = await NetInfo.isConnected.fetch();
-        if(!isConnected) throw "No connected";
+        // const isConnected = await NetInfo.isConnected.fetch();
+        // if(!isConnected) throw "No conectado";
         let headers;
         if(setHeaders)
             headers = setHeaders;
@@ -56,7 +56,7 @@ function responseError(error, method){
     console.log('message error');
     throw {message: error.message, method};
   }
-  else if(error==="No connected"){
+  else if(error==="No conectado"){
     console.log('No conectado');
     ToastAndroid.showWithGravity(error,ToastAndroid.LONG,ToastAndroid.BOTTOM);
     throw error;

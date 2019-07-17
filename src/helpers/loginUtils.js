@@ -14,7 +14,7 @@ function validateEmail(value: string):boolean {
 }
 
 function validatePassword(value: string): boolean {
-    const testing = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&_\-])[A-Za-z\d@$!%*#?&_\-]{8,}$/
+    const testing = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&_\-])[A-Za-z\d@$!%*#?&_\-]{8,15}$/
     return (value)?testing.test(value):false;
 }
 

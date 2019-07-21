@@ -24,11 +24,12 @@ export default globalStyles = {
 
 export const buttonForm = StyleSheet.create({
     buttonContainer: {
-        marginHorizontal: 10,
         paddingVertical: 10,
+        marginHorizontal: 10,
         marginVertical: 15,
         backgroundColor: globalStyles.darkBlue,
         borderRadius: 10,
+        overflow:'hidden',
         elevation: 1,
         shadowOpacity: 2,
         shadowRadius: 2,
@@ -36,6 +37,7 @@ export const buttonForm = StyleSheet.create({
     },
     textButton: {
         color: '#FFF',
-        textAlign: 'center'
+        textAlign: 'center',
+        textTransform: 'uppercase'
     }
 });

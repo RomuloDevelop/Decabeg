@@ -6,6 +6,7 @@ import {sendGetUserData, sendUpdateUserData} from '../../../Api';
 import SubmitButton from '../../../sharedComponents/SubmitButton';
 import CardMonedero from '../../../sharedComponents/CardMonedero';
 import LoaderScreen from '../../../sharedComponents/LoadScreen';
+import DynamicForm from '../../../sharedComponents/DynamicForm';
 import { AdMobRewarded } from 'expo-ads-admob';
 import RNAdcolony from 'react-native-adcolony';
 const moneyName = 'Dicag';
@@ -132,7 +133,9 @@ export default class VideoAds extends React.Component{
             }}>
             <LoaderScreen loading={this.state.loader}/>
               <CardMonedero textHeader = "Dicags" value = {this.state.byte} style = {{margin: 40}}/>
-              <SubmitButton onPress={this.showRewarded} text="Videos bonificados"/>
+              <DynamicForm>
+                <SubmitButton onPress={this.showRewarded} text="Videos bonificados"/>
+              </DynamicForm>
             </Content>
           </Container>
       );

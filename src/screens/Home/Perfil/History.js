@@ -1,10 +1,10 @@
 import React, { Component } from "react";
 import {StyleSheet, View, ScrollView} from "react-native";
-import { Container, Content, Card, CardItem, Text, Body,
-    Icon, IconNB, List, ListItem, Left, Right} from "native-base";
+import { Container, Content, Card, CardItem, Text, Icon, Right} from "native-base";
 import LoaderScreen from '../../../sharedComponents/LoadScreen';
 import Header from '../../../sharedComponents/Header';
 import NoDataIcon from '../../../sharedComponents//NoDataIcon';
+import PaginationContainer from '../../../sharedComponents/PaginationContainer';
 
 import {sendGetHistory, sendDeleteHistory} from '../../../Api';
 
@@ -121,7 +121,11 @@ class History extends Component {
           {(this.state.history.length <= 0)?
           (<NoDataIcon text="Sin datos de historial"/>):(
             <ScrollView>
-              <HistoryCards history={this.state.history} onPress={this.onPress}/>
+              <PaginationContainer 
+                onFetch={()=>alert('Ver más')}
+                containerStyle = {{padding:15}}>
+                <HistoryCards history={this.state.history} onPress={this.onPress}/>
+              </PaginationContainer>
             </ScrollView>
           )}
         </Content>

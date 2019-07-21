@@ -1,29 +1,27 @@
-// @flow
 import { clearData } from './sessionData';
 import { signOut as googleSingOut } from '../Api/SessionManager/googleApi';
 import { signOut as facebookSingOut } from '../Api/SessionManager/facebookApi';
-import type {LoginFieldType} from 'helpers-module';
 
 function removeUpperAndSpaces(value){
     return value.trim().toLowerCase();
 }
 
-function validateEmail(value: string):boolean {
+function validateEmail(value) {
     const testing = /\S+@\S+\.\S+/;
     return (value)?testing.test(value):false;
 }
 
-function validatePassword(value: string): boolean {
+function validatePassword(value) {
     const testing = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&_\-])[A-Za-z\d@$!%*#?&_\-]{8,15}$/
     return (value)?testing.test(value):false;
 }
 
-function validateChangePassword(value: string, password:string): boolean {
+function validateChangePassword(value, password) {
     return value === password;
 }
 
-function checkLoginField(value: string, field:LoginFieldType='email', password:string=''):string{
-    let message = "no corresponde al formato";
+function checkLoginField(value, field='email', password=''){
+    let message = "no corresponde a un formato válido";
     if(field === 'email'){
         if(!validateEmail(value)) return `El email ${message}`;
     }else if(field === 'password'){
@@ -63,6 +61,7 @@ export{
     removeUpperAndSpaces,
     validateEmail,
     validatePassword,
+    validateChangePassword,
     checkLoginField,
     signOut
 }

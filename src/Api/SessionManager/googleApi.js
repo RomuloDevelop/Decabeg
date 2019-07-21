@@ -1,16 +1,15 @@
-//@ flow
 import { GoogleSignin , statusCodes } from 'react-native-google-signin';
 
-  interface UserGoogle {
-    userDataModel: {
-      avatar: string,
-      lastnames: string
-    },
-    userAccount: {
-      email: string,
-      password: string
-    }
-  }
+  // interface UserGoogle {
+  //   userDataModel: {
+  //     avatar: string,
+  //     lastnames: string
+  //   },
+  //   userAccount: {
+  //     email: string,
+  //     password: string
+  //   }
+  // }
 
   function getUserModelGoogle(user){
     const userDataModel = {

@@ -1,17 +1,25 @@
 //@flow
 import React from 'react';
-import { TouchableOpacity, Text } from 'react-native';
-import type { SubmitButtonProps } from 'screen-module';
+import { Text } from 'react-native';
+import Touchable from 'react-native-platform-touchable';
 
-import {buttonForm} from '../styles';
+import globalStyles,{buttonForm} from '../styles';
 
-function SubmitButton(props: SubmitButtonProps){
+function SubmitButton(props){
+    let rippleColor = globalStyles.lightBlue;
+    if(props.style){
+        const style = props.style;
+        if(style.backgroundColor && style.backgroundColor === rippleColor){
+            rippleColor = globalStyles.darkBlue;
+        }
+    }
     return (
-        <TouchableOpacity 
+        <Touchable 
             style = {[buttonForm.buttonContainer,props.style]}
-            onPress = {props.onPress}>
+            onPress = {props.onPress}
+            background={Touchable.Ripple(rippleColor)}>
             <Text style = {[buttonForm.textButton,props.textStyle]}>{props.text}</Text>
-        </TouchableOpacity>
+        </Touchable>
     );
 }
 

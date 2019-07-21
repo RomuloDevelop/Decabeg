@@ -1,17 +1,14 @@
 import React, { Component }  from 'react';
-import { 
-    View,
-    Text, 
-    TouchableOpacity,
-    TextInput, StyleSheet, Image, ScrollView, ToastAndroid } from 'react-native';
-//import Hr from 'react-native-hr-plus';
-import Hr from '../../sharedComponents/Hr';
-import { Button, Icon } from 'native-base';
+import { View, Text, StyleSheet, Image, ScrollView, Dimensions } from 'react-native';
+//import Hr from '../../sharedComponents/Hr';
 import { signInGoogle } from '../../Api/SessionManager/googleApi';
 import { singInFacebook} from '../../Api/SessionManager/facebookApi';
 import { sendUserLogin, sendUserSignUp } from '../../Api';
 import { validateEmail,validatePassword, appAlert } from '../../helpers';
+import SubmitButton from '../../sharedComponents/SubmitButton';
+import {InputLogin} from '../../sharedComponents/InputDicabeg';
 import LoaderScreen from '../../sharedComponents/LoadScreen';
+import DynamicForm from '../../sharedComponents/DynamicForm';
 
 import globalStyles from '../../styles';
 
@@ -25,10 +22,18 @@ class LogIn extends Component{
             password: '',
             disableSubmit: false,
             errorUser:'',
-            errorPassword:''
+            errorPassword:'',
+            dinamycWidth:{width:'auto', alignSelf:'stretch'}
         }
     }
-
+    componentDidMount(){
+        Dimensions.addEventListener("change",(value)=>{
+            const {window} = value;
+            const dinamycWidth = (window.width<500)?
+            {width:'auto', alignSelf:'stretch'}:{width:400, alignSelf:'center'}
+            this.setState({dinamycWidth});
+        })
+    }
     signInAppOAuth = async (userData)=>{
         try {
             const {userAccount, userDataModel} = userData;
@@ -40,7 +45,6 @@ class LogIn extends Component{
                 await this.signInApp(userAccount, userDataModel);
             }
         } catch(ex){
-            console.log('login error');
             const message = (ex.message)?ex.message:ex;
             console.log(message);
             const description = message.description?message.description:'other';
@@ -114,21 +118,14 @@ class LogIn extends Component{
         })
     }
     
-    handleChangeUser = (value) => {
-        this.setState({user:value});
-    }
+    handleChangeUser = (value) => this.setState({user:value})
 
-    handleChangePassword = (value) => {
-        this.setState({password:value});
-    }
+    handleChangePassword = (value) =>this.setState({password:value});
 
-    handleCancelPress = (value)=>{
-        this.props.navigation.goBack();
-    }
+    handleCancelPress = (value)=>this.props.navigation.goBack()
 
-    handleSubmitEditing = (value)=>{
-        this.secondTextInput.focus();
-    }
+    handleSubmitEditing = (value)=>this.secondTextInput.focus();
+
     render(){
         return (
             <ScrollView style ={{backgroundColor: globalStyles.fontBrown}}>
@@ -138,44 +135,34 @@ class LogIn extends Component{
                         style={styles.image}
                         source={require('../../assets/DICABEG.png')}/>
                     <Text style={styles.textImage}>DICABEG</Text>
-                    <View style = {styles.formContainer}>
-                        <TextInput
-                            style = {[styles.inputContainer,{borderColor:this.state.errorUser?'red':'rgba(255,255,255,0)',borderWidth:1}]}
+                    <DynamicForm>   
+                        <InputLogin
                             placeholder = "Email"
-                            placeholderTextColor = "rgba(255,255,255,0.7)"
                             onChangeText={this.handleChangeUser}
                             onSubmitEditing = {this.handleSubmitEditing}
-                            returnKeyType = "next"
-                            blurOnSubmit={false}
-                            value = {this.state.user}
-                        ></TextInput>
-                        {(this.state.errorUser !== '')&&(<Text style={styles.errorMessage}>{this.state.errorUser}</Text>)}
-                        <TextInput ref={(input) => { this.secondTextInput = input; }}
-                            style = {[styles.inputContainer,{borderColor:this.state.errorPassword?'red':'rgba(255,255,255,0)', borderWidth:1}]}
+                            error = {this.state.errorUser}
+                            value = {this.state.user}/>
+                        <InputLogin inputRef={(input) => { this.secondTextInput = input; }}
                             placeholder = "Contraseña"
-                            placeholderTextColor = "rgba(255,255,255,0.7)"
                             secureTextEntry = {true}
                             onChangeText={this.handleChangePassword}
                             value = {this.state.password}
-                        ></TextInput>
-                        {(this.state.errorPassword !== '')&&(<Text style={styles.errorMessage}>{this.state.errorPassword}</Text>)}
-                        <TouchableOpacity 
-                            style = {[styles.buttonContainer,{backgroundColor:globalStyles.darkBlue}]}
+                            error = {this.state.errorPassword}/>
+                        <SubmitButton 
+                            text = "INICIA SESION"
                             onPress = {this.handleLoginPress}
-                            disabled={this.state.disableSubmit}>
-                            <Text style = {styles.textButton}>INICIA SESION</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity 
-                            style = {[styles.buttonContainer ,{backgroundColor:globalStyles.lightBlue}]}
+                            disabled={this.state.disableSubmit}
+                            style={{marginHorizontal:0}}/>
+                        <SubmitButton
+                            text = "REGISTRATE" 
+                            style = {{backgroundColor:globalStyles.lightBlue, marginTop:0, marginHorizontal:0}}
                             onPress={this.handlePressSingUp}
-                            disabled={this.state.disableSubmit}>
-                            <Text style = {styles.textButton}>REGISTRATE</Text>
-                        </TouchableOpacity>
+                            disabled={this.state.disableSubmit}/>
                         <Text style={{color:"#FFFFFFaa", textAlign:'center' , marginBottom:10}}
                             onPress={()=>this.props.navigation.navigate('sendEmail')}>
                             ¿Olvidaste tu contraseña?
                         </Text>
-                    </View>
+                    </DynamicForm>
                     {/* <Hr color='white' width={1}>
                         <Text style={styles.textHr}>O</Text>
                     </Hr>
@@ -213,9 +200,6 @@ const styles = StyleSheet.create({
         marginTop: 10,
         marginBottom: 20
     },
-    formContainer: {
-        marginBottom: 10
-    },
     inputContainer: {
         height: 40,
         paddingHorizontal: 10,
@@ -227,20 +211,6 @@ const styles = StyleSheet.create({
         shadowOpacity: 2,
         shadowRadius: 2,
         shadowColor: '#000'
-    },
-    buttonContainer: {
-        paddingVertical: 10,
-        marginBottom: 15,
-        backgroundColor: 'rgba(41, 128, 185,1.0)',
-        borderRadius: 10,
-        elevation: 1,
-        shadowOpacity: 2,
-        shadowRadius: 2,
-        shadowColor: '#000'
-    },
-    textButton: {
-        color: '#FFF',
-        textAlign: 'center'
     },
     textHr: {
         color: 'rgba(255,255,255,0.3)',
@@ -254,10 +224,6 @@ const styles = StyleSheet.create({
     socialButton: {
         margin: 10,
         borderRadius: 20
-    },
-    errorMessage: {
-        color:'red',
-        marginBottom: 10,
     }
 });
 

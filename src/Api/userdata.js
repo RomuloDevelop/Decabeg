@@ -3,7 +3,6 @@ import {
     setUserData,
     mergeUserData,
     getUrlEncodedParams,
-    setOneSignalId,
     getOneSignalId
 } from '../helpers';
 

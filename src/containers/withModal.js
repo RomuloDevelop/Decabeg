@@ -17,9 +17,7 @@ function withModal(WrappedComponent) {
         Open() {this.setState({show:true});}
 
         Close() {this.setState({show:false});}
-
         
-
         render() {
             const ModalContainer = (props) => (
                 <Modal

@@ -1,13 +1,13 @@
 import React, {Component} from 'react';
 import {StyleSheet, View, ScrollView, TouchableOpacity} from 'react-native';
-import { Container, Content,List, ListItem, Left, Body, Right,Card, Text, H3, H2, H1, Grid, Col, Row, Button, Icon, Item, Form, Label, Input} from "native-base";
-import { getUserData } from '../../../helpers';
+import { Container, Content, Text, H3, H2, Grid, Col, Row, Item, Form, Label, Input} from "native-base";
 import { sendGetTransferInfo } from '../../../Api';
 import moment from 'moment';
 import NoDataIcon from '../../../sharedComponents/NoDataIcon';
-import SubmitButton from '../../../sharedComponents/SubmitButton';
 import Header from '../../../sharedComponents/Header';
 import CardMonedero from '../../../sharedComponents/CardMonedero';
+import LoaderScreen from '../../../sharedComponents/LoadScreen';
+//import PaginationContainer from '../../../sharedComponents/PaginationContainer';
 import {withModal} from '../../../containers';
 
 import globalStyles from '../../../styles';
@@ -43,12 +43,8 @@ const ItemDetail = withModal(FormWithModal);
 
 
 function TransaccionList(props){
-    const ItemRow = ({children})=>(
-      <Col>
-        {children}
-      </Col>
-    );
-    return props.data.map((item, index, array)=>{
+    const data = props.data.reverse();
+    return data.map((item, index, array)=>{
         const date = moment(item.create_date).calendar().split('at');
         const color = (index%2)?globalStyles.mediumBlue:globalStyles.lightBlue;
         return(
@@ -77,42 +73,77 @@ function TransaccionList(props){
 class Transacciones extends Component {
   constructor(props){
     super(props);
+    this.group = 1;
     this.state = {
-        balance:0,
-        data:[],
-        itemToShow:{}
+      balance:0,
+      data:[],
+      itemToShow:{},
+      loading:false
     }
   }
-  componentWillMount(){
-    sendGetTransferInfo().then((data)=>{
+
+  getTransferPerGroup = async (group = 1)=>{
+    try{
+      const data = await sendGetTransferInfo(group);
+      if(group === 1) {
         const {current_balance} = data[data.length -1];
-        this.setState({balance:current_balance, data:data.reverse()});
-    }).catch((e)=>console.log(e));
+        this.setState({balance:current_balance, data});
+      } else {
+        const oldData = this.state.data; 
+        oldData.push(data);
+        this.setState({data:oldData});
+      }
+    } catch(e){
+      console.log(e)
+    }
+  }
+
+  componentWillMount(){
+    //this.getTransferPerGroup(this.group);
+    this.setState(()=>({loading:true}),()=>{
+      sendGetTransferInfo().then((data)=>{
+        const {current_balance} = data[data.length -1];
+        this.setState({loading:false, balance:current_balance, data:data.reverse()});
+      }).catch((e)=>{
+        this.setState({loading:false});  
+        console.log(e);
+      });
+    })
   }
 
   onItemPress=(item)=>{
-      this.setState(()=>({itemToShow:item}),this.modal.Open)
+    this.setState(()=>({itemToShow:item}),this.modal.Open);
   }
 
   render(){
-        return(
-            <Container>
-              <Header color={globalStyles.navbarColor} title="Transacciones" onPress={()=>this.props.navigation.openDrawer()}/>
-              <Content 
-                contentContainerStyle={this.state.data.length <= 0?{flex: 1}:{backgroundColor: globalStyles.fontGrey}}>
-                {(this.state.data.length <= 0)?(<NoDataIcon text="No se encontraron registros"/>):(
-                <ScrollView>
-                  <ItemDetail ref = {ref => this.modal = ref} data={this.state.itemToShow}/>
-                  <CardMonedero textHeader = "Dicags" value = {this.state.balance} style = {{margin: 40}}/>
-                  <Grid>
-                    <Row style = {{backgroundColor:globalStyles.mediumBlue, padding:10, borderTopLeftRadius:20, borderTopRightRadius:20}}>
-                      <H3 style={{marginLeft:8, color:'white'}}>Operaciones</H3>
-                    </Row>
-                    <TransaccionList data={this.state.data} onItemPress={this.onItemPress}/>
-                  </Grid>
-                </ScrollView>)}
-              </Content>
-            </Container>);
+    return(
+      <Container>
+        <Header color={globalStyles.navbarColor} title="Transacciones" onPress={()=>this.props.navigation.openDrawer()}/>
+        <Content 
+          contentContainerStyle={this.state.data.length <= 0?{flex: 1}:{flex: 1, backgroundColor: globalStyles.fontGrey}}>
+          <LoaderScreen loading = {this.state.loading}/>
+          {(this.state.data.length <= 0)?(
+            <NoDataIcon text="No se encontraron registros"/>
+          ):(
+            <ScrollView>
+              <ItemDetail ref = {ref => this.modal = ref} data={this.state.itemToShow}/>
+              <CardMonedero textHeader = "Dicags" value = {this.state.balance} style = {{margin: 40}}/>
+              {/* <PaginationContainer onFetch={async ()=>{
+                this.group += 1;
+                await this.getTransferPerGroup(this.group);
+              }} style={{marginBottom:10}}> */}
+                <Grid>
+                  <Row style = {{backgroundColor:globalStyles.mediumBlue, padding:10, borderTopLeftRadius:20, borderTopRightRadius:20}}>
+                    <H3 style={{marginLeft:8, color:'white'}}>Operaciones</H3>
+                  </Row>
+                  <TransaccionList data={this.state.data} onItemPress={this.onItemPress}/>
+                </Grid>
+              {/* </PaginationContainer> */}
+            </ScrollView>
+          )}
+        </Content>
+      </Container>
+    );
   }
 }
 

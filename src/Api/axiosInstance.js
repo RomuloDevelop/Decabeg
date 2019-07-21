@@ -1,7 +1,5 @@
-//@flow
 import { ToastAndroid } from 'react-native';
 import NetInfo from "@react-native-community/netinfo"
-import type {RequestType} from 'api-module';
 import axios from 'axios';
 import { getFunctionName, getAppToken } from '../helpers';
 
@@ -10,7 +8,7 @@ const axiosInstance = axios.create({
     baseURL
 });
 
-async function executeRequest(type: RequestType, uri: string, data: any, setHeaders: any){
+async function executeRequest(type, uri, data, setHeaders){
     try{
         // const isConnected = await NetInfo.isConnected.fetch();
         // if(!isConnected) throw "No conectado";

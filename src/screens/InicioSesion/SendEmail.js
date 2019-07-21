@@ -1,16 +1,11 @@
 import React,  { Component }  from 'react';
-import { 
-    View, 
-    Text, 
-    TouchableOpacity,
-    TextInput, StyleSheet, Image, ScrollView} from 'react-native';
-import {Button, Icon} from 'native-base';
-import { GoogleSignin , statusCodes } from 'react-native-google-signin';
+import { View, Text, StyleSheet, Image, ScrollView} from 'react-native';
 import { sendForgotPassword } from '../../Api';
-import { checkLoginField } from '../../helpers';
+import { checkLoginField, appAlert } from '../../helpers';
 import SubmitButton from '../../sharedComponents/SubmitButton';
 import {InputLogin} from '../../sharedComponents/InputDicabeg';
 import LoaderScreen from '../../sharedComponents/LoadScreen';
+import DynamicForm from '../../sharedComponents/DynamicForm';
 import globalStyles from '../../styles';
     
 // ...
@@ -38,6 +33,10 @@ class SendEmail extends Component {
                     sendForgotPassword({email})
                         .then(()=> this.props.navigation.navigate('forgotPassword'))
                         .catch((ex)=>{
+                            if(ex.message.description) {
+                                if(ex.message.description === 'email not found')
+                                    appAlert('Correo inválido', 'Este correo no existe');
+                            }
                             this.setState({loading:false});
                             console.log(ex);
                         });
@@ -52,28 +51,26 @@ class SendEmail extends Component {
     render(){
         return (
             <ScrollView style ={{backgroundColor: globalStyles.fontBrown}}>
-            <LoaderScreen loading ={this.state.loading}/>
-                <View style ={styles.container}>
-                    <Image 
-                        style={styles.image}
-                        source={require('../../assets/DICABEG.png')}
-                    />
+                <LoaderScreen loading ={this.state.loading}/>
+                <View style={{padding:30}}>
+                    <Image style={styles.image} source={require('../../assets/DICABEG.png')}/>
                     <Text style={styles.textImage}>DICABEG</Text>
-                    <View style = {styles.formContainer}>
-                        <Text style={{color:"#FFFFFFaa", textAlign:'left' , marginBottom:10}}>
-                            Te enviaremos un codigo a tu correo con el que podras cambiar tu contraseña luego 
+                    <DynamicForm>
+                        <Text style={globalStyles.infoText}>
+                        &nbsp;Te enviaremos un código a tu correo con el que podras cambiar tu contraseña. 
                         </Text>
                         <InputLogin
                             placeholder = "Email"
                             onChangeText={(email)=>{this.setState({email})}}
                             value = {this.state.email}
+                            autoFocus={true}
                             error={this.state.error}>
                         </InputLogin>
                         <Text style={{color:"#FFFFFFaa", textAlign:'center' , marginBottom:10}} onPress={()=>this.props.navigation.navigate('forgotPassword')}>
                             Ya tengo un codigo
                         </Text>
                         <SubmitButton text = 'Enviar' onPress = {this.handleSubmit} style={{ marginHorizontal: 0}}/>
-                    </View>
+                    </DynamicForm>
                 </View>
             </ScrollView>
         );
@@ -82,7 +79,7 @@ class SendEmail extends Component {
 
 const styles = StyleSheet.create({
     container: {
-        padding: 30
+        paddingTop: 30
     },
     image:{
         width: 100,
@@ -97,9 +94,6 @@ const styles = StyleSheet.create({
         fontWeight: '300',
         marginTop: 10,
         marginBottom: 20
-    },
-    formContainer: {
-        marginBottom: 10
     }
 });
 

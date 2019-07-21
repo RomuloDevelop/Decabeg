@@ -1,20 +1,16 @@
 import React, {useState, useEffect, useRef} from 'react';
-import {Linking} from 'react-native';
-import { List, ListItem, Icon, IconNB, Switch, Text, Left, Right, Button } from 'native-base';
+import { List, ListItem, Icon, Switch, Text, Left, Right } from 'native-base';
 import { sendUpdatePlayerId } from '../../Api';
-import { getOneSignalId, getConfiguration, setConfiguration, sendEmail } from '../../helpers';
-import SubmitButton from '../../sharedComponents/SubmitButton';
+import { getConfiguration, setConfiguration, sendEmail } from '../../helpers';
 import globalStyles from '../../styles';
 
 function Configurations(props){
   const [notify, setNotify] = useState(false);
   const switchRef = useRef(null);
   let oldConfigs = {};
-  let id = '';
   useEffect(()=>{
     getConfiguration()
       .then(async (configs)=>{
-        id = await getOneSignalId();
         oldConfigs = Object.assign(configs);
         setNotify(configs.notify);
       })

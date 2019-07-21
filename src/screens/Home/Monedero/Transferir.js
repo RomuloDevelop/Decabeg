@@ -8,6 +8,7 @@ import CardMonedero from '../../../sharedComponents/CardMonedero';
 import LoaderScreen from '../../../sharedComponents/LoadScreen';
 import SubmitButton from '../../../sharedComponents/SubmitButton';
 import {AgendaList, AgendaForm} from '../../../sharedComponents/Agenda';
+import DynamicForm from '../../../sharedComponents/DynamicForm';
 import globalStyles from '../../../styles';
 
 const moneyName = 'Dicag';
@@ -137,45 +138,47 @@ class Transferir extends Component {
             onSelect={(item)=>this.setState({username:item.username, showModal:false})}
             data={this.state.agendaList}/>
           <CardMonedero textHeader = "Dicags" value = {this.state.byte} style = {{margin: 40}}/>
-          <Card style={{margin:100}}>
-            <CardItem header bordered>
-              <Text style={{color:globalStyles.darkBlue}}>Transferir</Text>
-            </CardItem>
-            <CardItem bordered>
-              <Body>
-                <Form style={{marginHorizontal:15, marginBottom:30, alignSelf:'stretch'}}>
-                    <Item floatingLabel>
-                      <Label>Username</Label>
-                      <Input value={this.state.username} onChangeText={(username)=>this.setState({username})}/>
-                      <Icon name="address-book" type="FontAwesome" onPress={()=>{
-                        getAgendaList()
-                          .then((agendaList)=>{
-                            console.log(agendaList);
-                            this.setState({showModal:true, agendaList})})
-                          .catch((ex)=>{
-                            if(ex==='No data was found'){
-                              appAlert('Agenda', 'No tiene usuarios en su agenda');
-                            } else
-                              console.log(ex)
-                          });
-                        }} style={{color:globalStyles.darkBlue}}/>
-                    </Item>
-                    <Item floatingLabel>
-                      <Label>Monto</Label>
-                      <Input value={this.state.amount} onChangeText={this.handleChangeSaldo} spellCheck = {false} keyboardType = 'numeric'/>
-                    </Item>
-                    <Item floatingLabel>
-                      <Label>Concepto</Label>
-                      <Input value={this.state.concept} maxLength={20} onChangeText={(concept)=>{this.setState({concept})}}/>
-                    </Item>
-                </Form>
-              </Body>
-            </CardItem>
-          </Card>
-          <SubmitButton
-            style={{marginVertical:25}}
-            onPress = {()=>this.setState(()=>({loading:true}),async()=>await this.onPress())}
-            text = "Transferir"/>
+          <DynamicForm>
+            <Card style={{margin:100}}>
+              <CardItem header bordered>
+                <Text style={{color:globalStyles.darkBlue}}>Transferir</Text>
+              </CardItem>
+              <CardItem bordered>
+                <Body>
+                  <Form style={{marginHorizontal:15, marginBottom:30, alignSelf:'stretch'}}>
+                      <Item floatingLabel>
+                        <Label>Username</Label>
+                        <Input value={this.state.username} onChangeText={(username)=>this.setState({username})}/>
+                        <Icon name="address-book" type="FontAwesome" onPress={()=>{
+                          getAgendaList()
+                            .then((agendaList)=>{
+                              console.log(agendaList);
+                              this.setState({showModal:true, agendaList})})
+                            .catch((ex)=>{
+                              if(ex==='No data was found'){
+                                appAlert('Agenda', 'No tiene usuarios en su agenda');
+                              } else
+                                console.log(ex)
+                            });
+                          }} style={{color:globalStyles.darkBlue}}/>
+                      </Item>
+                      <Item floatingLabel>
+                        <Label>Monto</Label>
+                        <Input value={this.state.amount} onChangeText={this.handleChangeSaldo} spellCheck = {false} keyboardType = 'numeric'/>
+                      </Item>
+                      <Item floatingLabel>
+                        <Label>Concepto</Label>
+                        <Input value={this.state.concept} maxLength={20} onChangeText={(concept)=>{this.setState({concept})}}/>
+                      </Item>
+                  </Form>
+                </Body>
+              </CardItem>
+            </Card>
+            <SubmitButton
+              style={{marginVertical:25}}
+              onPress = {()=>this.setState(()=>({loading:true}),async()=>await this.onPress())}
+              text = "Transferir"/>
+          </DynamicForm>
         </Content>
       </Container>
     );

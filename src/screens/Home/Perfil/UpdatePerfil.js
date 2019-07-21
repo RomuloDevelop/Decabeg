@@ -8,6 +8,7 @@ import SubmitButton from '../../../sharedComponents/SubmitButton';
 import Header from '../../../sharedComponents/Header';
 import { InputFormApp } from '../../../sharedComponents/InputDicabeg';
 import {InputPhoneNumber, PhoneNumberPerCountry} from '../../../sharedComponents/InputPhoneNumber';
+import DynamicForm from '../../../sharedComponents/DynamicForm';
 import { getUserData, validateEmail, validatePassword, checkLoginField, appAlert } from '../../../helpers';
 import { sendUpdateUserData } from '../../../Api';
 import FadeIn from '../../../Animations/FadeIn';
@@ -142,12 +143,13 @@ class UpdatePerfil extends Component {
 
     render() {
         return (
-            <Container>
+          <Container>
             <Header color={globalStyles.darkBlue} title="Actualizar" onPress={()=>this.props.navigation.openDrawer()}/>
-              <Content>
+            <Content>
               <PhoneNumberPerCountry show={this.state.showNumberCode}
                 onClose={()=>this.setState({showNumberCode:false})}
                 onSelect={this.handleSelectNumberCode}/>
+              <DynamicForm>
                 <Grid style = {{paddingTop:20}}>
                   <Row style={{alignItems:'flex-start', justifyContent: 'center'}}>
                     <TouchableOpacity onPress={this.handleImgPress} style={{marginBottom:15}}>
@@ -206,8 +208,9 @@ class UpdatePerfil extends Component {
                     </Col>
                   </Row>
                 </Grid>
-              </Content>
-            </Container>
+              </DynamicForm>
+            </Content>
+          </Container>
         );
     }
 

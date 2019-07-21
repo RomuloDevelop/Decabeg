@@ -1,9 +1,8 @@
-import React, {Component} from 'react';
-import { 
-    View, 
-    Text, StyleSheet, Image } from 'react-native';
-import {H3, Icon, IconNB} from 'native-base';
-import Hr from '../sharedComponents/Hr';
+import React from 'react';
+import { View, Text, StyleSheet } from 'react-native';
+import {H3, Icon,} from 'native-base';
+import Hr from './Hr';
+import DynamicForm from './DynamicForm';
 
 import globalStyles from '../styles';
 
@@ -20,6 +19,7 @@ function CalcMessage({value}){
 
 function CardMonedero(props){
     return (
+        <DynamicForm compare = {600} resultValue = {500}>
             <View style = {styles.moneyCard}>
                 <View style={styles.cardTitleBox}>
                     <Icon name="cash" type="Ionicons" style={styles.titleIcon}/>
@@ -30,7 +30,9 @@ function CardMonedero(props){
                     <Hr color='#00000033' width={1.5}/>
                     <CalcMessage value ={props.value}/>
                 </View>
-            </View>);
+            </View>
+        </DynamicForm>
+        );
 }
  
 // Later on in your styles..

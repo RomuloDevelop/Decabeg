@@ -1,8 +1,8 @@
 import React, {Component} from 'react';
-import { View, TextInput, Text, Picker, StyleSheet, Modal} from 'react-native';
-import { Item, Icon, Input, Label,List, ListItem, Body, Left, Right, H3, Badge, CheckBox } from 'native-base';
-import { CloseModalButton } from './CloseModalButton';
+import { View, TextInput, Text, Picker, StyleSheet } from 'react-native';
+import { Item, Icon, Input, Label, Badge, CheckBox } from 'native-base';
 import {checkLoginField} from '../helpers';
+import globalStyles from '../styles';
 
 function InputLogin(props){
     return(
@@ -10,15 +10,12 @@ function InputLogin(props){
             <TextInput
                 ref={props.inputRef}
                 style = {[styles.inputContainer,{borderColor:props.error?'red':'#FFFFFF00',borderWidth:1}]}
-                placeholder = {props.placeholder}
                 placeholderTextColor = "rgba(255,255,255,0.7)"
-                onChangeText={props.onChangeText}
-                onSubmitEditing = {props.onSubmitEditing}
                 returnKeyType = "next"
                 blurOnSubmit={false}
-                secureTextEntry = {props.secureTextEntry}
-                maxLength = {props.maxLength}
-                value = {props.value}></TextInput>
+                autoCapitalize='none'
+                selectionColor={globalStyles.darkBlue}
+                {...props}/>
             {(props.error !== '' && props.error)&&(<Text style={styles.errorMessage}>{props.error}</Text>)}
         </View>
     );

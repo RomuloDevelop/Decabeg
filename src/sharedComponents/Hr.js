@@ -1,9 +1,7 @@
-//@flow
 import React from 'react';
 import {View} from 'react-native';
-import type {HrProps} from 'screen-module';
 
-const Side = (props: HrProps)=>(
+const Side = (props)=>(
     <View style={
       {
         height: props.width,
@@ -14,7 +12,7 @@ const Side = (props: HrProps)=>(
       }}>
     </View>);
 
-export default class Hr extends React.Component<HrProps> {
+export default class Hr extends React.Component {
   render() {
     return (
       <View style={[{flexDirection: 'row'}, this.props.style]}>

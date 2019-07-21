@@ -93,7 +93,7 @@ export default SessionStack = createStackNavigator({
   forgotPassword: {
     screen: ForgotPassword,
     navigationOptions: ()=> ({
-      title: 'Recuperar contraseña'
+      title: 'Cambio de contraseña'
     })
   }
 },{

@@ -1,17 +1,14 @@
 import React, {Component}  from 'react';
-import { 
-    View, 
-    ScrollView, 
-    TouchableOpacity,
-    TextInput, StyleSheet, Image} from 'react-native';
-import {
-    Badge, Text, Icon
-} from 'native-base';
-import { sendUserLogin, sendUserSignUp } from '../../Api';
+import { View, ScrollView, TextInput, StyleSheet} from 'react-native';
+import { Badge, Text, Icon } from 'native-base';
+import { sendUserSignUp } from '../../Api';
 import {appAlert, validateEmail, validatePassword, validateChangePassword} from '../../helpers';
 import LoaderScreen from '../../sharedComponents/LoadScreen';
 import {PickerLogin, CheckBoxFormApp} from '../../sharedComponents/InputDicabeg';
 import TermsAndConditions from '../../sharedComponents/TermsAndConditions';
+import DynamicForm from '../../sharedComponents/DynamicForm';
+import SubmitButton from '../../sharedComponents/SubmitButton';
+import {InputLogin} from '../../sharedComponents/InputDicabeg';
 import globalStyles from '../../styles';
 import DeviceInfo from 'react-native-device-info';
 import moment from 'moment-timezone';
@@ -81,7 +78,7 @@ class SingUp extends Component{
     handleChangeUsername = (value) => this.setState({username:value})
     
     handleChangeEmail = (value) => {
-        const validEmail = validEmail(value);
+        const validEmail = validateEmail(value);
         this.setState({email:value, validEmail});
     }
     
@@ -90,7 +87,7 @@ class SingUp extends Component{
     }
 
     handleChangePassword = (value) => {
-        this.validPassword = validPassword(value);
+        this.validPassword = validatePassword(value);
         this.validRepassword = validateChangePassword(this.state.repeatpassword, value);
         this.setState({password:value});
     }
@@ -148,22 +145,20 @@ class SingUp extends Component{
     render(){
         return (           
         <ScrollView style ={{backgroundColor: globalStyles.fontBrown}}>
+            <TermsAndConditions ref={ref=>this.modal = ref}/>
+            <LoaderScreen loading ={this.state.disableSubmit}/>
             <View style ={styles.container}>
-                <TermsAndConditions ref={ref=>this.modal = ref}/>
-                <LoaderScreen loading ={this.state.disableSubmit}/>
                 <Text style={{fontSize:25, color:'#fff', textAlign:'center', margin:30}}>
                     CREAR CUENTA
                 </Text>
+            <DynamicForm>
                 <Text style={{fontSize:14, color:(this.state.showInvalidPassword)?'red':'rgba(255,255,255,0.5)', textAlign:'left', margin:10}}>
-                    * Contraseña debe tener longitud 8, al menos 1 digito, 1 caracter especial (@$!%*#?&_-)
+                    * Contraseña debe tener entre 8 y 15 caracteres, al menos 1 digito y un 1 caracter especial (@$!%*#?&_-)
                 </Text>
-                <TextInput
-                    style = {styles.inputContainer}
-                    placeholder = "Username"
-                    placeholderTextColor = "rgba(255,255,255,0.7)"
+                <InputLogin
+                    placeholder = "Nombre de Usuario"
                     value = {this.state.username}
-                    onChangeText={this.handleChangeUsername}
-                ></TextInput>
+                    onChangeText={this.handleChangeUsername}/>
                 {this.state.errorDuplicatedUser !== '' && (
                     <Badge danger style={{marginBottom: 20}}>
                         <View style={{flexDirection:'row', justifyContent:'center', alignItems: 'center'}}>
@@ -171,8 +166,7 @@ class SingUp extends Component{
                             <Text>{this.state.errorDuplicatedUser}</Text> 
                         </View>
                     </Badge>
-                )
-                }
+                )}
                 <View style={[styles.inputIconContainer,styles.inputContainer,
                     {borderColor:this.state.showInvalidEmail?(this.state.validEmail?'green':'red'):'rgba(255,255,255,0)', 
                     borderWidth:1}]}>
@@ -183,6 +177,8 @@ class SingUp extends Component{
                         value = {this.state.email}
                         onBlur = {this.handleBlurEmail}
                         onChangeText={this.handleChangeEmail}
+                        autoCapitalize='none'
+                        selectionColor={globalStyles.darkBlue}
                     ></TextInput>{
                         this.state.showInvalidEmail&&
                     <Icon 
@@ -205,12 +201,14 @@ class SingUp extends Component{
                 <View style={[styles.inputIconContainer,styles.inputContainer]}>
                     <TextInput
                         style={styles.innerInput}
-                        placeholder="Password"
+                        placeholder="Contraseña"
                         placeholderTextColor = "rgba(255,255,255,0.7)"
                         maxLength={15}
                         secureTextEntry={this.state.security}
                         onChangeText={this.handleChangePassword}
                         onBlur={this.handleBlurPassword}
+                        autoCapitalize='none'
+                        selectionColor={globalStyles.darkBlue}
                     />
                     <Icon 
                         style={styles.inputIcon} name={this.state.iconName} type='FontAwesome' 
@@ -233,17 +231,14 @@ class SingUp extends Component{
                     </Badge>
                 )
                 }
-                <TextInput
-                    style = {styles.inputContainer}
-                    placeholder = "Repeat Password"
-                    placeholderTextColor = "rgba(255,255,255,0.7)"
+                <InputLogin
+                    placeholder = "Repite Contraseña"
                     secureTextEntry = {true}
                     value = {this.state.repeatpassword}
                     secureTextEntry={true}
                     maxLength={15}
                     onChangeText={this.handleChangeRepeatpassword}
-                    onBlur={this.handleBlurRepeatpassword}
-                ></TextInput>
+                    onBlur={this.handleBlurRepeatpassword}/>
                 {this.state.showInvalidRepeatPassword && (
                     <Badge danger style={{marginBottom: 20}}>
                         <View style={{flexDirection:'row', justifyContent:'center', alignItems: 'center'}}>
@@ -274,18 +269,17 @@ class SingUp extends Component{
                     onPress={()=>this.setState({acceptTerms:!this.state.acceptTerms})}>
                     <Text style={globalStyles.infoText}>
                         Lee y acepta nuestros 
-                        <Text style={{color: '#0000ff55'}} onPress={()=>this.modal.Open()}>Terminos y Condiciones</Text>
+                        <Text style={{color: '#0000ff55'}} onPress={()=>this.modal.Open()}>{' Terminos y Condiciones'}</Text>
                     </Text>
                 </CheckBoxFormApp>
-                <TouchableOpacity 
-                    style = {[styles.buttonContainer ,{backgroundColor:globalStyles.lightBlue, marginTop:10}]}
-                    onPress={this.handlePressSingUp}
-                    disabled={this.state.disableSubmit}>
-                    <Text style = {styles.textButton}>REGISTRARSE</Text>
-                </TouchableOpacity>
+                <SubmitButton 
+                    style = {{backgroundColor:globalStyles.lightBlue, marginTop:10}}
+                    onPress={this.handlePressSingUp} text="registrarse"
+                    disabled={this.state.disableSubmit}/>
                 <Text style={{color:"#FFFFFFaa", textAlign:'center' , marginTop:15}} onPress={this.goToGetCode}>
                     Ya tengo un codigo
                 </Text>
+            </DynamicForm>
             </View>
         </ScrollView>
         );
@@ -310,20 +304,6 @@ const styles = StyleSheet.create({
         shadowOpacity: 2,
         shadowRadius: 2,
         shadowColor: '#000'
-    },
-    buttonContainer: {
-        paddingVertical: 10,
-        marginBottom: 15,
-        backgroundColor: 'rgba(41, 128, 185,1.0)',
-        borderRadius: 10,
-        elevation: 1,
-        shadowOpacity: 2,
-        shadowRadius: 2,
-        shadowColor: '#000'
-    },
-    textButton: {
-        color: '#FFF',
-        textAlign: 'center'
     },
     badgeIcon:{
         fontSize: 15, 

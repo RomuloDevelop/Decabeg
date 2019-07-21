@@ -1,12 +1,11 @@
 import React, {Component}  from 'react';
-import { View, Text, TouchableOpacity, TextInput, StyleSheet, Image, ScrollView } from 'react-native';
-import { Button, Icon } from 'native-base';
-import { GoogleSignin , statusCodes } from 'react-native-google-signin';
+import { View, Text, StyleSheet, Image, ScrollView } from 'react-native';
 import { sendForgotPassword } from '../../Api';
-import { checkLoginField } from '../../helpers';
+import { checkLoginField, appAlert } from '../../helpers';
 import { InputLogin } from '../../sharedComponents/InputDicabeg';
 import SubmitButton from '../../sharedComponents/SubmitButton';
 import LoaderScreen from '../../sharedComponents/LoadScreen';
+import DynamicForm from '../../sharedComponents/DynamicForm';
 import globalStyles from '../../styles';
     
 // ...
@@ -17,25 +16,27 @@ class ForgotPassword extends Component{
     constructor(props){
         super(props);
         this.state = {
-            temporal_code: '',
-            password: '',
-            repeatpassword: '',
+            temporal_code:'',
+            password:'',
+            repeatpassword:'',
             errorPassword:'',
             errorRepeatPassword:'',
             errorCode:'',
-            loading: false
+            loading:false
         }
     }
 
     handleSendPress = async () => {
         try{
             const {repeatpassword, password, temporal_code} = this.state;
-            const message = checkLoginField(password, 'password');
-            if(temporal_code === '') this.setState({errorCode: 'El codigo es requerido'});
-            else if(message !== 'Correct') 
-                this.setState({errorPassword: message});
-            else if(repeatpassword !== password){
-                this.setState({errorRepeatPassword: 'Las contaseñas son diferentes', errorPassword: ''});
+            const errorPassword = checkLoginField(password, 'password');
+            const errorRepeatPassword = checkLoginField(repeatpassword,'repeatpassword',password);
+            if(temporal_code === '') 
+                this.setState({errorCode: 'El codigo es requerido'});
+            else if(errorPassword !== 'Correct') 
+                this.setState({errorPassword, errorRepeatPassword:'', errorCode:''});
+            else if(errorRepeatPassword !== 'Correct'){
+                this.setState({errorPassword:'', errorRepeatPassword, errorCode:''});
             } else {
                 this.setState(()=>({loading:true}),()=>{
                     const data = { 
@@ -46,6 +47,10 @@ class ForgotPassword extends Component{
                     sendForgotPassword(data)
                     .then(()=>this.props.navigation.navigate('login'))
                     .catch((ex)=>{
+                        if(ex.message.description) {
+                            if(ex.message.description === 'code incorrect or used')
+                                appAlert('Código inválido', 'Este código caducó o es inválido');
+                        }
                         this.setState({loading:false});
                         console.log(ex);
                     });
@@ -73,14 +78,18 @@ class ForgotPassword extends Component{
                         source={require('../../assets/DICABEG.png')}
                     />
                     <Text style={styles.textImage}>DICABEG</Text>
-                    <View style = {styles.formContainer}>
+                    <DynamicForm style = {styles.formContainer}>
+                        <Text style={{fontSize:14, color:(this.state.errorPassword)?'red':'rgba(255,255,255,0.5)', textAlign:'left', margin:10}}>
+                            * Recuerda que la contraseña debe tener entre 8 y 15 caracteres, al menos 1 digito y un 1 caracter especial (@$!%*#?&_-)
+                        </Text>
                         <InputLogin 
                             inputRef={(input) =>this.codeTextInput = input}
                             placeholder = "Codigo"
                             onSubmitEditing = {(value)=>this.passwordTextInput.focus()}
                             onChangeText={this.handleChangeCode}
                             error = {this.state.errorCode}
-                            value = {this.state.temporal_code}>
+                            value = {this.state.temporal_code}
+                            autoFocus={true}>
                         </InputLogin>
                         <InputLogin 
                             inputRef={(input) =>this.passwordTextInput = input}
@@ -89,7 +98,7 @@ class ForgotPassword extends Component{
                             onChangeText={this.handleChangePassword}
                             error = {this.state.errorPassword}
                             secureTextEntry = {true}
-                            maxLength={8}
+                            maxLength={15}
                             value = {this.state.password}>
                         </InputLogin>
                         <InputLogin 
@@ -99,11 +108,11 @@ class ForgotPassword extends Component{
                             onChangeText={this.handleChangeRepeatPassword}
                             error = {this.state.errorRepeatPassword}
                             secureTextEntry = {true}
-                            maxLength={8}
+                            maxLength={15}
                             value = {this.state.repeatpassword}>
                         </InputLogin>
-                        <SubmitButton text='LOGIN' onPress = {this.handleSendPress} style={{ marginHorizontal: 0}}/>
-                    </View>
+                        <SubmitButton text='enviar' onPress = {this.handleSendPress} style={{ marginHorizontal: 0}}/>
+                    </DynamicForm>
                 </View>
             </ScrollView>
         );

@@ -1,16 +1,12 @@
 import React,  { Component }  from 'react';
-import { 
-    View, 
-    Text, 
-    TouchableOpacity,
-    TextInput, StyleSheet, Image, ScrollView} from 'react-native';
-import {Button, Icon} from 'native-base';
+import { View, Text, StyleSheet, Image, ScrollView} from 'react-native';
 import { sendUserActivation, sendUserActivationAgain } from '../../Api';
 import {appAlert} from '../../helpers'; 
 import SubmitButton from '../../sharedComponents/SubmitButton';
 import {InputLogin} from '../../sharedComponents/InputDicabeg';
 import SendEmailCode from '../../sharedComponents/SendEmailCode';
 import LoaderScreen from '../../sharedComponents/LoadScreen';
+import DynamicForm from '../../sharedComponents/DynamicForm';
 import globalStyles from '../../styles';
     
 // ...
@@ -40,7 +36,7 @@ class SendCode extends Component {
                 .catch((ex) => {
                     if(ex.message.description) {
                         if(ex.message.description === 'code invalid or used')
-                            appAlert('Codigo invalido', 'Este Codigo caduco o es invalido');
+                            appAlert('Código inválido', 'Este código caducó o es inválido');
                     }
                     this.setState({loading:false});
                     console.log(ex);
@@ -66,7 +62,7 @@ class SendCode extends Component {
                 .catch((ex) => {
                     if(ex.message.description) {
                         if(ex.message.description === 'email not found')
-                            appAlert('Correo invalido', 'Este correo no existe');
+                            appAlert('Correo inválido', 'Este correo no existe');
                     }
                     this.setState({loading:false});
                     console.log(ex);
@@ -89,16 +85,17 @@ class SendCode extends Component {
                         source={require('../../assets/DICABEG.png')}
                     />
                     <Text style={styles.textImage}>DICABEG</Text>
-                    <View style = {styles.formContainer}>
+                    <DynamicForm style = {styles.formContainer}>
                         <Text style={globalStyles.infoText}>
                             &nbsp;Te enviamos un codigo a tu correo para la veficacion de tu cuenta.
                             {"\n"}
-                            &nbsp;Si no has recibido un codigo puedes volver a enviar la solicitud.
+                            &nbsp;Si no has recibido un código, puedes volver a enviar la solicitud.
                         </Text>
                         <InputLogin
                             placeholder = "Codigo"
                             onChangeText={(temporal_code)=>{this.setState({temporal_code})}}
-                            value = {this.state.temporal_code}>
+                            value = {this.state.temporal_code}
+                            autoFocus={true}>
                         </InputLogin>
                         <SubmitButton text = 'Enviar' onPress = {this.handleSubmit} 
                             style={{ marginHorizontal: 0}}
@@ -107,7 +104,7 @@ class SendCode extends Component {
                             onPress = {()=>this.modal.Open()} 
                             style={{ marginHorizontal: 0, marginTop:0, backgroundColor:globalStyles.lightBlue}}
                             textStyle = {styles.buttonText}/>
-                    </View>
+                    </DynamicForm>
                 </View>
             </ScrollView>
         );

@@ -107,7 +107,7 @@ export default class VideoAds extends React.Component{
           this.setState({loader:false});
         } catch(ex) {
           this.adColonyAds();
-          setTimeout(()=>this.manageErrorAds(ex.message), 1000);
+          setTimeout(()=>this.manageErrorAds(ex.message), 3000);
           this.setState({loader:false});
         }
       });

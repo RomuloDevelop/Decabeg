@@ -77,7 +77,8 @@ async function sendUserSignUp(user){
 
 async function sendUserActivation(temporal_code, email){
     try{
-        const formBody = getUrlEncodedParams({temporal_code, email, send_email:true});
+        const fixedEmail = removeUpperAndSpaces(email);
+        const formBody = getUrlEncodedParams({temporal_code, email:fixedEmail, send_email:true});
         const response = await executeRequest('post', `accounts/activation`, formBody,{'Content-Type': 'application/x-www-form-urlencoded'});
         const data = response.data;
         console.log('SingUp:' + JSON.stringify(data));

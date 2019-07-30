@@ -1,12 +1,12 @@
 import React, {Component} from 'react';
 import Video from 'react-native-video';
-import { View, StyleSheet, TouchableOpacity, Dimensions, ProgressBarAndroid, ScrollView } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, Dimensions, ScrollView } from 'react-native';
 //import * as firebase from 'react-native-firebase';
 import * as Progress from 'react-native-progress';
-import { Button, Text, Icon, ListItem, Radio, Right, Left, Badge, Card, CardItem, Col, Row, Grid } from 'native-base';
+import { Text, Icon, Radio, Right, Left, Badge, Card, CardItem, Col, Row, Grid } from 'native-base';
 import FadeIn from '../../../Animations/FadeIn';
-import { sendGetVideos, sendPostHistory, sendUpdateUserData, sendGetUserData } from '../../../Api';
-import { mergeUserData, getUserData, expirationAddListener, appAlert } from '../../../helpers';
+import { sendGetVideos, sendPostHistory, sendUpdateUserData } from '../../../Api';
+import { expirationAddListener, appAlert } from '../../../helpers';
 import LoaderScreen from '../../../sharedComponents/LoadScreen';
 import globalStyles from '../../../styles';
 // let video = '';
@@ -86,11 +86,17 @@ class Anuncios extends Component {
       sendGetVideos().then((data)=>{
         try{
           if(data){
+            console.log(data)
             const videos = data.map((video)=>{
-              const response = video.responses.map((response, index)=>{
-                let selected = false
+              // const response = video.responses.map((response, index)=>{
+              //   let selected = false
+              //   if(index===0) selected=true;
+              //   return {key:index, response, selected};
+              // });
+              const response = Object.keys(video.responses).map((response, index)=>{
+                let selected = false;
                 if(index===0) selected=true;
-                return {key:index, response, selected};
+                return {key:index, response:video.responses[response], selected};
               });
               video.responses = response;
               return video;
@@ -105,8 +111,9 @@ class Anuncios extends Component {
       }).catch((ex)=>console.log('in catch willunmount' + JSON.stringify(ex)));
     }
     componentDidMount(){
+      appAlert('Anuncios no disponibles','Los anuncios no estaran disponible por el momento, para generar dicags puedes mirar los videos bonificados');
       const {navigation} = this.props;
-      this.didBlurEvent = navigation.addListener('didBlur',()=>{
+        this.didBlurEvent = navigation.addListener('didBlur',()=>{
         this.setState({paused:true});
       });
     }
@@ -175,15 +182,15 @@ class Anuncios extends Component {
             const item = responses[index];
             if(item.selected){
                 const {correct} = this.state.videos[this.state.index];
-                this.result = correct === index;
+                this.result = correct-1 === index; //Indice en videos empieza en 1
                 break;
             }
         }
         console.log(`Result: ${this.result}`);
         console.log(this.state.videos[this.state.index].video_id);
         //Videos
-        if(this.result) await updateUserMoneyLocalAndSend(parseFloat(0.005));
-        await sendPostHistory(this.state.videos[this.state.index].video_id);
+        // if(this.result) await updateUserMoneyLocalAndSend(parseFloat(0.005));
+        // await sendPostHistory(this.state.videos[this.state.index].video_id);
         this.setState(()=>({
                     paused: false,
                     showQuestion: false,

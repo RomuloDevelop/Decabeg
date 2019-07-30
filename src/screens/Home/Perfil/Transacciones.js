@@ -1,14 +1,17 @@
 import React, {Component} from 'react';
 import {StyleSheet, View, ScrollView, TouchableOpacity} from 'react-native';
 import { Container, Content, Text, H3, H2, Grid, Col, Row, Item, Form, Label, Input} from "native-base";
-import { sendGetTransferInfo } from '../../../Api';
+import { sendGetTransferInfo, sendReport } from '../../../Api';
 import moment from 'moment';
 import NoDataIcon from '../../../sharedComponents/NoDataIcon';
 import Header from '../../../sharedComponents/Header';
 import CardMonedero from '../../../sharedComponents/CardMonedero';
 import LoaderScreen from '../../../sharedComponents/LoadScreen';
-//import PaginationContainer from '../../../sharedComponents/PaginationContainer';
+import PaginationContainer from '../../../sharedComponents/PaginationContainer';
+import SubmitButton from '../../../sharedComponents/SubmitButton';
+//import AlertDialog from '../../../sharedComponents/AlertDialog';
 import {withModal} from '../../../containers';
+import {appAlert, getUserData} from '../../../helpers';
 
 import globalStyles from '../../../styles';
 
@@ -22,7 +25,11 @@ const FormWithModal = (props) => (
       </Item>
       <Item disabled floatingLabel>
         <Label>Usuario</Label>
-        <Input disabled value={props.data.username}/>
+        <Input disabled value={props.data.responsible.username}/>
+      </Item>
+      <Item disabled floatingLabel>
+        <Label>Email</Label>
+        <Input disabled value={props.data.responsible.email}/>
       </Item>
       <Item disabled floatingLabel>
         <Label>Pago</Label>
@@ -43,9 +50,8 @@ const ItemDetail = withModal(FormWithModal);
 
 
 function TransaccionList(props){
-    const data = props.data.reverse();
-    return data.map((item, index, array)=>{
-        const date = moment(item.create_date).calendar().split('at');
+    return props.data.map((item, index, array)=>{
+        const date = moment(item.create_date).calendar().split('a las');
         const color = (index%2)?globalStyles.mediumBlue:globalStyles.lightBlue;
         return(
           <TouchableOpacity key={index} 
@@ -60,7 +66,7 @@ function TransaccionList(props){
                 </View>
               </Col>
               <Col style = {{justifyContent:'center'}}>
-                <Text style={{textAlign:'center',color:globalStyles.darkBlue, fontSize:18}}>{item.username}</Text>
+                <Text style={{textAlign:'center',color:globalStyles.darkBlue, fontSize:18}}>{item.responsible.username}</Text>
               </Col>
               <Col style = {{justifyContent:'center'}}>
                 <H2 style={{textAlign:'right', color:(item.amount<0)?'red':'green'}}>{item.amount}</H2>
@@ -81,34 +87,41 @@ class Transacciones extends Component {
       loading:false
     }
   }
-
-  getTransferPerGroup = async (group = 1)=>{
-    try{
-      const data = await sendGetTransferInfo(group);
-      if(group === 1) {
-        const {current_balance} = data[data.length -1];
-        this.setState({balance:current_balance, data});
-      } else {
-        const oldData = this.state.data; 
-        oldData.push(data);
-        this.setState({data:oldData});
+  componentDidMount() {
+    const {navigation} = this.props;
+    navigation.addListener('didFocus',()=>{
+        getUserData().then((data)=>{
+            const {balance = 0} = data;
+            const byte = parseFloat(balance).toFixed(4);
+            this.setState({balance:byte});
+        });
+    });
+  }
+  getTransferPerGroup = (group = 1)=>{
+    this.setState(()=>({loading:true}),async ()=>{
+      try{
+        const data = await sendGetTransferInfo(group, 'desc');
+        if(group === 1) {
+          this.setState({loading:false, data});
+        } else {
+          const oldData = this.state.data;
+          for (item of data){
+            oldData.push(item);
+          }
+          this.setState({loading:false,data:oldData});
+        }
+      } catch(ex){
+        if(ex.message){
+          if(ex.message.status==404)
+            appAlert('Error en listado', 'No existen mas transferencias');
+        }
+        this.setState({loading:false});
       }
-    } catch(e){
-      console.log(e)
-    }
+    });
   }
 
   componentWillMount(){
-    //this.getTransferPerGroup(this.group);
-    this.setState(()=>({loading:true}),()=>{
-      sendGetTransferInfo().then((data)=>{
-        const {current_balance} = data[data.length -1];
-        this.setState({loading:false, balance:current_balance, data:data.reverse()});
-      }).catch((e)=>{
-        this.setState({loading:false});  
-        console.log(e);
-      });
-    })
+    this.getTransferPerGroup();
   }
 
   onItemPress=(item)=>{
@@ -126,19 +139,31 @@ class Transacciones extends Component {
             <NoDataIcon text="No se encontraron registros"/>
           ):(
             <ScrollView>
-              <ItemDetail ref = {ref => this.modal = ref} data={this.state.itemToShow}/>
+              {/* <AlertDialog ref={ref=>this.alert=ref}/> */}
+              <ItemDetail ref = {ref => this.modal = ref} hasCloseButton data={this.state.itemToShow}/>
               <CardMonedero textHeader = "Dicags" value = {this.state.balance} style = {{margin: 40}}/>
-              {/* <PaginationContainer onFetch={async ()=>{
+              <SubmitButton
+              style={{marginBottom:25}}
+              onPress = {()=>this.setState(()=>({loading:true}),()=>{
+                sendReport().then(()=>{
+                  appAlert('Reporte enviado', 'Reporte enviado exitosamente');
+                }).catch((ex)=>console.log(ex))
+                .finally(()=>this.setState({loading:false}))
+              })}
+              //onPress = {()=>this.setState({showModalForm:true})}
+              //onPress = {()=>this.alert.Open()}
+              text = "Enviar Reporte"/>
+              <PaginationContainer onFetch={async ()=>{
                 this.group += 1;
-                await this.getTransferPerGroup(this.group);
-              }} style={{marginBottom:10}}> */}
+                this.getTransferPerGroup(this.group);
+              }} style={{marginBottom:10}}>
                 <Grid>
                   <Row style = {{backgroundColor:globalStyles.mediumBlue, padding:10, borderTopLeftRadius:20, borderTopRightRadius:20}}>
                     <H3 style={{marginLeft:8, color:'white'}}>Operaciones</H3>
                   </Row>
                   <TransaccionList data={this.state.data} onItemPress={this.onItemPress}/>
                 </Grid>
-              {/* </PaginationContainer> */}
+              </PaginationContainer>
             </ScrollView>
           )}
         </Content>

@@ -1,5 +1,4 @@
 import { AsyncStorage } from "react-native";
-import moment from 'moment';
 const notFoundError = 'No data was found';
 const tokenAppKey = 'tokenApp';
 const userData = 'userData';
@@ -9,6 +8,7 @@ const oneSignalId = 'oneSignalId';
 const firstTime = 'firstTime';
 const configurationVars = 'configurationVars';
 const agendaList = 'agendaList';
+
 async function setAppToken(token, refresh, expiration, timeZone){
     try{
         const dataJson = JSON.stringify({token, refresh, expiration, timeZone});
@@ -238,7 +238,6 @@ async function getAgendaList(){
         throw ex;
     }
 }
-
 
 export {
     setAppToken,

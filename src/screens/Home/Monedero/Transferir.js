@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {StyleSheet, TouchableOpacity} from 'react-native';
+import {StyleSheet} from 'react-native';
 import { Container, Content, Card, CardItem, Body, Text, Form, Label, Item, Input, Icon} from "native-base";
 //import {  } from 'react-native-dialog';
 import { getUserData, appAlert, setAgendaList, getAgendaList } from '../../../helpers';
@@ -9,9 +9,9 @@ import LoaderScreen from '../../../sharedComponents/LoadScreen';
 import SubmitButton from '../../../sharedComponents/SubmitButton';
 import {AgendaList, AgendaForm} from '../../../sharedComponents/Agenda';
 import DynamicForm from '../../../sharedComponents/DynamicForm';
+import AlertDialog from '../../../sharedComponents/AlertDialog';
 import globalStyles from '../../../styles';
 
-const moneyName = 'Dicag';
 class Transferir extends Component {
   constructor(props){
     super(props);
@@ -60,6 +60,17 @@ class Transferir extends Component {
     });
   }
 
+  dropItemFromAgenda= async (index)=>{
+    try{
+      const list = await getAgendaList();
+      list.splice(index,1);
+      await setAgendaList(list);
+      this.setState({agendaList:list});
+    } catch(ex){
+      throw ex;
+    }
+  }
+
   addItemToAgenda=(item)=>{
     getAgendaList().then((list)=>{
       list.push(item);
@@ -80,18 +91,18 @@ class Transferir extends Component {
     try{
       const value = this.state.amount;
       if (typeof value !== 'undefined'){
-          if(value <=0){
-            alert('Especifique un monto superior a 0');
-            return;
-          }
-          const {balance} = await sendGetUserData();
-          if(value > balance){
-            appAlert('No posee tantos dicag');
-            return;
-          }
-          const transferResponse = await sendTransferToUser(this.state.username, this.state.amount, this.state.concept);
-          const byte = parseFloat(transferResponse.current_balance).toFixed(4);
-          this.setState({byte});
+        if(value <0.005 || value >1){
+          appAlert('Error en el monto','Especifique un monto superior o igual a 0.005 e inferior o igual a 1');
+          return;
+        }
+        const {balance} = await sendGetUserData();
+        if(value > balance){
+          appAlert('No posee tantos dicag');
+          return;
+        }
+        const transferResponse = await sendTransferToUser(this.state.username, this.state.amount, this.state.concept);
+        const byte = parseFloat(transferResponse.current_balance).toFixed(4);
+        this.setState({byte});
         this.addItemIfNotExist();
       } else {
           alert('Especifique un monto');
@@ -128,6 +139,7 @@ class Transferir extends Component {
           flex: 1,
           backgroundColor: globalStyles.fontGrey
         }}>
+          <AlertDialog ref={(ref)=>this.alert = ref}/>
           <LoaderScreen loading={this.state.loading}/>
           <AgendaForm show={this.state.showModalForm}
             onClose={()=>this.setState({showModalForm:false,username:'',amount:'', concept:''})}
@@ -135,10 +147,13 @@ class Transferir extends Component {
             username={this.state.username}/>
           <AgendaList show={this.state.showModal}
             onClose={()=>this.setState({showModal:false})}
+            onDrop ={(index)=>this.dropItemFromAgenda(index)}
             onSelect={(item)=>this.setState({username:item.username, showModal:false})}
             data={this.state.agendaList}/>
           <CardMonedero textHeader = "Dicags" value = {this.state.byte} style = {{margin: 40}}/>
+          
           <DynamicForm>
+            
             <Card style={{margin:100}}>
               <CardItem header bordered>
                 <Text style={{color:globalStyles.darkBlue}}>Transferir</Text>
@@ -147,8 +162,10 @@ class Transferir extends Component {
                 <Body>
                   <Form style={{marginHorizontal:15, marginBottom:30, alignSelf:'stretch'}}>
                       <Item floatingLabel>
-                        <Label>Username</Label>
-                        <Input value={this.state.username} onChangeText={(username)=>this.setState({username})}/>
+                        <Label>Usuario</Label>
+                        <Input value={this.state.username} onChangeText={(username)=>this.setState({username})} 
+                          autoCapitalize='none'
+                          selectionColor={globalStyles.darkBlue}/>
                         <Icon name="address-book" type="FontAwesome" onPress={()=>{
                           getAgendaList()
                             .then((agendaList)=>{
@@ -164,11 +181,15 @@ class Transferir extends Component {
                       </Item>
                       <Item floatingLabel>
                         <Label>Monto</Label>
-                        <Input value={this.state.amount} onChangeText={this.handleChangeSaldo} spellCheck = {false} keyboardType = 'numeric'/>
+                        <Input value={this.state.amount} onChangeText={this.handleChangeSaldo} spellCheck = {false} keyboardType = 'numeric'
+                          autoCapitalize='none'
+                          selectionColor={globalStyles.darkBlue}/>
                       </Item>
                       <Item floatingLabel>
                         <Label>Concepto</Label>
-                        <Input value={this.state.concept} maxLength={20} onChangeText={(concept)=>{this.setState({concept})}}/>
+                        <Input value={this.state.concept} maxLength={40} 
+                        onChangeText={(concept)=>{this.setState({concept})}}
+                        selectionColor={globalStyles.darkBlue}/>
                       </Item>
                   </Form>
                 </Body>
@@ -177,6 +198,8 @@ class Transferir extends Component {
             <SubmitButton
               style={{marginVertical:25}}
               onPress = {()=>this.setState(()=>({loading:true}),async()=>await this.onPress())}
+              //onPress = {()=>this.setState({showModalForm:true})}
+              //onPress = {()=>this.alert.Open()}
               text = "Transferir"/>
           </DynamicForm>
         </Content>

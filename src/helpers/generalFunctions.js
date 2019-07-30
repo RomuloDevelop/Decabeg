@@ -1,5 +1,5 @@
 import qs from 'qs';
-import { Linking, Alert, ToastAndroid } from 'react-native';
+import { Linking, Alert } from 'react-native';
 
 function checkResponse(response, method, message){
   if(response){

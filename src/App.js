@@ -1,25 +1,36 @@
 import React from 'react';
-import { StyleSheet, Text, Button, ToastAndroid, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
+import moment from 'moment';
 import { createSwitchNavigator, createAppContainer} from 'react-navigation';
 import HomeStack from './navigation/HomeStack';
 import SessionStack from './navigation/SessionStack';
 import LoadingSession from './screens/InicioSesion/LoadingSession';
 import OfflineMessage from './sharedComponents/OfflineMessage';
 import { expirationClearListener, setTopLevelNavigator, getOneSignalId, setOneSignalId } from './helpers';
-import { 
-  appAlert, 
-  timeForExpiration, 
-  getAppToken, clearData, 
-  getShowResetTokenMessage, 
+import {
   setShowResetTokenMessage, 
   NetInfoManager,
   getFirstTime, setFirstTime,
   setConfiguration } from './helpers';
-import { sendUserResetToken } from './Api';
-import BackgroundTimer from 'react-native-background-timer';
 import OneSignal from 'react-native-onesignal';
 import { Client } from 'bugsnag-react-native';
 const bugsnag = new Client('f6fda3b0e6194d20aeb884cd8fee9e9d');
+
+moment.locale('es', {
+  months: 'Enero_Febrero_Marzo_Abril_Mayo_Junio_Julio_Agosto_Septiembre_Octubre_Noviembre_Diciembre'.split('_'),
+  monthsShort: 'Enero._Feb._Mar_Abr._May_Jun_Jul._Ago_Sept._Oct._Nov._Dec.'.split('_'),
+  weekdays: 'Domingo_Lunes_Martes_Miercoles_Jueves_Viernes_Sabado'.split('_'),
+  weekdaysShort: 'Dom._Lun._Mar._Mier._Jue._Vier._Sab.'.split('_'),
+  weekdaysMin: 'Do_Lu_Ma_Mi_Ju_Vi_Sa'.split('_'),
+  calendar : {
+    lastDay : '[Ayer a las] LT',
+    sameDay : '[Hoy a las] LT',
+    nextDay : '[Mañana a las] LT',
+    lastWeek : '[Pasado] dddd [a las] LT',
+    nextWeek : 'dddd [a las] LT',
+    sameElse : 'L'
+  }
+});
 
 const AppStack = createSwitchNavigator({
   loading: {
@@ -42,7 +53,8 @@ const AppStack = createSwitchNavigator({
       return {
         title: '',
         header: null,
-    }},
+      }
+    },
   },
   home: {
     screen: HomeStack,

@@ -18,17 +18,41 @@ class SendCode extends Component {
         super(props);
         this.state = {
             temporal_code:'',
-            loading: false
+            loading: false,
+            emai: '',
+            errorEmail: '',
         }
+    }
+
+    componentDidMount(){
+        const email = this.props.navigation.getParam('email', '');
+        if(email !== '')
+            this.setState({email});
+    }
+
+    validateEmail = ()=>{
+        const email = this.state.email;
+        const message = checkLoginField(email);
+        const valid = message === "Correct";
+        if(!valid)
+            this.setState({error:message});
+        return valid;
     }
 
     handleSubmit = async () => {
         try{
+            if(!(this.state.email !== '')){
+                appAlert('Error al validar código', 'Debe especificar un email para validar el código');
+                return;
+            }
+
+            if(!this.validateEmail) return;
+
             const temporal_code = this.state.temporal_code;
             if(!temporal_code)
                 return appAlert('Codigo', 'Ingrese un codigo de verificacion valido');
             this.setState(()=>({loading:true}),()=>{
-                sendUserActivation(temporal_code)
+                sendUserActivation(temporal_code,this.state.email)
                 .then(()=>{
                     appAlert('Codigo recibido', 'Ya puedes iniciar sesion en la app!');
                     this.props.navigation.navigate('login');
@@ -48,16 +72,21 @@ class SendCode extends Component {
         }
     };
 
-    handleReSubmit = async (email)=> {
+    handleReSubmit = async ()=> {
         try{
-            if(!email)
+            if(!(this.state.email !== '')){
+                appAlert('Error en el reenvio de código', 'Debe especificar un email para poder reenviar el código');
                 return;
-            this.modal.Close();
+            }
+
+            if(!this.validateEmail) return;
+
+            const email = this.state.email;
             this.setState(()=>({loading:true}),()=>{
                 sendUserActivationAgain(email)
                 .then(()=>{
                     appAlert('Código enviado', 'Hemos enviado un codigo a tu correo');
-                    this.setState({loading:false});
+                    this.setState({loading:false, email});
                 })
                 .catch((ex) => {
                     if(ex.message.description) {
@@ -78,7 +107,6 @@ class SendCode extends Component {
         return (
             <ScrollView style ={{backgroundColor: globalStyles.fontBrown}}>
                 <LoaderScreen loading ={this.state.loading}/>
-                <SendEmailCode ref={ref=>this.modal = ref} onPressSubmit ={this.handleReSubmit}/>
                 <View style ={styles.container}>
                     <Image 
                         style={styles.image}
@@ -92,6 +120,13 @@ class SendCode extends Component {
                             &nbsp;Si no has recibido un código, puedes volver a enviar la solicitud.
                         </Text>
                         <InputLogin
+                            placeholder = "Email"
+                            onChangeText={(email)=>{this.setState({email})}}
+                            value = {this.state.email}
+                            error={this.state.errorEmail}
+                            autoFocus={true}>
+                        </InputLogin>
+                        <InputLogin
                             placeholder = "Codigo"
                             onChangeText={(temporal_code)=>{this.setState({temporal_code})}}
                             value = {this.state.temporal_code}
@@ -101,7 +136,7 @@ class SendCode extends Component {
                             style={{ marginHorizontal: 0}}
                             textStyle = {styles.buttonText}/>
                         <SubmitButton text = 'Volver a Enviar' 
-                            onPress = {()=>this.modal.Open()} 
+                            onPress = {this.handleReSubmit} 
                             style={{ marginHorizontal: 0, marginTop:0, backgroundColor:globalStyles.lightBlue}}
                             textStyle = {styles.buttonText}/>
                     </DynamicForm>

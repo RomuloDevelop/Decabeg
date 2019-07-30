@@ -2,14 +2,10 @@ import { executeRequest } from './axiosInstance';
 import { sendGetUserData } from './userdata';
 import {
     setAppToken,
-    mergeAppToken,
-    setUserData,
     getUrlEncodedParams,
-    getOneSignalId,
-    removeUpperAndSpaces
+    removeUpperAndSpaces,
+    setUserData
 } from '../helpers';
-
-import moment from 'moment';
 
 async function sendUserLogOut(){
     try{
@@ -27,21 +23,21 @@ async function sendUserLogin(user, userData){
         const formBody = getUrlEncodedParams({email:fixedEmail, password});
         console.log(formBody);
         const response = await executeRequest('post', `accounts/login`, formBody, {'Content-Type': 'application/x-www-form-urlencoded'});
-        const data = response.data.resource.accounts;
+        console.log(response.data);
+        const data = response.data.information.access_data;
         const token = data.access_token;
         const refresh = data.refresh_token;
-        const expiration = data.expiration_date;//parseFloat(moment().add(30,'minutes').format('X'));
+        const expiration = data.expiration_date_unix;//parseFloat(moment().add(30,'minutes').format('X'));
         const timeZone = data.time_zone;
         await setAppToken(token, refresh, expiration, timeZone);
         console.log('Login:' + JSON.stringify(data));
-        //const player_id = await getOneSignalId();
-        //await sendUpdateUserData({player_id});
-        if(userData){ //Inicia sesion por primera ves en google, facebook
-            await sendGetUserData();
-            //await sendUpdateUserData(userData);
-        } else {
-            await sendGetUserData();
-        }
+        setUserData(response.data.information.user);
+        // if(userData){ //Inicia sesion por primera ves en google, facebook
+        //     await sendGetUserData();
+        //     //await sendUpdateUserData(userData);
+        // } else {
+        //     await sendGetUserData();
+        // }
         return data;
     } catch(ex){
         throw ex;
@@ -52,10 +48,11 @@ async function sendUserResetToken(){
     try{
         const response = await executeRequest('post', `accounts/login/refresh`);
         const data = response.data;
-        const token = data.description.access_token;
-        const refresh = data.description.refresh_token;
-        const expiration = data.description.expiration_date;//parseFloat(moment().add(30,'minutes').format('X'));
-        const timeZone = data.description.time_zone;
+        console.log(data);
+        const token = data.information.access_data.access_token;
+        const refresh = data.information.access_data.refresh_token;
+        const expiration = data.information.access_data.expiration_date_unix;//parseFloat(moment().add(30,'minutes').format('X'));
+        const timeZone = data.information.access_data.time_zone;
         await setAppToken(token, refresh, expiration, timeZone);
         return data;
     } catch(ex){
@@ -78,9 +75,9 @@ async function sendUserSignUp(user){
     }
 }
 
-async function sendUserActivation(temporal_code){
+async function sendUserActivation(temporal_code, email){
     try{
-        const formBody = getUrlEncodedParams({temporal_code});
+        const formBody = getUrlEncodedParams({temporal_code, email, send_email:true});
         const response = await executeRequest('post', `accounts/activation`, formBody,{'Content-Type': 'application/x-www-form-urlencoded'});
         const data = response.data;
         console.log('SingUp:' + JSON.stringify(data));
@@ -93,8 +90,8 @@ async function sendUserActivation(temporal_code){
 async function sendUserActivationAgain(email) {
     try{
         const fixedEmail = removeUpperAndSpaces(email);
-        const formBody = getUrlEncodedParams({email:fixedEmail});
-        const response = await executeRequest('post', `accounts/send_email`, formBody,{'Content-Type': 'application/x-www-form-urlencoded'});
+        const formBody = getUrlEncodedParams({email:fixedEmail, send_email:true});
+        const response = await executeRequest('post', `accounts/resend_email`, formBody,{'Content-Type': 'application/x-www-form-urlencoded'});
         const data = response.data;
         console.log('SendingEmail:' + JSON.stringify(data));
         return data;
@@ -103,9 +100,15 @@ async function sendUserActivationAgain(email) {
     }
 }
 
-async function sendForgotPassword(password) {
+async function sendForgotPassword(account) {
     try{
-        const formBody = getUrlEncodedParams(password);
+        let formBody;
+        const fixedEmail = removeUpperAndSpaces(account.email);
+        if(account.temporal_code){
+            formBody = getUrlEncodedParams({email:fixedEmail, new_password:account.password, temporal_code:account.temporal_code,send_email:true})
+        } else {
+            formBody = getUrlEncodedParams({email:fixedEmail, send_email:true});
+        }
         const response = await executeRequest('post', `accounts/recovery`, formBody, {'Content-Type': 'application/x-www-form-urlencoded'});
         const data = response.data;
         console.log('Data Email:' + JSON.stringify(data));

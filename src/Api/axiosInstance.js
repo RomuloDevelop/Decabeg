@@ -1,11 +1,12 @@
 import { ToastAndroid } from 'react-native';
-import NetInfo from "@react-native-community/netinfo"
+//import NetInfo from "@react-native-community/netinfo"
 import axios from 'axios';
 import { getFunctionName, getAppToken } from '../helpers';
 
-const baseURL = 'https://api-dicabeg.herokuapp.com/v2/';
+const baseURL = 'https://api-dicabeg.herokuapp.com/api/';
 const axiosInstance = axios.create({
-    baseURL
+    baseURL,
+    timeout: 0
 });
 
 async function executeRequest(type, uri, data, setHeaders){

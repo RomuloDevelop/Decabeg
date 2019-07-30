@@ -136,7 +136,7 @@ class History extends Component {
 
 const styles = StyleSheet.create({
   historyTitle: {
-    color: '#15aabf',
+    color: globalStyles.darkBlue,
   },
 });
 

@@ -43,9 +43,9 @@ import { executeRequest } from './axiosInstance';
         date: "2019-03-15 12:29:23"
     }
 ];
-async function sendGetHistory(group=1){
+async function sendGetHistory(nro=1){
     try{
-        const response = await executeRequest('get', `history/group/${group}`);
+        const response = await executeRequest('get', `history/page/${nro}`);
         const data = response.data.resource.history;
         console.log(data);
         return data;
@@ -54,9 +54,9 @@ async function sendGetHistory(group=1){
     }
 }
 
-async function sendPostHistory(videoId){
+async function sendPostHistory(videoId, order='asc'){
     try{
-        const response = await executeRequest('post', `history/${videoId}`);
+        const response = await executeRequest('post', `history/${videoId}/date-order/${order}`);
         const data = response.data.resource.history;
         return data;
     } catch(ex){
@@ -64,9 +64,9 @@ async function sendPostHistory(videoId){
     }
 }
 
-async function sendDeleteHistory(deleteAll, historyId){
+async function sendDeleteHistory(deleteAll, videoId){
     try {
-        const uriData = deleteAll? `history`:`history/${historyId}`;
+        const uriData = deleteAll? `history`:`history/${videoId}`;
         const response = await executeRequest('delete', uriData);
         return response;
     } catch(ex){

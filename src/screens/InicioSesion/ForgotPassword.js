@@ -17,30 +17,36 @@ class ForgotPassword extends Component{
         super(props);
         this.state = {
             temporal_code:'',
+            email:'',
             password:'',
             repeatpassword:'',
             errorPassword:'',
             errorRepeatPassword:'',
             errorCode:'',
+            errorEmail:'',
             loading:false
         }
     }
 
     handleSendPress = async () => {
         try{
-            const {repeatpassword, password, temporal_code} = this.state;
+            const {repeatpassword, password, temporal_code, email} = this.state;
+            const errorEmail = checkLoginField(email, 'email');
             const errorPassword = checkLoginField(password, 'password');
             const errorRepeatPassword = checkLoginField(repeatpassword,'repeatpassword',password);
             if(temporal_code === '') 
                 this.setState({errorCode: 'El codigo es requerido'});
+            else if(errorEmail !== 'Correct') 
+                this.setState({errorEmail,  errorPassword: '', errorRepeatPassword:'', errorCode:''});
             else if(errorPassword !== 'Correct') 
-                this.setState({errorPassword, errorRepeatPassword:'', errorCode:''});
+                this.setState({errorEmail: '', errorPassword, errorRepeatPassword:'', errorCode:''});
             else if(errorRepeatPassword !== 'Correct'){
-                this.setState({errorPassword:'', errorRepeatPassword, errorCode:''});
+                this.setState({errorEmail: '', errorPassword:'', errorRepeatPassword, errorCode:''});
             } else {
                 this.setState(()=>({loading:true}),()=>{
                     const data = { 
-                        temporal_code:this.state.temporal_code, 
+                        email: this.state.email,
+                        temporal_code:this.state.temporal_code,
                         password:this.state.password 
                     };
                     console.log(data);
@@ -85,10 +91,19 @@ class ForgotPassword extends Component{
                         <InputLogin 
                             inputRef={(input) =>this.codeTextInput = input}
                             placeholder = "Codigo"
-                            onSubmitEditing = {(value)=>this.passwordTextInput.focus()}
+                            onSubmitEditing = {(value)=>this.emailTextInput.focus()}
                             onChangeText={this.handleChangeCode}
                             error = {this.state.errorCode}
                             value = {this.state.temporal_code}
+                            autoFocus={true}>
+                        </InputLogin>
+                        <InputLogin 
+                            inputRef={(input) =>this.emailTextInput = input}
+                            placeholder = "Email"
+                            onSubmitEditing = {(value)=>this.passwordTextInput.focus()}
+                            onChangeText={(email)=>this.setState({email})}
+                            error = {this.state.errorEmail}
+                            value = {this.state.email}
                             autoFocus={true}>
                         </InputLogin>
                         <InputLogin 

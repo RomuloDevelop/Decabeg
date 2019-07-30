@@ -1,4 +1,3 @@
-//@flow
 import React from 'react';
 import { Text } from 'react-native';
 import Touchable from 'react-native-platform-touchable';
@@ -18,7 +17,9 @@ function SubmitButton(props){
             style = {[buttonForm.buttonContainer,props.style]}
             onPress = {props.onPress}
             background={Touchable.Ripple(rippleColor)}>
-            <Text style = {[buttonForm.textButton,props.textStyle]}>{props.text}</Text>
+            <Text style = {[buttonForm.textButton,props.textStyle]}>
+                {props.text}
+            </Text>
         </Touchable>
     );
 }

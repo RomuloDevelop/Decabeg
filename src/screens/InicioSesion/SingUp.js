@@ -71,7 +71,7 @@ class SingUp extends Component{
         }
     }
 
-    goToGetCode=()=>this.props.navigation.navigate('sendCode')
+    goToGetCode=()=>this.props.navigation.navigate('sendCode',{email:this.state.email})
     
     handlePickerValueChange = (itemValue, itemIndex) =>this.setState({timezone: itemValue})
 
@@ -145,7 +145,7 @@ class SingUp extends Component{
     render(){
         return (           
         <ScrollView style ={{backgroundColor: globalStyles.fontBrown}}>
-            <TermsAndConditions ref={ref=>this.modal = ref}/>
+            <TermsAndConditions ref={ref=>this.modal = ref} hasCloseButton/>
             <LoaderScreen loading ={this.state.disableSubmit}/>
             <View style ={styles.container}>
                 <Text style={{fontSize:25, color:'#fff', textAlign:'center', margin:30}}>

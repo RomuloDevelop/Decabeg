@@ -105,7 +105,9 @@ class InputFormApp extends Component{
         return(
         <View>
             <Item floatingLabel={!this.props.stacked} 
-                stackedLabel={this.props.stacked} success = {this.state.success}>
+                stackedLabel={this.props.stacked}
+                disabled={this.props.disabled} 
+                success = {this.state.success}>
                 <Label>{this.props.label}</Label>
                 <Input onChangeText={(value)=>{
                     try{

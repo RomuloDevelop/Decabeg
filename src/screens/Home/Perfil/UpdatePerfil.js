@@ -1,19 +1,35 @@
 import React, {Component} from 'react';
-import { View, StyleSheet, Image, TouchableOpacity, TextInput, Dimensions } from 'react-native';
-import { Container, Content, Form, Item, Input, Picker, Label, Left, Button, Icon, Body, Right, Text,
-        Card, CardItem, ListItem, CheckBox } from 'native-base';
+import { View, StyleSheet, Dimensions } from 'react-native';
+import { Container, Content, Form, Text, CheckBox } from 'native-base';
 import { Col, Row, Grid } from 'react-native-easy-grid';
 import ImagePicker from 'react-native-image-picker';
 import SubmitButton from '../../../sharedComponents/SubmitButton';
 import Header from '../../../sharedComponents/Header';
 import { InputFormApp } from '../../../sharedComponents/InputDicabeg';
-import {InputPhoneNumber, PhoneNumberPerCountry} from '../../../sharedComponents/InputPhoneNumber';
+//import {InputPhoneNumber, PhoneNumberPerCountry} from '../../../sharedComponents/InputPhoneNumber';
 import DynamicForm from '../../../sharedComponents/DynamicForm';
-import { getUserData, validateEmail, validatePassword, checkLoginField, appAlert } from '../../../helpers';
-import { sendUpdateUserData } from '../../../Api';
+import LoaderScreen from '../../../sharedComponents/LoadScreen';
+import SendEmailCode from '../../../sharedComponents/SendEmailCode';
+import { getUserData, appAlert, setUserData } from '../../../helpers';
+import { sendUpdateUserData, sendCodeForNewPassword, sendCodeForNewEmail } from '../../../Api';
 import FadeIn from '../../../Animations/FadeIn';
 import globalStyles from '../../../styles';
 import EventEmitter from 'events';
+
+const CheckBoxWithText = (props)=>(
+  <Row style={{ marginVertical: 15}}>
+    <Col>
+  <View style={{ flex:1,flexDirection:'row', marginLeft:10}}>
+    <CheckBox
+      style={{marginRight:15}}
+      color={globalStyles.darkBlue}
+      {...props}/>
+    <Text>{props.text}</Text>
+  </View>
+  </Col>
+  </Row>
+)
+
 
 class UpdatePerfil extends Component {
   constructor(props){
@@ -22,18 +38,24 @@ class UpdatePerfil extends Component {
     this._emitter = new EventEmitter();
     this.state = {
       username: '',
+      temporal_code_email: '',
+      email: '',
+      new_email: '',
       password: '',
+      temporal_code_pass: '',
       changepassword:'',
       repeatpassword: '',
       phone: '',
       phoneNumberCode: '🇻🇪 +58',
       image: require('../../../assets/no_image.png'),
+      showEmailForm: false,
       showPasswordForm: false,
       showNumberCode:false,
-      userError:''
+      userError:'',
+      loading: false
     }
   }
-    componentWillMount(){
+    setData=()=>{
       getUserData().then((data)=>{
         //let phone='';
         //let phoneNumberCode = '🇻🇪 +58';
@@ -44,48 +66,52 @@ class UpdatePerfil extends Component {
         //}
         this.setState({
           username: data.username,
+          email: data.email,
           //phone,
           //phoneNumberCode,
           image: data.image? data.image:require('../../../assets/no_image.png')
         });
       }).catch((ex)=>console.log(ex));
     }
-
-    handlePressGoBack = ()=>{
-      this._emitter.emit('userchange');
+    componentWillMount(){
+      this.setData();
     }
 
-    handleImgPress = () => {
-      ImagePicker.showImagePicker(null,(response) => {
-        console.log('Response = ', response);
+    // handleImgPress = () => {
+    //   ImagePicker.showImagePicker(null,(response) => {
+    //     console.log('Response = ', response);
       
-        if (response.didCancel) {
-          console.log('User cancelled image picker');
-        } else if (response.error) {
-          console.log('ImagePicker Error: ', response.error);
-        } else if (response.customButton) {
-          console.log('User tapped custom button: ', response.customButton);
-        } else {
-          const source = { uri: response.uri };
-          console.log(source);
-          // You can also display the image using data:
-          // const source = { uri: 'data:image/jpeg;base64,' + response.data };
+    //     if (response.didCancel) {
+    //       console.log('User cancelled image picker');
+    //     } else if (response.error) {
+    //       console.log('ImagePicker Error: ', response.error);
+    //     } else if (response.customButton) {
+    //       console.log('User tapped custom button: ', response.customButton);
+    //     } else {
+    //       const source = { uri: response.uri };
+    //       console.log(source);
+    //       // You can also display the image using data:
+    //       // const source = { uri: 'data:image/jpeg;base64,' + response.data };
       
-          this.setState({
-            image: source,
-          });
-        }
-      });
-      }
+    //       this.setState({
+    //         image: source,
+    //       });
+    //     }
+    //   });
+    //   }
     
 
-    handleUsername = ({value}) => {
-      console.log(value);
-      this.setState({username:value});
-    }
+    // handleUsername = ({value}) => {
+    //   console.log(value);
+    //   this.setState({username:value});
+    // }
 
-    handlePhone = (value) => {
-      this.setState({phone:value});
+    // handlePhone = (value) => {
+    //   this.setState({phone:value});
+    // }
+
+    handleEmail = ({value, success, errorMessage}) => {
+      this.handlePasswordState({ new_email:value }, success);
     }
 
     handlePassword = ({value, success, errorMessage}) => {
@@ -106,13 +132,44 @@ class UpdatePerfil extends Component {
       this.setState(obj);
     }
 
-    handleSelectNumberCode = ({flag, dial_code})=>this.setState({phoneNumberCode:`${flag} ${dial_code}`, showNumberCode:false});
+    //handleSelectNumberCode = ({flag, dial_code})=>this.setState({phoneNumberCode:`${flag} ${dial_code}`, showNumberCode:false});
+    
+    handleSendEmailCode = (data)=>this.setState(
+      ()=>({loading:true}),async ()=>{
+          try{
+            await sendCodeForNewEmail(data);
+            const newData = await getUserData();
+            newData.email= data.new_email;
+            await setUserData(newData);
+            this.setState({loading:false});
+          }catch(ex){
+            this.setState({loading:false});
+            console.log(ex);
+          }
+        }
+      );
 
+    handleSendPasswordCode = ()=>{
+      if(!this.state.showPasswordForm){
+        appAlert('Cambio de Contraseña', 'Al aceptar, se le enviara un código de verificacion que debera ingresar junto con los datos de su nueva contraseña. Si ya posee uno presione cancelar',
+        ()=>this.setState(()=>({loading:true}),async ()=>{
+            try{
+              await sendCodeForNewPassword();
+              this.setState({loading:false});
+            }catch(ex){
+              this.setState({loading:false});
+              console.log(ex);
+            }
+          }
+        ));
+      }
+      this.setState({showPasswordForm:!this.state.showPasswordForm})
+    }
     handleUpdatePress = () => {
       const code = this.state.phoneNumberCode.split(' ');
       const completePhoneNumber = `${code[1]}-${this.state.phone}`;
       const data = {
-        username:this.state.username,
+        email:this.state.email,
         //phone:completePhoneNumber
       }
       if(this.state.showPasswordForm) {
@@ -146,22 +203,27 @@ class UpdatePerfil extends Component {
           <Container>
             <Header color={globalStyles.darkBlue} title="Actualizar" onPress={()=>this.props.navigation.openDrawer()}/>
             <Content>
-              <PhoneNumberPerCountry show={this.state.showNumberCode}
+            <LoaderScreen loading = {this.state.loading}/>
+            <SendEmailCode ref={ref=>this.modal = ref} onPressSubmit={this.handleSendEmailCode}
+            email = {this.state.new_email} hasCloseButton/>
+              {/* <PhoneNumberPerCountry show={this.state.showNumberCode}
                 onClose={()=>this.setState({showNumberCode:false})}
-                onSelect={this.handleSelectNumberCode}/>
+                onSelect={this.handleSelectNumberCode}/> */}
               <DynamicForm>
                 <Grid style = {{paddingTop:20}}>
-                  <Row style={{alignItems:'flex-start', justifyContent: 'center'}}>
+                  {/* <Row style={{alignItems:'flex-start', justifyContent: 'center'}}>
                     <TouchableOpacity onPress={this.handleImgPress} style={{marginBottom:15}}>
                       <Image style={styles.image} source={this.state.image}/>
                       <Label style={{textAlign:'center'}}>Escoger Imagen</Label>
                     </TouchableOpacity>
-                  </Row>
+                  </Row> */}
                   <Row style={{marginBottom:20}}>
                   <Col>
                     <Form style={{marginLeft:5, padding:0}}>
-                      <InputFormApp label="Nombre de Usuario" type="other" value={this.state.username} onChangeText={this.handleUsername}
-                        errorMessage ={this.state.userError} stacked={true}/>
+                      <InputFormApp label="Nombre de Usuario" value={this.state.username}
+                      stacked={true} disabled={true}/>
+                      <InputFormApp label="Email" type="email" value={this.state.email} 
+                      stacked={true} disabled={true}/>
                       {/* <InputPhoneNumber 
                         onPress={()=>this.setState({showNumberCode:true})} 
                         value={{code:this.state.phoneNumberCode, number:this.state.phone}}
@@ -173,39 +235,89 @@ class UpdatePerfil extends Component {
                     </Form>
                   </Col>
                   </Row>
-                  {/* <Row style={{ marginVertical: 15}}>
-                    <Col>
-                    <View style={{ flex:1,flexDirection:'row', marginLeft:10}}>
-                      <CheckBox checked={this.state.showPasswordForm} 
-                        style={{marginRight:15}}
-                        color={globalStyles.darkBlue}
-                        onPress={()=>this.setState({showPasswordForm:!this.state.showPasswordForm})}/>
-                      <Text>Cambiar Contraseña</Text>
+                  {/* <CheckBoxWithText text="Cambiar email" 
+                  checked={this.state.showEmailForm}
+                  onPress = {()=>this.setState({showEmailForm:!this.state.showEmailForm})}/> */}
+                  <Row>
+                    {this.state.showEmailForm && (
+                      <Grid>
+                      <Row>
+                        <Col>
+                        <FadeIn>
+                    <View style={{marginLeft:15}}>
+                      <Text style={styles.textInfo}>
+                       * Si ya tienes código puedes saltar al {"\n"}
+                       <Text style={{color: '#0000ff55'}}
+                       onPress={()=>this.modal.Open()}>&nbsp;siguiente paso</Text> 
+                      </Text>
                     </View>
-                    </Col>
-                  </Row> */}
+                        <Form style={{marginLeft:5}}>
+                          <InputFormApp label="Nuevo Email" type="email" value={this.state.new_email} 
+                          onChangeText={this.handleEmail}/>
+                        </Form>
+                        </FadeIn>
+                        </Col>
+                      </Row>
+                      <Row>
+                        <Col>
+                          <SubmitButton onPress={()=>this.setState(()=>({loading:true}),()=>{
+                            sendCodeForNewEmail({new_email:this.state.new_email})
+                            .then(()=>this.modal.Open())
+                            .catch((ex)=>console.log(ex))
+                            .finally(()=>this.setState({loading:false}));
+                          })} text="Actualizar Email" style={{marginHorizontal:15, marginVertical:25}}/>
+                        </Col>
+                      </Row>
+
+                      </Grid>
+                    )}
+                  </Row>
+                  <CheckBoxWithText text="Cambiar Contraseña"
+                  checked={this.state.showPasswordForm}
+                  onPress={this.handleSendPasswordCode}/>
+                  <Row>
                   {this.state.showPasswordForm && (
+                    <Grid>
                   <Row>
                     <Col>
                     <FadeIn>
                     <View style={{marginLeft:15}}>
-                      <Text style={{fontSize:14, color:'rgba(0,0,0,0.7)', textAlign:'left'}}>
-                       * Contraseña debe tener al menos longitud 8, al menos 1 digito, 1 caracter especial (@$!%*#?&_-)
+                      <Text style={styles.textInfo}>
+                       * Contraseña debe tener entre 8 y 15 caracteres, al menos 1 digito y un 1 caracter especial (@$!%*#?&_-)
                       </Text>
                     </View>
                     <Form style={{marginLeft:5}}>
-                      <InputFormApp label="Contraseña anterior" type="password" value={this.state.password} onChangeText={this.handlePassword}/>
+                      <InputFormApp label="Código" value={this.state.temporal_code} onChangeText={({value})=>this.setState({temporal_code_pass:value})}/>
+                      {/* <InputFormApp label="Contraseña anterior" type="password" value={this.state.password} onChangeText={this.handlePassword}/> */}
                       <InputFormApp label="Nueva contraseña" type="password" value={this.state.changepassword} onChangeText={this.handleChangePassword}/>
                       <InputFormApp label="Confirmar nueva contraseña" type="repeatpassword" value={this.state.repeatpassword} onChangeText={this.handleRepeatPassword}
                         password={this.state.changepassword}/>
                     </Form>
                     </FadeIn>
                     </Col>
-                  </Row>)}
+                  </Row>
+                  
                   <Row>
                     <Col>
-                      <SubmitButton onPress = {this.handleUpdatePress} text="Actualizar" style={{marginHorizontal:15, marginVertical:25}}/>
+                      <SubmitButton onPress = {
+                        ()=>this.setState(()=>({loading:true}),async ()=>{
+                          try{
+                            await sendCodeForNewPassword({
+                              temporal_code:this.state.temporal_code_pass, 
+                              new_password: this.state.changepassword
+                            });
+                            appAlert('Contraseña',"Contraseña cambiada con exito");
+                            this.setState({loading:false, showPasswordForm:false});
+                          }catch(ex){
+                            this.setState({loading:false});
+                            console.log(ex);
+                          }
+                        })
+                      } text="Actualizar Contraseña" style={{marginHorizontal:15, marginVertical:25}}/>
                     </Col>
+                  </Row>
+                  </Grid>
+                  )}
                   </Row>
                 </Grid>
               </DynamicForm>
@@ -238,7 +350,8 @@ const styles = StyleSheet.create({
   textButton: {
       color: '#FFF',
       textAlign: 'center'
-  }
+  },
+  textInfo:{fontSize:14, color:'rgba(0,0,0,0.7)', textAlign:'left'}
 });
 
 export default UpdatePerfil;

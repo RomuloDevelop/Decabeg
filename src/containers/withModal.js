@@ -14,23 +14,36 @@ function withModal(WrappedComponent) {
             }
         }
 
-        Open() {this.setState({show:true});}
+        Open() {
+            this.setState({show:true});
+        }
 
         Close() {this.setState({show:false});}
         
         render() {
-            const ModalContainer = (props) => (
-                <Modal
-                    animationType={'slide'}
-                    visible={props.show}>
-                    <CloseModalButton onClose={props.onClose?props.onClose:this.Close}/>
-                    {props.children}
-                </Modal>
-            );
+            let Component; 
+            if(!this.props.hasCloseButton){
+                Component= (props) => (
+                    <Modal
+                        transparent={true}
+                        animationType={'fade'}
+                        visible={props.show}>
+                        <WrappedComponent onClose={props.onClose?props.onClose:this.Close} {...props} />
+                    </Modal>
+                );
+
+            } else {
+                Component= (props) => (
+                    <Modal
+                        animationType={'slide'}
+                        visible={props.show}>
+                        <CloseModalButton onClose={props.onClose?props.onClose:this.Close}/>
+                        <WrappedComponent {...props}/>
+                    </Modal>
+                );
+            }
             return (
-                <ModalContainer show={this.state.show} onClose={this.props.onClose}>
-                    <WrappedComponent {...this.props} />
-                </ModalContainer>
+                <Component show={this.state.show} {...this.props} />
             );
         }
     }

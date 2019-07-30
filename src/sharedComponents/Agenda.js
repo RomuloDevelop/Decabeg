@@ -1,8 +1,9 @@
-import React, {useState, useEffect} from 'react';
-import {Modal, ActivityIndicator, StyleSheet, View} from 'react-native';
+import React, {useState} from 'react';
+import {Modal, StyleSheet, View} from 'react-native';
 import {List, ListItem, Body, Left, Text, Button, Icon, H3,
 Form, Item, Input, Label} from 'native-base';
 import SubmitButton from '../sharedComponents/SubmitButton';
+import DropItem from '../Animations/DropItem';
 import globalStyles from '../styles';
 //import {} from 'prop-types';
 
@@ -33,14 +34,16 @@ function AgendaList(props){
                 </ListItem>
                { data.map((item, index)=>{
                 return(
-                    <ListItem key={index} onPress={()=>props.onSelect(item)}>
-                        <Left>
-                            <Text style={styles.listItemText}>{item.username}</Text>
-                        </Left>
-                        <Body>
-                            <Text style={styles.listItemText}>{item.alias}</Text>
-                        </Body>
-                    </ListItem>
+                    <DropItem key={item.username} onDrop={()=>props.onDrop(index)}>
+                        <ListItem onPress={()=>props.onSelect(item)}>
+                            <Left>
+                                <Text style={styles.listItemText}>{item.username}</Text>
+                            </Left>
+                            <Body>
+                                <Text style={styles.listItemText}>{item.alias}</Text>
+                            </Body>
+                        </ListItem>
+                    </DropItem>
                     )}
                 )}
             </List>

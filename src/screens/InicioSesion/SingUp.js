@@ -145,7 +145,6 @@ class SingUp extends Component{
     render(){
         return (           
         <ScrollView style ={{backgroundColor: globalStyles.fontBrown}}>
-            <TermsAndConditions ref={ref=>this.modal = ref} hasCloseButton/>
             <LoaderScreen loading ={this.state.disableSubmit}/>
             <View style ={styles.container}>
                 <Text style={{fontSize:25, color:'#fff', textAlign:'center', margin:30}}>
@@ -269,7 +268,7 @@ class SingUp extends Component{
                     onPress={()=>this.setState({acceptTerms:!this.state.acceptTerms})}>
                     <Text style={globalStyles.infoText}>
                         Lee y acepta nuestros 
-                        <Text style={{color: '#0000ff55'}} onPress={()=>this.modal.Open()}>{' Terminos y Condiciones'}</Text>
+                        <Text style={{color: '#0000ff55'}} onPress={()=>this.props.navigation.navigate('terms')}>{' Terminos y Condiciones'}</Text>
                     </Text>
                 </CheckBoxFormApp>
                 <SubmitButton 

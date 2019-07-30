@@ -22,23 +22,22 @@ function withModal(WrappedComponent) {
         
         render() {
             let Component; 
-            if(!this.props.hasCloseButton){
-                Component= (props) => (
-                    <Modal
-                        transparent={true}
-                        animationType={'fade'}
-                        visible={props.show}>
-                        <WrappedComponent onClose={props.onClose?props.onClose:this.Close} {...props} />
-                    </Modal>
-                );
-
-            } else {
+            if(this.props.hasCloseButton){
                 Component= (props) => (
                     <Modal
                         animationType={'slide'}
                         visible={props.show}>
                         <CloseModalButton onClose={props.onClose?props.onClose:this.Close}/>
                         <WrappedComponent {...props}/>
+                    </Modal>
+                );
+            } else {
+                Component= (props) => (
+                    <Modal
+                        transparent={true}
+                        animationType={'fade'}
+                        visible={props.show}>
+                        <WrappedComponent onClose={props.onClose?props.onClose:this.Close} {...props} />
                     </Modal>
                 );
             }

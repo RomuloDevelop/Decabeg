@@ -6,6 +6,7 @@ import { StyleSheet, Text, Button, Easing, Animated } from 'react-native';
  import SendEmail from '../screens/InicioSesion/SendEmail';
  import SendCode from '../screens/InicioSesion/SendCode';
  import ForgotPassword from '../screens/InicioSesion/ForgotPassword';
+ import TermsAndConditions from '../sharedComponents/TermsAndConditions';
 
  import globalStyles from '../styles';
 
@@ -94,6 +95,12 @@ export default SessionStack = createStackNavigator({
     screen: ForgotPassword,
     navigationOptions: ()=> ({
       title: 'Cambio de contraseña'
+    })
+  },  
+  terms: {
+    screen: TermsAndConditions,
+    navigationOptions: ()=> ({
+      title: ''
     })
   }
 },{

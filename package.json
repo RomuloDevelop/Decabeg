@@ -1,0 +1,57 @@
+{
+  "name": "DECABEG_ANDROID",
+  "version": "1.0.8",
+  "private": true,
+  "scripts": {
+    "start": "node node_modules/react-native/local-cli/cli.js start",
+    "test": "jest",
+    "menu": "adb shell input keyevent 82",
+    "bundle": "react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --sourcemap-output android/app/src/main/assets/index.android.bundle.map --assets-dest android/app/src/main/res",
+    "android": "react-native run-android",
+    "android-release": "react-native run-android --variant=release",
+    "build": "cd android && gradlew assembleRelease && cd ../",
+    "project": "yarn run bundle && yarn run android",
+    "clean": "cd android && gradlew clean && cd ../",
+    "settime": "adb root shell \"date 'date +%m%d%H&M&Y.%S'\"",
+    "session": "adb shell \"input text 'romulocg25@gmail.com'\" && adb shell input keyevent 66 && adb shell \"input text 'Gabriel-0'\""
+  },
+  "dependencies": {
+    "@react-native-community/netinfo": "^2.0.0",
+    "axios": "^0.19.0",
+    "bugsnag-react-native": "^2.19.1",
+    "events": "^3.0.0",
+    "expo-ads-admob": "^5.0.0",
+    "moment": "^2.24.0",
+    "moment-timezone": "^0.5.25",
+    "native-base": "^2.12.1",
+    "react": "16.8.3",
+    "react-native": "0.59.0",
+    "react-native-background-timer": "^2.1.1",
+    "react-native-device-info": "^2.0.0",
+    "react-native-fbsdk": "^0.8.0",
+    "react-native-gesture-handler": "^1.1.0",
+    "react-native-google-signin": "^1.2.2",
+    "react-native-image-picker": "^0.27.2",
+    "react-native-onesignal": "^3.2.12",
+    "react-native-platform-touchable": "^1.1.1",
+    "react-native-progress": "^3.6.0",
+    "react-native-unimodules": "^0.4.0",
+    "react-native-vector-icons": "^6.0.2",
+    "react-native-video": "^4.4.0",
+    "react-navigation": "^3.6.1",
+    "yarn": "^1.16.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.3.4",
+    "@babel/runtime": "^7.3.4",
+    "babel-jest": "^24.4.0",
+    "babel-plugin-transform-remove-console": "^6.9.4",
+    "jest": "^24.4.0",
+    "jest-mock-axios": "^2.4.0",
+    "metro-react-native-babel-preset": "^0.53.0",
+    "react-test-renderer": "16.8.3"
+  },
+  "jest": {
+    "preset": "react-native"
+  }
+}

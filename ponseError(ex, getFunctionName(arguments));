@@ -1,0 +1,107 @@
+[33mcommit d53ca263b4aa425a971d2bf0700a9284d3fb491d[m[33m ([m[1;36mHEAD -> [m[1;32mmaster[m[33m, [m[1;31morigin/ActualizarReactNative[m[33m, [m[1;32mActualizarReactNative[m[33m)[m
+Author: romulo <romulocg25@gmail.com>
+Date:   Fri Apr 12 13:20:50 2019 -0400
+
+    se agregan multiples mejoras al proyecto
+
+[33mcommit b77d1ce3c1e93f6a30ee3d9b2e425a5f8f8282ce[m
+Author: romulo <romulocg25@gmail.com>
+Date:   Wed Mar 13 17:19:57 2019 -0400
+
+    se actualiza a react-native 0.59.0
+
+[33mcommit 508e766af64b1fa20a45b0b7dcde5805d4b6a016[m[33m ([m[1;31morigin/master[m[33m)[m
+Author: romulo <romulocg25@gmail.com>
+Date:   Tue Mar 12 18:14:40 2019 -0400
+
+    Se actualizan librerias nativas
+
+[33mcommit 70326a6090f2aa16798f2f512af53ffa3fdafaac[m[33m ([m[1;32mUltimosAjustes[m[33m)[m
+Author: romulo <romulocg25@gmail.com>
+Date:   Tue Mar 12 14:26:34 2019 -0400
+
+    Se realizan los ultimos ajustes para la actualizacion de paquetes
+
+[33mcommit a289b76f6f6c85714987f690cc2635dbb178c412[m[33m ([m[1;31morigin/UltimosAjustes[m[33m)[m
+Author: romulo <romulocg25@gmail.com>
+Date:   Thu Mar 7 16:32:31 2019 -0400
+
+    Se culminan los cambios para la version beta
+
+[33mcommit 3aced4f3514f1d316de4d2303d0659158cd0d842[m
+Author: romulo <romulocg25@gmail.com>
+Date:   Tue Mar 5 18:43:54 2019 -0400
+
+    version preliminar para mostrar
+
+[33mcommit fc49a800b2fbf6b262e321f06c8547f529915384[m
+Author: romulo <romulocg25@gmail.com>
+Date:   Mon Mar 4 23:30:10 2019 -0400
+
+    Se solventan problemas con el login de facebook-google
+
+[33mcommit 0e8a9c23a9fc0f3b4554f8d0d58f383e4912d44a[m
+Author: romulo <romulocg25@gmail.com>
+Date:   Thu Feb 28 19:27:05 2019 -0400
+
+    Se hacen ajustes para el modulo de Bolsa
+
+[33mcommit 47a5df3206f5ab31170bee701b1f33ca5d533591[m[33m ([m[1;31morigin/server[m[33m, [m[1;31morigin/InicioSesion[m[33m, [m[1;32mserver[m[33m, [m[1;32mInicioSesion[m[33m)[m
+Author: romulo <romulocg25@gmail.com>
+Date:   Thu Feb 28 15:32:20 2019 -0400
+
+    Se realizan las peticiones al servidor
+
+[33mcommit 484c3c28f99efd9662d4078258a0cb4e34d3b868[m
+Author: romulo <romulocg25@gmail.com>
+Date:   Mon Feb 4 12:57:09 2019 -0400
+
+    Se hacen cambios en la interfaz y se culmina la logica de sesion
+
+[33mcommit 17c541f2c781108152f735fe4eb1454b8d541b20[m
+Author: romulo <romulocg25@gmail.com>
+Date:   Sun Dec 30 15:54:03 2018 -0400
+
+    Se actualiza el json de los videos
+
+[33mcommit 75797e22bb1316d033a538ea5c32fa6e38e93104[m
+Author: romulo <romulocg25@gmail.com>
+Date:   Sun Dec 30 15:51:17 2018 -0400
+
+    Se actualiza el json de los videos
+
+[33mcommit 00a5e31dc01e188da49812a5099c65421e192f08[m
+Author: romulo <romulocg25@gmail.com>
+Date:   Tue Dec 25 13:08:13 2018 -0400
+
+    Se hacen ajustes para la primera version de prototipo
+
+[33mcommit 2eaf432c84ff01ac16f46f22e356b579a4692d7a[m
+Author: romulo <romulocg25@gmail.com>
+Date:   Mon Dec 24 17:25:59 2018 -0400
+
+    Se hacen arreglos del prototipo en la seccion de anuncios
+
+[33mcommit 10c87ba9ec8bc38e754efdfb454655aa860292c5[m
+Author: romulo <romulocg25@gmail.com>
+Date:   Sun Dec 23 14:24:17 2018 -0400
+
+    se terminan modificaciones preliminares de la app
+
+[33mcommit e651fff4704354d803f9a8e976f2891e66f831a4[m
+Author: romulo <romulocg25@gmail.com>
+Date:   Sat Dec 22 15:55:33 2018 -0400
+
+    se agregan preguntas en la pantalla de anuncios
+
+[33mcommit 3ac255796b6ad616cb51e6df5a434edd7a93583f[m
+Author: romulo <romulocg25@gmail.com>
+Date:   Thu Dec 20 10:19:01 2018 -0400
+
+    se hacen remodelaciones de pantallas para inicio de sesion
+
+[33mcommit 6b41ff7a0303b16b3482edba2573fc416ce2050e[m
+Author: romulo <romulocg25@gmail.com>
+Date:   Sat Dec 15 19:49:57 2018 -0400
+
+    Se modifica menu del Home y se mueven los Anuncios a un Stack nuevo

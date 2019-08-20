@@ -1,0 +1,56 @@
+{
+  "project_info": {
+    "project_number": "777376602447",
+    "firebase_url": "https://dicabeg.firebaseio.com",
+    "project_id": "dicabeg",
+    "storage_bucket": "dicabeg-10e40.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:777376602447:android:8987da4178ac11ea",
+        "android_client_info": {
+          "package_name": "com.decabeg_android"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "777376602447-f5va93h4l9l5d8u6esk67kgau2ebejr0.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.decabeg_android",
+            "certificate_hash": "41185603501fed771b72a8e4da77575155de933f"
+          }
+        },
+        {
+          "client_id": "777376602447-1qd2i80q96evc7gdcdu2gcdsck0eai6i.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.decabeg_android",
+            "certificate_hash": "bdbfef06f08fe710f0da3efc2a8970fb6e0764e3"
+          }
+        },
+        {
+          "client_id": "777376602447-me2kaqsrsffl25doe91kuhol1c41nmv3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC4obNSrDkVuELOa1Yjk86vv2E_AC5OTJM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "777376602447-me2kaqsrsffl25doe91kuhol1c41nmv3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

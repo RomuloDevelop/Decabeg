@@ -17,7 +17,7 @@
   },
   "dependencies": {
     "@react-native-community/netinfo": "^2.0.0",
-    "axios": "^0.19.0",
+    "axios": "^0.21.1",
     "bugsnag-react-native": "^2.19.1",
     "events": "^3.0.0",
     "expo-ads-admob": "^5.0.0",
